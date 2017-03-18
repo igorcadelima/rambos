@@ -290,14 +290,19 @@ public class DeJure extends Artifact {
 			Node prop = properties.item(i);
 			String propContent = prop.getTextContent();
 
-			if (prop.getNodeName().equals("status")) {
+			switch (prop.getNodeName()) {
+			case "status":
 				status = Status.valueOf(propContent.toUpperCase());
-			} else if (prop.getNodeName().equals("conditions")) {
+				break;
+			case "conditions":
 				conditions = ASSyntax.parseFormula(propContent);
-			} else if (prop.getNodeName().equals("issuer")) {
+				break;
+			case "issuer":
 				issuer = propContent;
-			} else if (prop.getNodeName().equals("content")) {
+				break;
+			case "content":
 				content = parseNormContent(propContent, id, issuer, conditions);
+				break;
 			}
 		}
 		return new Norm(id, status, conditions, issuer, content);
