@@ -560,7 +560,7 @@ public class DeJure extends Artifact {
 	@OPERATION
 	public synchronized boolean addLink(Norm n, Sanction s) {
 		// TODO: check whether operator agent is a legislator
-		if (n == null | s == null)
+		if (n == null || s == null)
 			return false;
 
 		Set<String> linkedSanctions = links.get(n.getId());
@@ -603,7 +603,7 @@ public class DeJure extends Artifact {
 	@OPERATION
 	public synchronized boolean removeLink(Norm n, Sanction s) {
 		// TODO: check whether operator agent is a legislator
-		if (n == null | s == null)
+		if (n == null || s == null)
 			return false;
 
 		Set<String> linkedSanctions = links.get(n.getId());
