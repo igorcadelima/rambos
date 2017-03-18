@@ -66,29 +66,32 @@ public class DeJure extends Artifact {
 	protected static final String SANCTION_TAG = "sanction";
 	protected static final String LINKS_TAG = "links";
 	protected static final String LINK_TAG = "link";
-	
+
 	// normId -> norm
 	private Map<String, Norm> norms;
 	// sanctionId -> sanction
 	private Map<String, Sanction> sanctions;
 	// normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
 	private Map<String, Set<String>> links;
-	
+
 	private DynamicFactsProvider dfp;
 
 	/**
 	 * Initialisation method.
 	 * 
-	 * @param djSpecFile path to de jure specification file
-	 * @param dfp {@link DynamicFactsProvider} instance from which facts will be retrieved
+	 * @param djSpecFile
+	 *            path to de jure specification file
+	 * @param dfp
+	 *            {@link DynamicFactsProvider} instance from which facts will be
+	 *            retrieved
 	 */
 	public void init(String djSpecFile, DynamicFactsProvider dfp) {
 		this.dfp = dfp;
-		
+
 		norms = new ConcurrentHashMap<String, Norm>();
 		sanctions = new ConcurrentHashMap<String, Sanction>();
 		links = new ConcurrentHashMap<String, Set<String>>();
-		
+
 		Document doc = null;
 		try {
 			doc = DJUtil.parseSpec(djSpecFile);
@@ -97,7 +100,7 @@ public class DeJure extends Artifact {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		extractSpecData(doc);
 	}
 
@@ -116,7 +119,7 @@ public class DeJure extends Artifact {
 		}
 		extractLinks(doc);
 	}
-	
+
 	/**
 	 * Extract norms from document.
 	 * 
@@ -125,85 +128,96 @@ public class DeJure extends Artifact {
 	 * @throws ParseException
 	 * @throws npl.parser.ParseException
 	 */
-	protected void extractNorms(Document doc) throws DOMException, ParseException, npl.parser.ParseException  {
+	protected void extractNorms(Document doc) throws DOMException, ParseException, npl.parser.ParseException {
 		Node normsRootEl = doc.getElementsByTagName(NORMS_TAG).item(0);
 		List<Element> norms = getChildElements(normsRootEl);
-		
+
 		for (Element normEl : norms) {
 			String id = normEl.getAttribute("id");
 			NodeList properties = normEl.getChildNodes();
 			addNorm(createNorm(properties, id));
 		}
 	}
-	
+
 	/**
-	 * Extract sanctions from document. 
+	 * Extract sanctions from document.
 	 * 
 	 * @param doc
-	 * @throws ParseException 
-	 * @throws DOMException 
+	 * @throws ParseException
+	 * @throws DOMException
 	 */
 	protected void extractSanctions(Document doc) throws DOMException, ParseException {
 		Node sanctionsRootEl = doc.getElementsByTagName(SANCTIONS_TAG).item(0);
-		NodeList sanctionNodes = sanctionsRootEl.getChildNodes();
-		
-		for (int i = 0; i < sanctionNodes.getLength(); i++) {
-			Node sanctionNode = sanctionNodes.item(i);
-			
-			if (sanctionNode.getNodeType() == Node.ELEMENT_NODE) {
-				Element sanctionEl = (Element) sanctionNode;
-				
-				String id = sanctionEl.getAttribute("id");
-				Status status = Status.ACTIVE;
-				LogicalFormula conditions = null;
-				
-				SanctionCategory category = null;
-				SanctionPurpose purpose = null;
-				SanctionIssuer issuer = null;
-				SanctionLocus locus = null;
-				SanctionMode mode = null;
-				SanctionPolarity polarity = null;
-				SanctionDiscernability discernability = null;
-				
-				NodeList sanctionProperties = sanctionEl.getChildNodes();
-				for (int j = 0; j < sanctionProperties.getLength(); j++) {
-					Node propertyNode = sanctionProperties.item(j);
-					
-					if (propertyNode.getNodeType() == Node.ELEMENT_NODE) {
-						if (propertyNode.getNodeName().equals("status")) {
-							status = Status.valueOf(propertyNode.getTextContent().toUpperCase());
-						} else if (propertyNode.getNodeName().equals("conditions")) {
-							conditions = ASSyntax.parseFormula(propertyNode.getTextContent());
-						} else if (propertyNode.getNodeName().equals("category")) {
-							NodeList dimensions = propertyNode.getChildNodes();
-							
-							for (int k = 0; k < dimensions.getLength(); k++) {
-								Node dimension = dimensions.item(k);
-								String dimensionContent = dimension.getTextContent().toUpperCase();
-								
-								if (dimension.getNodeName().equals("purpose")) {
-									purpose = SanctionPurpose.valueOf(dimensionContent);
-								} else if (dimension.getNodeName().equals("issuer")) {
-									issuer = SanctionIssuer.valueOf(dimensionContent);
-								} else if (dimension.getNodeName().equals("locus")) {
-									locus = SanctionLocus.valueOf(dimensionContent);
-								} else if (dimension.getNodeName().equals("mode")) {
-									mode = SanctionMode.valueOf(dimensionContent);
-								} else if (dimension.getNodeName().equals("polarity")) {
-									polarity = SanctionPolarity.valueOf(dimensionContent);
-								} else if (dimension.getNodeName().equals("discernability")) {
-									discernability = SanctionDiscernability.valueOf(dimensionContent);
-								}
-							}
-							category = new SanctionCategory(purpose, issuer, locus, mode, polarity, discernability);
-						}
-					}
+		List<Element> sanctions = getChildElements(sanctionsRootEl);
+
+		for (Element sanctionEl : sanctions) {
+			String id = sanctionEl.getAttribute("id");
+			Status status = Status.ACTIVE;
+			LogicalFormula conditions = null;
+			SanctionCategory category = null;
+
+			List<Element> properties = getChildElements(sanctionEl);
+			for (Element property : properties) {
+				switch (property.getNodeName()) {
+				case "status":
+					status = Status.valueOf(property.getTextContent().toUpperCase());
+					break;
+				case "conditions":
+					conditions = ASSyntax.parseFormula(property.getTextContent());
+					break;
+				case "category":
+					category = parseSanctionCategory(property);
+					break;
 				}
-				addSanction(new Sanction(id, status, conditions, category));
 			}
+			addSanction(new Sanction(id, status, conditions, category));
 		}
 	}
-	
+
+	/**
+	 * Extract the category dimensions from given node, create a
+	 * {@link SanctionCategory}, and return it.
+	 * 
+	 * @param category
+	 * @return parsed {@link SanctionCategory} based on given node
+	 */
+	private SanctionCategory parseSanctionCategory(Node category) {
+		NodeList dimensions = category.getChildNodes();
+		SanctionPurpose purpose = null;
+		SanctionIssuer issuer = null;
+		SanctionLocus locus = null;
+		SanctionMode mode = null;
+		SanctionPolarity polarity = null;
+		SanctionDiscernability discernability = null;
+
+		for (int i = 0; i < dimensions.getLength(); i++) {
+			Node dimension = dimensions.item(i);
+			String dimensionContent = dimension.getTextContent().toUpperCase();
+
+			switch (dimension.getNodeName()) {
+			case "purpose":
+				purpose = SanctionPurpose.valueOf(dimensionContent);
+				break;
+			case "issuer":
+				issuer = SanctionIssuer.valueOf(dimensionContent);
+				break;
+			case "locus":
+				locus = SanctionLocus.valueOf(dimensionContent);
+				break;
+			case "mode":
+				mode = SanctionMode.valueOf(dimensionContent);
+				break;
+			case "polarity":
+				polarity = SanctionPolarity.valueOf(dimensionContent);
+				break;
+			case "discernability":
+				discernability = SanctionDiscernability.valueOf(dimensionContent);
+				break;
+			}
+		}
+		return new SanctionCategory(purpose, issuer, locus, mode, polarity, discernability);
+	}
+
 	/**
 	 * Extract links from document.
 	 * 
@@ -214,16 +228,16 @@ public class DeJure extends Artifact {
 		NodeList linkNodes = linksRootEl.getChildNodes();
 		for (int i = 0; i < linkNodes.getLength(); i++) {
 			Node linkNode = linkNodes.item(i);
-			
+
 			if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
 				Node normIdNode = linkNode.getFirstChild();
 				String normId = normIdNode.getTextContent();
-				
+
 				Node sanctionsNode = linkNode.getLastChild();
 				NodeList sanctionIdsList = sanctionsNode.getChildNodes();
 				for (int j = 0; j < sanctionIdsList.getLength(); j++) {
 					Node sanctionIdNode = sanctionIdsList.item(j);
-					
+
 					if (sanctionIdNode.getNodeType() == Node.ELEMENT_NODE) {
 						String sanctionId = sanctionIdNode.getTextContent();
 						addLink(normId, sanctionId);
@@ -231,22 +245,22 @@ public class DeJure extends Artifact {
 				}
 			}
 		}
-		
 	}
-	
+
 	/**
 	 * Extract and return parent node's child elements.
 	 * 
-	 * @param parent parent node
+	 * @param parent
+	 *            parent node
 	 * @return list of child elements
 	 */
 	private List<Element> getChildElements(Node parent) {
 		List<Element> nodes = new ArrayList<Element>();
 		NodeList childNodes = parent.getChildNodes();
-		
+
 		for (int i = 0; i < childNodes.getLength(); i++) {
 			Node normNode = childNodes.item(i);
-			
+
 			if (normNode.getNodeType() == Node.ELEMENT_NODE) {
 				Element normEl = (Element) normNode;
 				nodes.add(normEl);
@@ -254,27 +268,28 @@ public class DeJure extends Artifact {
 		}
 		return nodes;
 	}
-	
+
 	/**
 	 * Create a norm based on properties passed as argument.
 	 * 
 	 * @param properties
 	 * @param id
-	 * @return new norm 
+	 * @return new norm
 	 * @throws DOMException
 	 * @throws ParseException
 	 * @throws npl.parser.ParseException
 	 */
-	private Norm createNorm(NodeList properties, String id) throws DOMException, ParseException, npl.parser.ParseException {
+	private Norm createNorm(NodeList properties, String id)
+			throws DOMException, ParseException, npl.parser.ParseException {
 		Status status = Status.ACTIVE;
 		LogicalFormula conditions = null;
 		String issuer = null;
 		Literal content = null;
-		
+
 		for (int i = 0; i < properties.getLength(); i++) {
 			Node prop = properties.item(i);
 			String propContent = prop.getTextContent();
-			
+
 			if (prop.getNodeName().equals("status")) {
 				status = Status.valueOf(propContent.toUpperCase());
 			} else if (prop.getNodeName().equals("conditions")) {
@@ -287,7 +302,7 @@ public class DeJure extends Artifact {
 		}
 		return new Norm(id, status, conditions, issuer, content);
 	}
-	
+
 	/**
 	 * Parse content as literal.
 	 * 
@@ -298,49 +313,52 @@ public class DeJure extends Artifact {
 	 * @return literal form of {@code content}
 	 * @throws npl.parser.ParseException
 	 */
-	private Literal parseNormContent(String content, String normId, String issuer, LogicalFormula conditions) throws npl.parser.ParseException {
+	private Literal parseNormContent(String content, String normId, String issuer, LogicalFormula conditions)
+			throws npl.parser.ParseException {
 		LiteralFactory literalFactory = NPLLiteral.getFactory();
 		Literal literal = parseNormObligationContent(content, normId, conditions, issuer);
-				
+
 		if (literal == null) {
 			literal = parseNormFailContent(content);
 		}
 		return literalFactory.createNPLLiteral(literal, dfp);
 	}
-	
+
 	/**
-	 * Parse string to obligation literal. 
+	 * Parse string to obligation literal.
 	 * 
 	 * @param obligation
 	 * @param normId
 	 * @param conditions
 	 * @param issuer
-	 * @return obligation literal if {@code content} is a well-formed string, or {@code null} otherwise
+	 * @return obligation literal if {@code content} is a well-formed string, or
+	 *         {@code null} otherwise
 	 */
-	private Literal parseNormObligationContent(String obligation, String normId, LogicalFormula conditions, String issuer) {
+	private Literal parseNormObligationContent(String obligation, String normId, LogicalFormula conditions,
+			String issuer) {
 		String obligationRegex = "obligation\\s*\\(\\s*(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(.+?)\\s*,\\s*(.+?)\\s*\\)";
 		Pattern pattern = Pattern.compile(obligationRegex);
 		Matcher matcher = pattern.matcher(obligation);
-		
+
 		if (matcher.matches()) {
 			String agent = matcher.group(1);
 			String reason = matcher.group(2);
 			String goal = matcher.group(3);
 			String deadline = matcher.group(4);
 			Literal literal = ASSyntax.createLiteral(NormativeProgram.OblFunctor);
-			
+
 			// Interpret agent argument
 			literal.addTerm(parseAgent(agent));
 
 			// Interpret reason argument
 			literal.addTerm(reason.equals(normId) ? conditions : new Atom(normId));
-			
+
 			// Interpret goal argument
 			literal.addTerm(new Atom(ASSyntax.createLiteral(goal)));
-			
+
 			// Interpret deadline argument
 			literal.addTerm(resolveTimeExpression(deadline));
-			
+
 			// Add annotations
 			literal.addAnnot(ASSyntax.createStructure("norm", new Atom(normId)));
 			literal.addAnnot(ASSyntax.createStructure("issuer", new Atom(issuer)));
@@ -348,24 +366,26 @@ public class DeJure extends Artifact {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Parse agent name to {@link VarTerm} or {@link Atom} depending on what it really represents. 
+	 * Parse agent name to {@link VarTerm} or {@link Atom} depending on what it
+	 * really represents.
 	 * 
 	 * @param agent
 	 * @return term with given agent name.
 	 */
 	private Term parseAgent(String agent) {
-		char agentInitial = agent.charAt(0); 
+		char agentInitial = agent.charAt(0);
 		if (Character.isUpperCase(agentInitial)) {
 			return new VarTerm(agent);
 		} else {
 			return new Atom(agent);
 		}
 	}
-	
+
 	/**
-	 * Resolve a time expression such as {@code `now` + `2 days`} to a {@link TimeTerm}.
+	 * Resolve a time expression such as {@code `now` + `2 days`} to a
+	 * {@link TimeTerm}.
 	 * 
 	 * @param time
 	 * @return resolved {@link TimeTerm}.
@@ -373,26 +393,27 @@ public class DeJure extends Artifact {
 	private TimeTerm resolveTimeExpression(String time) {
 		String[] deadlineTerms = time.split("`");
 		NumberTerm t1 = parseTimeTerm(deadlineTerms[1]);
-		
-		for (int k = 2; k < deadlineTerms.length; k+=2) {
+
+		for (int k = 2; k < deadlineTerms.length; k += 2) {
 			ArithmeticOp op = parseArithmeticOp(deadlineTerms[k]);
-			NumberTerm t2 = parseTimeTerm(deadlineTerms[k+1]);
+			NumberTerm t2 = parseTimeTerm(deadlineTerms[k + 1]);
 			t1 = new ArithExpr(t1, op, t2);
 		}
-		return (TimeTerm)t1;
+		return (TimeTerm) t1;
 	}
-	
+
 	/**
 	 * Parse string to fail literal.
 	 * 
 	 * @param content
-	 * @return fail literal content if {@code content} is a well-formed string, or {@code null} otherwise
+	 * @return fail literal content if {@code content} is a well-formed string,
+	 *         or {@code null} otherwise
 	 */
 	private Literal parseNormFailContent(String content) {
 		String failureRegex = "fail\\s*\\(\\s*(.+)\\s*\\)";
 		Pattern pattern = Pattern.compile(failureRegex);
 		Matcher matcher = pattern.matcher(content);
-		
+
 		if (matcher.matches()) {
 			String resonStr = matcher.group(1);
 			Atom reason = new Atom(resonStr);
@@ -400,12 +421,14 @@ public class DeJure extends Artifact {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Parse argument to corresponding {@link ArithmeticOp} value.
 	 * 
-	 * @param operation either {@code "+"} or {@code "-"}
-	 * @return corresponding {@link ArithmeticOp} value of {@code operation}, or {@code null} if {@code operation} is an invalid sign
+	 * @param operation
+	 *            either {@code "+"} or {@code "-"}
+	 * @return corresponding {@link ArithmeticOp} value of {@code operation}, or
+	 *         {@code null} if {@code operation} is an invalid sign
 	 */
 	private ArithmeticOp parseArithmeticOp(String operation) {
 		switch (operation) {
@@ -417,7 +440,7 @@ public class DeJure extends Artifact {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Parse argument to {@link TimeTerm}.
 	 * 
@@ -439,7 +462,7 @@ public class DeJure extends Artifact {
 	 * Add norm to norms set.
 	 * 
 	 * @param n
-	 * @return true if norm is added successfully 
+	 * @return true if norm is added successfully
 	 */
 	@LINK
 	@OPERATION
@@ -473,7 +496,7 @@ public class DeJure extends Artifact {
 	 * Add sanction to sanctions set.
 	 * 
 	 * @param s
-	 * @return true if sanction is added successfully 
+	 * @return true if sanction is added successfully
 	 */
 	@LINK
 	@OPERATION
@@ -500,12 +523,14 @@ public class DeJure extends Artifact {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Add link to links set.
 	 * 
-	 * @param normId the norm id
-	 * @param sanctionId the sanction id
+	 * @param normId
+	 *            the norm id
+	 * @param sanctionId
+	 *            the sanction id
 	 * @return true if link is created successfully
 	 */
 	@LINK
@@ -520,30 +545,35 @@ public class DeJure extends Artifact {
 	/**
 	 * Add link to links set.
 	 * 
-	 * @param n the norm
-	 * @param s the sanction
+	 * @param n
+	 *            the norm
+	 * @param s
+	 *            the sanction
 	 * @return true if link is created successfully
 	 */
 	@LINK
 	@OPERATION
 	public synchronized boolean addLink(Norm n, Sanction s) {
 		// TODO: check whether operator agent is a legislator
-		if (n == null | s == null) return false;
+		if (n == null | s == null)
+			return false;
 
 		Set<String> linkedSanctions = links.get(n.getId());
 		if (linkedSanctions.add(s.getId())) {
 			links.put(n.getId(), linkedSanctions);
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Remove link from links set.
 	 * 
-	 * @param normId the norm id
-	 * @param sanctionId the sanction id
+	 * @param normId
+	 *            the norm id
+	 * @param sanctionId
+	 *            the sanction id
 	 * @return true if link is destroyed successfully
 	 */
 	@LINK
@@ -558,27 +588,31 @@ public class DeJure extends Artifact {
 	/**
 	 * Remove link from links set.
 	 * 
-	 * @param n the norm
-	 * @param s the sanction
+	 * @param n
+	 *            the norm
+	 * @param s
+	 *            the sanction
 	 * @return true if link is destroyed successfully
 	 */
 	@LINK
 	@OPERATION
 	public synchronized boolean removeLink(Norm n, Sanction s) {
 		// TODO: check whether operator agent is a legislator
-		if (n == null | s == null) return false;
+		if (n == null | s == null)
+			return false;
 
 		Set<String> linkedSanctions = links.get(n.getId());
 		if (linkedSanctions.remove(s.getId())) {
 			links.put(n.getId(), linkedSanctions);
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	/**
-	 * Get norms set as a {@link Map<{@link String}, {@link Norm}>}, whose keys are norms ids. 
+	 * Get norms set as a {@link Map<{@link String}, {@link Norm}>}, whose keys
+	 * are norms ids.
 	 * 
 	 * @return copy of the norms
 	 */
@@ -588,9 +622,9 @@ public class DeJure extends Artifact {
 		return new ConcurrentHashMap<String, Norm>(norms);
 	}
 
-	
 	/**
-	 * Get sanction set as a {@code {@link Map}<{@link String}, {@link Sanction}>}, whose keys are sanctions ids. 
+	 * Get sanction set as a {@code {@link Map}<{@link String},
+	 * {@link Sanction}>}, whose keys are sanctions ids.
 	 * 
 	 * @return copy of the sanctions
 	 */
@@ -601,7 +635,8 @@ public class DeJure extends Artifact {
 	}
 
 	/**
-	 * Get links set as a {@code {@link Map}<{@link String}, {@link Set}<{@link String}>>}, whose keys are norms ids.
+	 * Get links set as a {@code {@link Map}<{@link String},
+	 * {@link Set}<{@link String}>>}, whose keys are norms ids.
 	 * 
 	 * @return copy of the links
 	 */
@@ -610,11 +645,12 @@ public class DeJure extends Artifact {
 	public Map<String, Set<String>> getLinks() {
 		return new ConcurrentHashMap<String, Set<String>>(links);
 	}
-	
+
 	/**
 	 * Create a NPL Scope based on the repository's properties.
 	 * 
-	 * @param dj the DeJure repository
+	 * @param dj
+	 *            the DeJure repository
 	 * @return a NPL Scope extracted from the repository's properties
 	 */
 	@LINK
@@ -634,5 +670,5 @@ public class DeJure extends Artifact {
 		}
 		return null;
 	}
-	
+
 }
