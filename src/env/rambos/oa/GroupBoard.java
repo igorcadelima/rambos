@@ -1,6 +1,8 @@
 package rambos.oa;
 
+import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -26,7 +28,6 @@ import moise.common.MoiseException;
 import moise.oe.GroupInstance;
 import moise.oe.RolePlayer;
 import moise.os.Cardinality;
-import moise.os.OS;
 import moise.tools.os2dot;
 import moise.xml.DOMUtils;
 import npl.NormativeFailureException;
@@ -38,6 +39,8 @@ import ora4mas.nopl.WebInterface;
 import ora4mas.nopl.oe.Group;
 import ora4mas.nopl.oe.Player;
 import ora4mas.nopl.tools.os2nopl;
+import rambos.oa.util.DJUtil;
+import rambos.os.OS;
 
 public class GroupBoard extends ora4mas.nopl.GroupBoard {
 	protected moise.os.ss.Group spec;
@@ -66,7 +69,7 @@ public class GroupBoard extends ora4mas.nopl.GroupBoard {
 	 * 
 	 * @param osFile
 	 *            the organisation specification file (path and file name)
-	 * @param grType
+	 * @param groupType
 	 *            the type of the group (as defined in the OS)
 	 * @throws ParseException
 	 *             if the OS file is not correct
@@ -75,17 +78,20 @@ public class GroupBoard extends ora4mas.nopl.GroupBoard {
 	 * @throws OperationException
 	 *             if parentGroupId doesn't exit
 	 */
-	public void init(final String osFile, final String grType)
+	public void init(final String osFile, final String groupType)
 			throws ParseException, MoiseException, OperationException {
 		final String groupName = getId().getName();
 		orgState = new Group(groupName);
 
-		final OS os = OS.loadOSFromURI(osFile);
+		String mechanismOSFile = "/org/org.xml";
+    	InputStream mechanismOSResource = getClass().getResourceAsStream(mechanismOSFile);
+    	OS os = OS.create(mechanismOSResource);
+    	os.extend(osFile);
 
-		spec = os.getSS().getRootGrSpec().findSubGroup(grType);
+		spec = os.getSS().getRootGrSpec().findSubGroup(groupType);
 
 		if (spec == null)
-			throw new MoiseException("group " + grType + " does not exist!");
+			throw new MoiseException("Group " + groupType + " does not exist!");
 
 		oeId = getCreatorId().getWorkspaceId().getName();
 
@@ -97,7 +103,7 @@ public class GroupBoard extends ora4mas.nopl.GroupBoard {
 		defineObsProperty(obsPropParentGroup, new JasonTermWrapper(getGrpState().getParentGroup()));
 
 		// load normative program
-		initNormativeEngine(os, "group(" + grType + ")");
+		initNormativeEngine(os, "group(" + groupType + ")");
 		installNormativeSignaler(); // TODO replace this with the new one
 
 		// install monitor of agents quitting the system

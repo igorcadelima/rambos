@@ -1,5 +1,8 @@
 package rambos.oa;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -29,7 +32,6 @@ import moise.oe.GoalInstance;
 import moise.oe.MissionPlayer;
 import moise.oe.SchemeInstance;
 import moise.os.Cardinality;
-import moise.os.OS;
 import moise.os.fs.Goal;
 import npl.NPLInterpreter;
 import npl.NPLLiteral;
@@ -45,10 +47,12 @@ import ora4mas.nopl.oe.Group;
 import ora4mas.nopl.oe.Player;
 import ora4mas.nopl.oe.Scheme;
 import ora4mas.nopl.tools.os2nopl;
+import rambos.oa.util.DJUtil;
+import rambos.os.OS;
 
 public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
 	protected moise.os.fs.Scheme spec;
-    protected String nsFileUri;
+    protected String djSpecFileUri;
 //    public static final String obsPropSpec       = "specification";
 //    public static final String obsPropGroups     = "groups";
 //    public static final String obsPropCommitment = "commitment";
@@ -87,9 +91,13 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
      * @throws MoiseException  if schType was not specified
      */
     public void init(final String osFile, final String nsFileUri, final String schType) throws ParseException, MoiseException {
-    	this.nsFileUri = nsFileUri;
+    	this.djSpecFileUri = nsFileUri;
     	
-    	final OS os = OS.loadOSFromURI(osFile);
+    	String mechanismOSFile = "/org/org.xml";
+    	InputStream mechanismOSResource = getClass().getResourceAsStream(mechanismOSFile);
+    	OS os = OS.create(mechanismOSResource);
+    	os.extend(osFile);
+    	
         spec = os.getFS().findScheme(schType);
         
         final String schName = getId().getName();
@@ -414,7 +422,7 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
                         out.append("\n}");
                         execLinkedOp(aid, "load", out.toString());
                 	}
-                    execLinkedOp(aid, "load", nsFileUri);
+                    execLinkedOp(aid, "load", djSpecFileUri);
                 }
             }
         }, null);

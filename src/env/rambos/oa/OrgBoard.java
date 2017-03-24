@@ -46,7 +46,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	 *             if parentGroupId doesn't exit
 	 */
 	public void init(final String osFile) throws ParseException, MoiseException, OperationException {
-		super.init(osFile);
+//		super.init(osFile);
 		this.osFile = osFile;
 		
 //		TODO: WebInterface is package private
