@@ -30,7 +30,6 @@ import rambos.oa.util.DJUtil;
  *
  */
 public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
-	protected RuleEngine ruleEngine;
 	protected ArtifactId deJureRep;
 
 	@LINK
@@ -57,14 +56,6 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * @param ruleEngine Output parameter to return the rule engine
-	 */
-	@OPERATION
-	protected void getRuleEngine(OpFeedbackParam<RuleEngine> ruleEngine) {
-		ruleEngine.set(this.ruleEngine);
 	}
 	
 	/**
