@@ -14,19 +14,19 @@ import static jason.asSyntax.ASSyntax.parseLiteral;
 import npl.NPLInterpreter;
 
 public class Norm extends npl.Norm{
-	protected Status status;
+	protected boolean disabled;
 	protected String issuer;
 
 	/**
 	 * @param id
-	 * @param status
+	 * @param disabled
 	 * @param conditions
 	 * @param issuer
 	 * @param content
 	 */
-	public Norm(String id, Status status, LogicalFormula conditions, String issuer, Literal content) {
+	public Norm(String id, boolean disabled, LogicalFormula conditions, String issuer, Literal content) {
 		super(id, content, conditions);
-		this.status = status;
+		this.disabled = disabled;
 		this.issuer = issuer;
 	}
 	

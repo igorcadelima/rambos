@@ -27,8 +27,6 @@
 	</xsd:complexType>
 	<xsd:complexType name="norm">
 		<xsd:sequence>
-			<xsd:element name="status" minOccurs="0" maxOccurs="1" type="status" default="active">
-			</xsd:element>
 			<xsd:element name="conditions" minOccurs="1" maxOccurs="1" type="xsd:string">
 			</xsd:element>
 			<xsd:element name="issuer" minOccurs="1" maxOccurs="1" type="xsd:string">
@@ -37,17 +35,12 @@
 			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:string" use="required" />
+		<xsd:attribute name="disabled" type="xsd:boolean" default="false"/>
 	</xsd:complexType>
 	<xsd:simpleType name="content_type">
 	    <xsd:restriction base="xsd:string">
 	        <xsd:pattern value="(obligation\s*\(\s*(\w+)\s*,\s*(\w+)\s*,\s*(.+)\s*,\s*(.+)\s*\))|fail\s*\(\s*(.+)\s*\)"/>
 	    </xsd:restriction>
-	</xsd:simpleType>
-	<xsd:simpleType name="status">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="active" />
-			<xsd:enumeration value="inactive" />
-		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:complexType name="sanctions">
 		<xsd:sequence>
@@ -56,14 +49,13 @@
 	</xsd:complexType>
 	<xsd:complexType name="sanction">
 		<xsd:sequence>
-			<xsd:element name="status" minOccurs="0" maxOccurs="1" type="status" default="active">
-			</xsd:element>
 			<xsd:element name="conditions" minOccurs="0" maxOccurs="1" type="xsd:string">
 			</xsd:element>
 			<xsd:element name="category" minOccurs="1" maxOccurs="1" type="sanctionCategory">
 			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:string" use="required" />
+		<xsd:attribute name="disabled" type="xsd:boolean" default="false"/>
 	</xsd:complexType>
 
 	<xsd:complexType name="sanctionCategory">

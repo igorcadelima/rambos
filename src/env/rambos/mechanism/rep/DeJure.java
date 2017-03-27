@@ -61,11 +61,8 @@ import rambos.oa.util.DJUtil;
  */
 public class DeJure extends Artifact {
 	protected static final String NORMS_TAG = "norms";
-	protected static final String NORM_TAG = "norm";
 	protected static final String SANCTIONS_TAG = "sanctions";
-	protected static final String SANCTION_TAG = "sanction";
 	protected static final String LINKS_TAG = "links";
-	protected static final String LINK_TAG = "link";
 
 	// normId -> norm
 	private Map<String, Norm> norms;
@@ -134,8 +131,9 @@ public class DeJure extends Artifact {
 
 		for (Element normEl : norms) {
 			String id = normEl.getAttribute("id");
+			boolean disabled = Boolean.valueOf(normEl.getAttribute("disabled"));
 			NodeList properties = normEl.getChildNodes();
-			addNorm(createNorm(properties, id));
+			addNorm(createNorm(properties, id, disabled));
 		}
 	}
 
@@ -274,14 +272,14 @@ public class DeJure extends Artifact {
 	 * 
 	 * @param properties
 	 * @param id
+	 * @param disabled
 	 * @return new norm
 	 * @throws DOMException
 	 * @throws ParseException
 	 * @throws npl.parser.ParseException
 	 */
-	private Norm createNorm(NodeList properties, String id)
+	private Norm createNorm(NodeList properties, String id, boolean disabled)
 			throws DOMException, ParseException, npl.parser.ParseException {
-		Status status = Status.ACTIVE;
 		LogicalFormula conditions = null;
 		String issuer = null;
 		Literal content = null;
@@ -291,9 +289,6 @@ public class DeJure extends Artifact {
 			String propContent = prop.getTextContent();
 
 			switch (prop.getNodeName()) {
-			case "status":
-				status = Status.valueOf(propContent.toUpperCase());
-				break;
 			case "conditions":
 				conditions = ASSyntax.parseFormula(propContent);
 				break;
@@ -305,7 +300,7 @@ public class DeJure extends Artifact {
 				break;
 			}
 		}
-		return new Norm(id, status, conditions, issuer, content);
+		return new Norm(id, disabled, conditions, issuer, content);
 	}
 
 	/**
