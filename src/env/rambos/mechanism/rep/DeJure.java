@@ -354,7 +354,7 @@ public class DeJure extends Artifact {
 			literal.addTerm(reason.equals(normId) ? conditions : new Atom(normId));
 
 			// Interpret goal argument
-			literal.addTerm(new Atom(ASSyntax.createLiteral(goal)));
+			literal.addTerm(ASSyntax.createLiteral(goal));
 
 			// Interpret deadline argument
 			literal.addTerm(solveTimeExpression(deadline));
