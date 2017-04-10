@@ -357,7 +357,7 @@ public class DeJure extends Artifact {
 			literal.addTerm(new Atom(ASSyntax.createLiteral(goal)));
 
 			// Interpret deadline argument
-			literal.addTerm(resolveTimeExpression(deadline));
+			literal.addTerm(solveTimeExpression(deadline));
 
 			// Add annotations
 			literal.addAnnot(ASSyntax.createStructure("norm", new Atom(normId)));
@@ -384,13 +384,13 @@ public class DeJure extends Artifact {
 	}
 
 	/**
-	 * Resolve a time expression such as {@code `now` + `2 days`} to a
-	 * {@link TimeTerm}.
+	 * Solve a time expression such as {@code `now` + `2 days`} and return the
+	 * result as {@link TimeTerm}.
 	 * 
 	 * @param time
 	 * @return resolved {@link TimeTerm}.
 	 */
-	private TimeTerm resolveTimeExpression(String time) {
+	private TimeTerm solveTimeExpression(String time) {
 		String[] deadlineTerms = time.split("`");
 		NumberTerm t1 = parseTimeTerm(deadlineTerms[1]);
 
