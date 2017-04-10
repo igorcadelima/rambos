@@ -347,20 +347,20 @@ public class DeJure extends Artifact {
 			String deadline = matcher.group(4);
 			Literal literal = ASSyntax.createLiteral(NormativeProgram.OblFunctor);
 
-			// Interpret agent argument
+			// Parse and add agent term
 			literal.addTerm(parseAgent(agent));
 
-			// Interpret reason argument
-			literal.addTerm(reason.equals(normId) ? conditions : new Atom(normId));
+			// Parse and add reason term
+			literal.addTerm(new Atom(reason));
 
-			// Interpret goal argument
+			// Parse and add goal term
 			literal.addTerm(ASSyntax.createLiteral(goal));
 
-			// Interpret deadline argument
+			// Solve and add deadline term
 			literal.addTerm(solveTimeExpression(deadline));
 
 			// Add annotations
-			literal.addAnnot(ASSyntax.createStructure("norm", new Atom(normId)));
+			literal.addAnnot(ASSyntax.createStructure("norm_id", new Atom(normId)));
 			literal.addAnnot(ASSyntax.createStructure("issuer", new Atom(issuer)));
 			return literal;
 		}
