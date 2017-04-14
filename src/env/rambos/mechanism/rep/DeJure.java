@@ -312,15 +312,19 @@ public class DeJure extends Artifact {
 	 * @param conditions
 	 * @return literal form of {@code content}
 	 * @throws npl.parser.ParseException
+	 * @throws ParseException
+	 *             if {@code content} does not have a valid format
 	 */
 	private Literal parseNormContent(String content, String normId, String issuer, LogicalFormula conditions)
-			throws npl.parser.ParseException {
-		LiteralFactory literalFactory = NPLLiteral.getFactory();
-		Literal literal = parseNormObligationContent(content, normId, conditions, issuer);
-
-		if (literal == null) {
+			throws npl.parser.ParseException, ParseException {
+		Literal literal;
+		try {
 			literal = parseNormFailContent(content);
+		} catch (ParseException e) {
+			literal = parseNormObligationContent(content, normId, conditions, issuer);
 		}
+
+		LiteralFactory literalFactory = NPLLiteral.getFactory();
 		return literalFactory.createNPLLiteral(literal, dfp);
 	}
 
@@ -331,11 +335,11 @@ public class DeJure extends Artifact {
 	 * @param normId
 	 * @param conditions
 	 * @param issuer
-	 * @return obligation literal if {@code content} is a well-formed string, or
-	 *         {@code null} otherwise
+	 * @return obligation literal if {@code content} is a well-formed string
+	 * @throws ParseException
 	 */
 	private Literal parseNormObligationContent(String obligation, String normId, LogicalFormula conditions,
-			String issuer) {
+			String issuer) throws ParseException {
 		String obligationRegex = "obligation\\s*\\(\\s*(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(.+?)\\s*,\\s*(.+?)\\s*\\)";
 		Pattern pattern = Pattern.compile(obligationRegex);
 		Matcher matcher = pattern.matcher(obligation);
@@ -364,7 +368,7 @@ public class DeJure extends Artifact {
 			literal.addAnnot(ASSyntax.createStructure("issuer", new Atom(issuer)));
 			return literal;
 		}
-		return null;
+		throw new ParseException();
 	}
 
 	/**
@@ -406,10 +410,10 @@ public class DeJure extends Artifact {
 	 * Parse string to fail literal.
 	 * 
 	 * @param content
-	 * @return fail literal content if {@code content} is a well-formed string,
-	 *         or {@code null} otherwise
+	 * @return fail literal content if {@code content} is a well-formed string
+	 * @throws ParseException
 	 */
-	private Literal parseNormFailContent(String content) {
+	private Literal parseNormFailContent(String content) throws ParseException {
 		String failureRegex = "fail\\s*\\(\\s*(.+)\\s*\\)";
 		Pattern pattern = Pattern.compile(failureRegex);
 		Matcher matcher = pattern.matcher(content);
@@ -419,7 +423,7 @@ public class DeJure extends Artifact {
 			Atom reason = new Atom(resonStr);
 			return ASSyntax.createLiteral(NormativeProgram.FailFunctor, reason);
 		}
-		return null;
+		throw new ParseException();
 	}
 
 	/**
