@@ -346,7 +346,7 @@ public class DeJure extends Artifact {
 
 		if (matcher.matches()) {
 			String agent = matcher.group(1);
-			String reason = matcher.group(2);
+			String condition = matcher.group(2);
 			String goal = matcher.group(3);
 			String deadline = matcher.group(4);
 			Literal literal = ASSyntax.createLiteral(NormativeProgram.OblFunctor);
@@ -354,8 +354,8 @@ public class DeJure extends Artifact {
 			// Parse and add agent term
 			literal.addTerm(parseAgent(agent));
 
-			// Parse and add reason term
-			literal.addTerm(new Atom(reason));
+			// Parse and add condition term
+			literal.addTerm(parseCondition(condition, normId, conditions));
 
 			// Parse and add goal term
 			literal.addTerm(ASSyntax.createLiteral(goal));
@@ -369,6 +369,25 @@ public class DeJure extends Artifact {
 			return literal;
 		}
 		throw new ParseException();
+	}
+
+	/**
+	 * Parse {@code condition} using {@link ASSyntax#parseFormula(String)} and
+	 * return the result as a {@link Term}.
+	 * 
+	 * @param condition
+	 * @param normId
+	 * @param conditions
+	 * @return parsed condition as a {@link Term}
+	 * @throws ParseException
+	 */
+	private Term parseCondition(String condition, String normId, LogicalFormula conditions) throws ParseException {
+		LogicalFormula conditionLiteral = ASSyntax.parseFormula(condition);
+		if (((Literal) conditionLiteral).getFunctor().equals(normId)) {
+			return conditions;
+		} else {
+			return conditionLiteral;
+		}
 	}
 
 	/**
