@@ -358,7 +358,7 @@ public class DeJure extends Artifact {
 			literal.addTerm(parseCondition(condition, normId, conditions));
 
 			// Parse and add goal term
-			literal.addTerm(ASSyntax.createLiteral(goal));
+			literal.addTerm(ASSyntax.parseFormula(goal));
 
 			// Solve and add deadline term
 			literal.addTerm(solveTimeExpression(deadline));
