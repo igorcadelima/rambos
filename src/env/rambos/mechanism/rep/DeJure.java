@@ -364,7 +364,7 @@ public class DeJure extends Artifact {
 			literal.addTerm(solveTimeExpression(deadline));
 
 			// Add annotations
-			literal.addAnnot(ASSyntax.createStructure("norm_id", new Atom(normId)));
+			literal.addAnnot(ASSyntax.createStructure("norm", new Atom(normId)));
 			literal.addAnnot(ASSyntax.createStructure("issuer", new Atom(issuer)));
 			return literal;
 		}
