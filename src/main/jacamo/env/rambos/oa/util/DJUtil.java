@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  *
  */
 public class DJUtil {
-	protected static final String DJ_SPEC_SCHEMA_URI = "/resources/xsd/dejure-specification.xsd";
+	protected static final String DJ_SPEC_SCHEMA_URI = "/xsd/dejure-specification.xsd";
 	
 	/**
 	 * @param djSpec the URI to the DeJure specification file
@@ -74,9 +74,6 @@ public class DJUtil {
 		    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		
 		URL schemaResource = DJUtil.class.getResource(DJ_SPEC_SCHEMA_URI);
-		if (schemaResource == null) {
-			System.out.println("Null");
-		}
 		InputStream schemaStream = schemaResource.openStream();
 		StreamSource schemaSource = new StreamSource(schemaStream);
 		
