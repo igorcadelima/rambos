@@ -395,10 +395,10 @@ public class GroupBoard extends ora4mas.nopl.GroupBoard {
 	// renamed linked operations
 	private void notifyObservers() throws CartagoException {
 		for (ArtifactId a : schemes) {
-			execLinkedOp(a, "rambos_updateRolePlayers", orgState.getId(), orgState.getPlayers());
+			execLinkedOp(a, "updateRolePlayers", orgState.getId(), orgState.getPlayers());
 		}
 		for (ArtifactId a : listeners) {
-			execLinkedOp(a, "rambos_updateRolePlayers", orgState.getId(), orgState.getPlayers());
+			execLinkedOp(a, "updateRolePlayers", orgState.getId(), orgState.getPlayers());
 		}
 	}
 

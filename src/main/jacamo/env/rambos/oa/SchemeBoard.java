@@ -411,11 +411,9 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
 //        }
 //    }
     
-//    Implemented as updateRolePlayers in the super class. It had to be changed due to the fact that spec is private in the super class.
-    // TODO replace rambos_updateRolePlayers with updateRolePlayers when jacamo gets updated.
-    // The commit 88c15740a0e44e8367efd7b1418df13c30d70dc5 on Moise's repository has fixed this.
-    @LINK 
-    protected void rambos_updateRolePlayers(final String grId, final Collection<Player> rp) throws NormativeFailureException, CartagoException {
+    @LINK
+    @Override
+    protected void updateRolePlayers(final String grId, final Collection<Player> rp) throws NormativeFailureException, CartagoException {
         ora4masOperationTemplate(new Operation() {
             public void exec() throws NormativeFailureException, Exception {
                 Group g = new Group(grId);
