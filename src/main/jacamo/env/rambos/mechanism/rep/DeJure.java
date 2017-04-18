@@ -180,7 +180,7 @@ public class DeJure extends Artifact {
 				case "status":
 					status = Status.valueOf(property.getTextContent().toUpperCase());
 					break;
-				case "conditions":
+				case "condition":
 					condition = ASSyntax.parseFormula(property.getTextContent());
 					break;
 				case "category":
@@ -309,7 +309,7 @@ public class DeJure extends Artifact {
 			String propContent = prop.getTextContent();
 
 			switch (prop.getNodeName()) {
-			case "conditions":
+			case "condition":
 				condition = ASSyntax.parseFormula(propContent);
 				break;
 			case "issuer":
