@@ -82,9 +82,9 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 	}
 	
 	/**
-	 * Check whether a norm is applicable by testing the truth value of its conditions.
+	 * Check whether a norm is applicable by testing the truth value of its activation condition.
 	 * 
-	 * @param norm Norm whose conditions will be checked against the environmental facts
+	 * @param norm Norm whose condition will be checked against the environmental facts
 	 * @param ruled Output parameter to return whether the given formula may be derived from the environment
 	 */
 	@OPERATION

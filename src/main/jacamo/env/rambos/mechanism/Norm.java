@@ -36,30 +36,30 @@ import jason.asSyntax.parser.ParseException;
 import static jason.asSyntax.ASSyntax.parseLiteral;
 import npl.NPLInterpreter;
 
-public class Norm extends npl.Norm{
+public class Norm extends npl.Norm {
 	protected boolean disabled;
 	protected String issuer;
 
 	/**
 	 * @param id
 	 * @param disabled
-	 * @param conditions
+	 * @param condition
 	 * @param issuer
 	 * @param content
 	 */
-	public Norm(String id, boolean disabled, LogicalFormula conditions, String issuer, Literal content) {
-		super(id, content, conditions);
+	public Norm(String id, boolean disabled, LogicalFormula condition, String issuer, Literal content) {
+		super(id, content, condition);
 		this.disabled = disabled;
 		this.issuer = issuer;
 	}
-	
+
 	/**
 	 * @return norm's content
 	 */
 	public Literal getContent() {
 		return getConsequence();
 	}
-	
+
 	/**
 	 * Check whether the data content of an event is ruled by the norm.
 	 * 
@@ -71,21 +71,20 @@ public class Norm extends npl.Norm{
 		try {
 			// Parse event data to Literal
 			Literal propLiteral = parseLiteral(event.toString());
-			
-			// Add parsed Literal to the BB in order to check the norm condition against it
+
+			// Add parsed Literal to BB to check norm condition against it
 			Agent ag = new Agent();
 			ag.addBel(propLiteral);
-			
+
 			// Get norm condition to see whether the event is ruled by it
 			LogicalFormula condition = getCondition();
 			Iterator<Unifier> i = condition.logicalConsequence(ag, new Unifier());
-			
+
 			return i.hasNext();
 		} catch (ParseException | RevisionFailedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
-		} 
+		}
 	}
 }
-

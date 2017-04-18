@@ -171,7 +171,7 @@ public class DeJure extends Artifact {
 		for (Element sanctionEl : sanctions) {
 			String id = sanctionEl.getAttribute("id");
 			Status status = Status.ACTIVE;
-			LogicalFormula conditions = null;
+			LogicalFormula condition = null;
 			SanctionCategory category = null;
 
 			List<Element> properties = getChildElements(sanctionEl);
@@ -181,14 +181,14 @@ public class DeJure extends Artifact {
 					status = Status.valueOf(property.getTextContent().toUpperCase());
 					break;
 				case "conditions":
-					conditions = ASSyntax.parseFormula(property.getTextContent());
+					condition = ASSyntax.parseFormula(property.getTextContent());
 					break;
 				case "category":
 					category = parseSanctionCategory(property);
 					break;
 				}
 			}
-			addSanction(new Sanction(id, status, conditions, category));
+			addSanction(new Sanction(id, status, condition, category));
 		}
 	}
 
@@ -300,7 +300,7 @@ public class DeJure extends Artifact {
 	 */
 	private Norm createNorm(NodeList properties, String id, boolean disabled)
 			throws DOMException, ParseException, npl.parser.ParseException {
-		LogicalFormula conditions = null;
+		LogicalFormula condition = null;
 		String issuer = null;
 		Literal content = null;
 
@@ -310,17 +310,17 @@ public class DeJure extends Artifact {
 
 			switch (prop.getNodeName()) {
 			case "conditions":
-				conditions = ASSyntax.parseFormula(propContent);
+				condition = ASSyntax.parseFormula(propContent);
 				break;
 			case "issuer":
 				issuer = propContent;
 				break;
 			case "content":
-				content = parseNormContent(propContent, id, issuer, conditions);
+				content = parseNormContent(propContent, id, issuer, condition);
 				break;
 			}
 		}
-		return new Norm(id, disabled, conditions, issuer, content);
+		return new Norm(id, disabled, condition, issuer, content);
 	}
 
 	/**
@@ -329,19 +329,19 @@ public class DeJure extends Artifact {
 	 * @param content
 	 * @param normId
 	 * @param issuer
-	 * @param conditions
+	 * @param normCondition
 	 * @return literal form of {@code content}
 	 * @throws npl.parser.ParseException
 	 * @throws ParseException
 	 *             if {@code content} does not have a valid format
 	 */
-	private Literal parseNormContent(String content, String normId, String issuer, LogicalFormula conditions)
+	private Literal parseNormContent(String content, String normId, String issuer, LogicalFormula normCondition)
 			throws npl.parser.ParseException, ParseException {
 		Literal literal;
 		try {
 			literal = parseNormFailContent(content);
 		} catch (ParseException e) {
-			literal = parseNormObligationContent(content, normId, conditions, issuer);
+			literal = parseNormObligationContent(content, normId, normCondition, issuer);
 		}
 
 		LiteralFactory literalFactory = NPLLiteral.getFactory();
@@ -353,12 +353,12 @@ public class DeJure extends Artifact {
 	 * 
 	 * @param obligation
 	 * @param normId
-	 * @param conditions
+	 * @param normCondition
 	 * @param issuer
 	 * @return obligation literal if {@code content} is a well-formed string
 	 * @throws ParseException
 	 */
-	private Literal parseNormObligationContent(String obligation, String normId, LogicalFormula conditions,
+	private Literal parseNormObligationContent(String obligation, String normId, LogicalFormula normCondition,
 			String issuer) throws ParseException {
 		String obligationRegex = "obligation\\s*\\(\\s*(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(.+?)\\s*,\\s*(.+?)\\s*\\)";
 		Pattern pattern = Pattern.compile(obligationRegex);
@@ -375,7 +375,7 @@ public class DeJure extends Artifact {
 			literal.addTerm(parseAgent(agent));
 
 			// Parse and add condition term
-			literal.addTerm(parseCondition(condition, normId, conditions));
+			literal.addTerm(parseCondition(condition, normId, normCondition));
 
 			// Parse and add goal term
 			literal.addTerm(ASSyntax.parseFormula(goal));
@@ -397,14 +397,14 @@ public class DeJure extends Artifact {
 	 * 
 	 * @param condition
 	 * @param normId
-	 * @param conditions
+	 * @param normCondition
 	 * @return parsed condition as a {@link Term}
 	 * @throws ParseException
 	 */
-	private Term parseCondition(String condition, String normId, LogicalFormula conditions) throws ParseException {
+	private Term parseCondition(String condition, String normId, LogicalFormula normCondition) throws ParseException {
 		LogicalFormula conditionLiteral = ASSyntax.parseFormula(condition);
 		if (((Literal) conditionLiteral).getFunctor().equals(normId)) {
-			return conditions;
+			return normCondition;
 		} else {
 			return conditionLiteral;
 		}
