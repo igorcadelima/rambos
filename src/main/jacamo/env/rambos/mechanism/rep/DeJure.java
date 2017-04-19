@@ -57,9 +57,6 @@ import jason.asSyntax.NumberTerm;
 import jason.asSyntax.Term;
 import jason.asSyntax.VarTerm;
 import jason.asSyntax.parser.ParseException;
-import npl.DynamicFactsProvider;
-import npl.LiteralFactory;
-import npl.NPLLiteral;
 import npl.NormativeProgram;
 import npl.Scope;
 import npl.TimeTerm;
@@ -91,20 +88,13 @@ public class DeJure extends Artifact {
 	// normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
 	private Map<String, Set<String>> links;
 
-	private DynamicFactsProvider dfp;
-
 	/**
 	 * Initialisation method.
 	 * 
 	 * @param djSpecFile
 	 *            path to de jure specification file
-	 * @param dfp
-	 *            {@link DynamicFactsProvider} instance from which facts will be
-	 *            retrieved
 	 */
-	public void init(String djSpecFile, DynamicFactsProvider dfp) {
-		this.dfp = dfp;
-
+	public void init(String djSpecFile) {
 		norms = new ConcurrentHashMap<String, Norm>();
 		sanctions = new ConcurrentHashMap<String, Sanction>();
 		links = new ConcurrentHashMap<String, Set<String>>();
@@ -331,21 +321,18 @@ public class DeJure extends Artifact {
 	 * @param issuer
 	 * @param normCondition
 	 * @return literal form of {@code content}
-	 * @throws npl.parser.ParseException
 	 * @throws ParseException
 	 *             if {@code content} does not have a valid format
 	 */
 	private Literal parseNormContent(String content, String normId, String issuer, LogicalFormula normCondition)
-			throws npl.parser.ParseException, ParseException {
+			throws ParseException {
 		Literal literal;
 		try {
 			literal = parseNormFailContent(content);
 		} catch (ParseException e) {
 			literal = parseNormObligationContent(content, normId, normCondition, issuer);
 		}
-
-		LiteralFactory literalFactory = NPLLiteral.getFactory();
-		return literalFactory.createNPLLiteral(literal, dfp);
+		return literal;
 	}
 
 	/**

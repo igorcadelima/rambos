@@ -66,7 +66,7 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 			
 			// Init DeJure
 			String djId = getId() + ".dj";
-			deJureRep = makeArtifact(djId, DeJure.class.getName(), new ArtifactConfig(file, this));
+			deJureRep = makeArtifact(djId, DeJure.class.getName(), new ArtifactConfig(file));
 			
 			// Load normative program into the interpreter
 			OpFeedbackParam<Scope> scope = new OpFeedbackParam<Scope>();
