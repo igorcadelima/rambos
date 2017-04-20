@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema 
+	xmlns:moise="http://moise.sourceforge.net/os" 
+	xmlns:rambos="https://github.com/igorcadelima/rambos"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" 
+	targetNamespace="https://github.com/igorcadelima/rambos">
+
+	<xsd:include schemaLocation="rambos-ns.xsd" />
+	<xsd:import namespace="http://moise.sourceforge.net/os"
+		schemaLocation="moise-os.xsd" />
+
+	<xsd:element name="organisational-specification" type="rambos:osType" />
+
+	<xsd:complexType name="osType">
+		<xsd:sequence>
+			<xsd:element maxOccurs="1" minOccurs="0" name="properties"
+				type="moise:propertiesType" />
+			<xsd:element maxOccurs="1" minOccurs="1"
+				name="structural-specification" type="moise:ssType" />
+			<xsd:element maxOccurs="1" minOccurs="0"
+				name="functional-specification" type="moise:fsType" />
+			<xsd:element maxOccurs="1" minOccurs="0"
+				name="normative-specification" type="rambos:normativeSpec" />
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:string" />
+		<xsd:attribute name="os-version" type="xsd:string" use="required" />
+	</xsd:complexType>
+</xsd:schema>
