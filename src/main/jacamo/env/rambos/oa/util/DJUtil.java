@@ -59,6 +59,7 @@ public class DJUtil {
 		File file = new File(djSpec);
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
 		        .newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		return documentBuilder.parse(file);
 	}
