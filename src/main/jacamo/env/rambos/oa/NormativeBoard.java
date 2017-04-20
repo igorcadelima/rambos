@@ -23,11 +23,14 @@
  *******************************************************************************/
 package rambos.oa;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -61,8 +64,7 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 	public void load(String file) throws MoiseException, ParseException {
 		try {
 			// Validate spec file
-			Document doc = DJUtil.parseSpec(file);
-			DJUtil.validateSpec(new DOMSource(doc));
+			DJUtil.parseDocument(file);
 			
 			// Init DeJure
 			String djId = getId() + ".dj";
@@ -72,9 +74,10 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 			OpFeedbackParam<Scope> scope = new OpFeedbackParam<Scope>();
 			execLinkedOp(deJureRep, "createNPLScope", scope);
 			nengine.loadNP(scope.get());
-		} catch (ParserConfigurationException | SAXException | IOException e) {
+		} catch (SAXException | IOException | ParserConfigurationException e) {
 			// Not a De Jure specification file
 			super.load(file);
+//			System.out.println(e);
 		} catch (OperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

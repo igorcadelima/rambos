@@ -33,12 +33,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
@@ -47,40 +49,81 @@ import org.xml.sax.SAXException;
  */
 public class DJUtil {
 	protected static final String NS_SCHEMA_PATH = "/xsd/rambos-ns.xsd";
-	
+
 	/**
-	 * @param djSpec the URI to the DeJure specification file
+	 * Try to parse, validate (if indicated via argument), and return
+	 * {@link Document}.
+	 * 
+	 * @param filePath
+	 *            path to the normative specification file
+	 * @param validate
+	 *            flag to indicate whether document should be validated before
+	 *            being returned
 	 * @return Document object
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public static Document parseSpec(String djSpec) throws ParserConfigurationException, SAXException, IOException {
-		File file = new File(djSpec);
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
-		        .newInstance();
+	public static Document parseDocument(String filePath, boolean validate)
+			throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
+
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		return documentBuilder.parse(file);
-	}
-	
-	/**
-	 * @param djSpec the DeJure specification Source
-	 * @return true if XML file is valid
-	 * @throws SAXException 
-	 * @throws IOException 
-	 */
-	public static void validateSpec(Source djSpec) throws SAXException, IOException {
-		SchemaFactory schemaFactory = SchemaFactory
-		    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		File file = new File(filePath);
+		Document doc = documentBuilder.parse(file);
 		
+		if (validate) {
+			validateSpec(doc);
+		}
+		return doc;
+	}
+
+	/**
+	 * Try to parse, validate, and return {@link Document}.
+	 * 
+	 * @param filePath
+	 *            path to the normative specification file
+	 * @return Document object
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+	public static Document parseDocument(String filePath)
+			throws ParserConfigurationException, SAXException, IOException {
+		return parseDocument(filePath, true);
+	}
+
+	/**
+	 * Try to validate a XML file with the normative specification against
+	 * schema.
+	 * 
+	 * @param node
+	 *            {@link Node} instance containing normative specification
+	 * @return true if XML file is valid
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+	public static void validateSpec(Node node) throws SAXException, IOException {
+		Source xmlSource = new DOMSource(node);
+		Schema schema = getSchema();
+		Validator validator = schema.newValidator();
+		validator.validate(xmlSource);
+	}
+
+	/**
+	 * Get schema used to validate normative specification.
+	 * 
+	 * @return schema used to validate normative specification
+	 * @throws IOException
+	 * @throws SAXException
+	 */
+	public static Schema getSchema() throws IOException, SAXException {
+		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		URL schemaResource = DJUtil.class.getResource(NS_SCHEMA_PATH);
 		InputStream schemaStream = schemaResource.openStream();
 		StreamSource schemaSource = new StreamSource(schemaStream);
-		
-		Schema schema = schemaFactory.newSchema(schemaSource);
-		Validator validator = schema.newValidator();
-		validator.validate(djSpec);
+		return schemaFactory.newSchema(schemaSource);
 	}
-	
+
 }

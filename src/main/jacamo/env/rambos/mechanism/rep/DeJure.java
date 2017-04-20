@@ -23,6 +23,7 @@
  *******************************************************************************/
 package rambos.mechanism.rep;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,8 +34,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -99,16 +103,13 @@ public class DeJure extends Artifact {
 		sanctions = new ConcurrentHashMap<String, Sanction>();
 		links = new ConcurrentHashMap<String, Set<String>>();
 
-		Document doc = null;
 		try {
-			doc = DJUtil.parseSpec(djSpecFile);
-			DJUtil.validateSpec(new DOMSource(doc));
-		} catch (ParserConfigurationException | SAXException | IOException e) {
+			Document doc = DJUtil.parseDocument(djSpecFile);
+			extractSpecData(doc);
+		} catch (ParserConfigurationException | SAXException | IOException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
-
-		extractSpecData(doc);
 	}
 
 	/**
