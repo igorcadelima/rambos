@@ -38,6 +38,11 @@ public interface INorm {
 	public Literal getContent();
 
 	/**
+	 * @return Norm's id
+	 */
+	public String getId();
+
+	/**
 	 * Check whether the data content of an event is ruled by the norm.
 	 * 
 	 * @param nEngine
