@@ -56,6 +56,7 @@ public class Norm extends npl.Norm implements INorm {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Literal getContent() {
 		return getConsequence();
 	}
@@ -63,6 +64,7 @@ public class Norm extends npl.Norm implements INorm {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean match(NPLInterpreter nEngine, ArtifactObsProperty event) {
 		try {
 			// Parse event data to Literal
