@@ -43,6 +43,11 @@ public interface INorm {
 	public String getId();
 
 	/**
+	 * @return Norm issuer's name
+	 */
+	public String getIssuer();
+
+	/**
 	 * @return true if norm is disabled, false otherwise
 	 */
 	public boolean isDisabled();

@@ -58,6 +58,11 @@ public class Norm extends npl.Norm implements INorm {
 	}
 
 	@Override
+	public String getIssuer() {
+		return issuer;
+	}
+
+	@Override
 	public boolean isDisabled() {
 		return disabled;
 	}
