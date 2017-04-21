@@ -34,7 +34,6 @@ import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
 
 import static jason.asSyntax.ASSyntax.parseLiteral;
-import npl.NPLInterpreter;
 
 public class Norm extends npl.Norm implements INorm {
 	protected boolean disabled;
@@ -65,7 +64,7 @@ public class Norm extends npl.Norm implements INorm {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean match(NPLInterpreter nEngine, ArtifactObsProperty event) {
+	public boolean match(ArtifactObsProperty event) {
 		try {
 			// Parse event data to Literal
 			Literal propLiteral = parseLiteral(event.toString());

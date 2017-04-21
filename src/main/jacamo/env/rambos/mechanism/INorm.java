@@ -25,7 +25,6 @@ package rambos.mechanism;
 
 import cartago.ArtifactObsProperty;
 import jason.asSyntax.Literal;
-import npl.NPLInterpreter;
 
 /**
  * @author igorcadelima
@@ -34,7 +33,7 @@ import npl.NPLInterpreter;
 public interface INorm {
 
 	/**
-	 * @return norm's content
+	 * @return Norm's content
 	 */
 	public Literal getContent();
 
@@ -45,5 +44,5 @@ public interface INorm {
 	 * @param event
 	 * @return true if event data is ruled by the norm.
 	 */
-	public boolean match(NPLInterpreter nEngine, ArtifactObsProperty event);
+	public boolean match(ArtifactObsProperty event);
 }
