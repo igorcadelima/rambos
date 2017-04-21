@@ -84,4 +84,14 @@ public class Norm extends npl.Norm implements INorm {
 			return false;
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see rambos.mechanism.INorm#isDisabled()
+	 */
+	@Override
+	public boolean isDisabled() {
+		return disabled;
+	}
 }

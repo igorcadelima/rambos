@@ -43,6 +43,11 @@ public interface INorm {
 	public String getId();
 
 	/**
+	 * @return true if norm is disabled, false otherwise
+	 */
+	public boolean isDisabled();
+
+	/**
 	 * Check whether the data content of an event is ruled by the norm.
 	 * 
 	 * @param nEngine
