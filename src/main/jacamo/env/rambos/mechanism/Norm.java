@@ -52,17 +52,16 @@ public class Norm extends npl.Norm implements INorm {
 		this.issuer = issuer;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Literal getContent() {
 		return getConsequence();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public boolean isDisabled() {
+		return disabled;
+	}
+
 	@Override
 	public boolean match(ArtifactObsProperty event) {
 		try {
@@ -83,15 +82,5 @@ public class Norm extends npl.Norm implements INorm {
 			e.printStackTrace();
 			return false;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see rambos.mechanism.INorm#isDisabled()
-	 */
-	@Override
-	public boolean isDisabled() {
-		return disabled;
 	}
 }
