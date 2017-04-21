@@ -36,7 +36,7 @@ import jason.asSyntax.parser.ParseException;
 import static jason.asSyntax.ASSyntax.parseLiteral;
 import npl.NPLInterpreter;
 
-public class Norm extends npl.Norm {
+public class Norm extends npl.Norm implements INorm {
 	protected boolean disabled;
 	protected String issuer;
 
@@ -54,18 +54,14 @@ public class Norm extends npl.Norm {
 	}
 
 	/**
-	 * @return norm's content
+	 * {@inheritDoc}
 	 */
 	public Literal getContent() {
 		return getConsequence();
 	}
 
 	/**
-	 * Check whether the data content of an event is ruled by the norm.
-	 * 
-	 * @param nEngine
-	 * @param event
-	 * @return true if event data is ruled by the norm.
+	 * {@inheritDoc}
 	 */
 	public boolean match(NPLInterpreter nEngine, ArtifactObsProperty event) {
 		try {
