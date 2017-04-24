@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:rambos="https://github.com/igorcadelima/rambos" targetNamespace="https://github.com/igorcadelima/rambos"
+	elementFormDefault="qualified">
+
+	<xsd:element name="properties" type="rambos:properties" />
+	<xsd:complexType name="properties">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="1">
+			<xsd:element name="property">
+				<xsd:complexType>
+					<xsd:attribute name="id" type="xsd:string" use="required" />
+					<xsd:attribute name="value" type="xsd:string" use="required" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>
