@@ -121,9 +121,7 @@ public class DJUtil {
 	public static Schema getSchema() throws IOException, SAXException {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		URL schemaResource = DJUtil.class.getResource(OS_SCHEMA_PATH);
-		InputStream schemaStream = schemaResource.openStream();
-		StreamSource schemaSource = new StreamSource(schemaStream);
-		return schemaFactory.newSchema(schemaSource);
+		return schemaFactory.newSchema(schemaResource);
 	}
 
 }
