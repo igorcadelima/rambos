@@ -6,8 +6,8 @@
 	targetNamespace="https://github.com/igorcadelima/rambos"
 	elementFormDefault="qualified">
 
-	<xsd:element name="normative-specification" type="rambos:normativeSpec" />
-	<xsd:complexType name="normativeSpec">
+	<xsd:element name="normative-specification" type="rambos:ns" />
+	<xsd:complexType name="ns">
 		<xsd:sequence>
 			<!--<xsd:element name="rules" minOccurs="0" maxOccurs="1" type="rambos:rules"/> -->
 			<xsd:element name="norms" minOccurs="0" maxOccurs="1"

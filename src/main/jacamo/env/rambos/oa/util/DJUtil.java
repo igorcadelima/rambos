@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
  *
  */
 public class DJUtil {
-	protected static final String NS_SCHEMA_PATH = "/xsd/rambos-ns.xsd";
+	protected static final String OS_SCHEMA_PATH = "/xsd/os.xsd";
 
 	/**
 	 * Try to parse, validate (if indicated via argument), and return
@@ -72,7 +72,7 @@ public class DJUtil {
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		File file = new File(filePath);
 		Document doc = documentBuilder.parse(file);
-		
+
 		if (validate) {
 			validateSpec(doc);
 		}
@@ -120,7 +120,7 @@ public class DJUtil {
 	 */
 	public static Schema getSchema() throws IOException, SAXException {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		URL schemaResource = DJUtil.class.getResource(NS_SCHEMA_PATH);
+		URL schemaResource = DJUtil.class.getResource(OS_SCHEMA_PATH);
 		InputStream schemaStream = schemaResource.openStream();
 		StreamSource schemaSource = new StreamSource(schemaStream);
 		return schemaFactory.newSchema(schemaSource);
