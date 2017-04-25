@@ -48,23 +48,42 @@ import org.xml.sax.SAXException;
  *
  */
 public class DJUtil {
-	protected static final String OS_SCHEMA_PATH = "/xsd/os.xsd";
+	public static final String OS_SCHEMA_PATH = "/xsd/os.xsd";
+	public static final String SS_SCHEMA_PATH = "/xsd/ss.xsd";
+	public static final String FS_SCHEMA_PATH = "/xsd/fs.xsd";
+	public static final String NS_SCHEMA_PATH = "/xsd/ns.xsd";
 
 	/**
-	 * Try to parse, validate (if indicated via argument), and return
+	 * Try to parse, validate using schema passed as argument, and return
 	 * {@link Document}.
 	 * 
 	 * @param filePath
-	 *            path to the normative specification file
-	 * @param validate
-	 *            flag to indicate whether document should be validated before
-	 *            being returned
-	 * @return Document object
+	 *            path to file to be validated
+	 * @param schemaPath
+	 *            path to schema which should be used for validation
+	 * @return Document resulting document after parsing and validation
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public static Document parseDocument(String filePath, boolean validate)
+	public static Document parseDocument(String filePath, String schemaPath)
+			throws ParserConfigurationException, SAXException, IOException {
+		Document doc = parseDocument(filePath);
+		validate(doc, schemaPath);
+		return doc;
+	}
+
+	/**
+	 * Try to parse and return {@link Document}.
+	 * 
+	 * @param filePath
+	 *            path to file to be validated
+	 * @return Document resulting document after parsing
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+	public static Document parseDocument(String filePath)
 			throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
@@ -72,56 +91,36 @@ public class DJUtil {
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		File file = new File(filePath);
 		Document doc = documentBuilder.parse(file);
-
-		if (validate) {
-			validateSpec(doc);
-		}
 		return doc;
 	}
 
 	/**
-	 * Try to parse, validate, and return {@link Document}.
-	 * 
-	 * @param filePath
-	 *            path to the normative specification file
-	 * @return Document object
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
-	 */
-	public static Document parseDocument(String filePath)
-			throws ParserConfigurationException, SAXException, IOException {
-		return parseDocument(filePath, true);
-	}
-
-	/**
-	 * Try to validate a XML file with the normative specification against
-	 * schema.
+	 * Validate a XML file against a schema.
 	 * 
 	 * @param node
-	 *            {@link Node} instance containing normative specification
-	 * @return true if XML file is valid
+	 *            node to be validated
+	 * @param schemaPath
+	 *            path to schema which should be used for validation
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public static void validateSpec(Node node) throws SAXException, IOException {
+	public static void validate(Node node, String schemaPath) throws SAXException, IOException {
 		Source xmlSource = new DOMSource(node);
-		Schema schema = getSchema();
+		Schema schema = getSchema(schemaPath);
 		Validator validator = schema.newValidator();
 		validator.validate(xmlSource);
 	}
 
 	/**
-	 * Get schema used to validate normative specification.
+	 * Create and return {@link Schema} representation of schema if existing in
+	 * the path passed as argument.
 	 * 
-	 * @return schema used to validate normative specification
-	 * @throws IOException
+	 * @return {@link Schema} representation of schema passed as argument
 	 * @throws SAXException
 	 */
-	public static Schema getSchema() throws IOException, SAXException {
+	public static Schema getSchema(String schemaPath) throws SAXException {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		URL schemaResource = DJUtil.class.getResource(OS_SCHEMA_PATH);
+		URL schemaResource = DJUtil.class.getResource(schemaPath);
 		return schemaFactory.newSchema(schemaResource);
 	}
-
 }
