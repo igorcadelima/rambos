@@ -123,4 +123,27 @@ public class DJUtil {
 		URL schemaResource = DJUtil.class.getResource(schemaPath);
 		return schemaFactory.newSchema(schemaResource);
 	}
+
+	/**
+	 * Convert a {@link Node} into a {@link Document} instance.
+	 * 
+	 * @param n
+	 *            node to be transformed
+	 * @return {@link Node} as a {@link Document}
+	 */
+	public static Document nodeToDocument(Node n) {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+		DocumentBuilder builder = null;
+		try {
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Document newDocument = builder.newDocument();
+		Node importedNode = newDocument.importNode(n, true);
+		newDocument.appendChild(importedNode);
+		return newDocument;
+	}
 }
