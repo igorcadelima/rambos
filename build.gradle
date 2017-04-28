@@ -72,11 +72,6 @@ repositories {
 	maven { url 'http://jacamo.sourceforge.net/maven2' }
 }
 
-// Override default 24h module caching in Gradle
-configurations.all {
-	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
-
 dependencies {
 	implementation 'org.jacamo:jacamo:latest.integration'
 }
