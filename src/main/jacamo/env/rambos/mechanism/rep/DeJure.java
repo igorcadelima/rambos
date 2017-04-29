@@ -110,6 +110,26 @@ public class DeJure extends Artifact {
 	}
 
 	/**
+	 * Build a De Jure repository from the given normative specification, which
+	 * is passed as argument, if it is valid.
+	 * 
+	 * {@inheritDoc}
+	 * 
+	 * @param ns
+	 *            normative specification node
+	 * @throws IOException
+	 * @throws SAXException
+	 */
+	public void init(Document ns) throws SAXException, IOException {
+		norms = new ConcurrentHashMap<String, Norm>();
+		sanctions = new ConcurrentHashMap<String, Sanction>();
+		links = new ConcurrentHashMap<String, Set<String>>();
+
+		DJUtil.validate(ns, DJUtil.NS_SCHEMA_PATH);
+		extractSpecData(ns);
+	}
+
+	/**
 	 * Extract specification data from document.
 	 * 
 	 * @param doc
