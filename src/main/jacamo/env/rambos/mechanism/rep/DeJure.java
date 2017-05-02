@@ -116,7 +116,7 @@ public class DeJure extends Artifact {
 	 * {@inheritDoc}
 	 * 
 	 * @param ns
-	 *            normative specification node
+	 *            normative specification
 	 * @throws IOException
 	 * @throws SAXException
 	 */
