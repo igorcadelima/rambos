@@ -141,6 +141,52 @@ public class GroupBoard extends ora4mas.nopl.GroupBoard {
 			}
 		}
 	}
+	
+	/**
+	 * Initialises the group board.
+	 * 
+	 * @param os
+	 *            organisational specification
+	 * @param type
+	 *            the group type as defined in the OS
+	 * @throws MoiseException
+	 *             if group type is not specified in OS
+	 * @throws ParseException
+	 *             if group scope cannot be found in OS
+	 */
+	public void init(OS os, final String type) throws MoiseException, ParseException {
+		final String groupName = getId().getName();
+		orgState = new Group(groupName);
+		spec = os.getSS().getRootGrSpec().findSubGroup(type);
+
+		if (spec == null)
+			throw new MoiseException("Group " + type + " does not exist!");
+
+		oeId = getCreatorId().getWorkspaceId().getName();
+
+		// observable properties
+		defineObsProperty(obsPropSchemes, getGrpState().getResponsibleForAsProlog());
+		defineObsProperty(obsWellFormed, new JasonTermWrapper("nok"));
+		defineObsProperty(obsPropSpec, new JasonTermWrapper(spec.getAsProlog()));
+		defineObsProperty(obsPropSubgroups, getGrpState().getSubgroupsAsProlog());
+		defineObsProperty(obsPropParentGroup, new JasonTermWrapper(getGrpState().getParentGroup()));
+
+		// load normative program
+		initNormativeEngine(os, "group(" + type + ")");
+		installNormativeSignaler(); // TODO replace this with the new one
+
+		// install monitor of agents quitting the system
+		initWspRuleEngine();
+
+		if (!"false".equals(Config.get().getProperty(Config.START_WEB_OI))) {
+			WebInterface w = WebInterface.get();
+			try {
+				w.registerOEBrowserView(oeId, "/group/", groupName, this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	// TODO: not working! UpdateGuiThread should be reimplemented
 //	@Override
