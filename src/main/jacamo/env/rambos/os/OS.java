@@ -82,29 +82,8 @@ public class OS extends moise.os.OS {
 	public void extend(String osFilePath) {
 		try {
 			Document doc = DOMUtils.getParser().parse(osFilePath);
-			DOMUtils.getOSSchemaValidator().validate(new DOMSource(doc));
-
-			Element osElement = (Element) doc.getElementsByTagName(OS.getXMLTag()).item(0);
-			this.setId(osElement.getAttribute("id"));
-			this.setPropertiesFromDOM(osElement);
-
-			Element specElement;
-
-			// Extend structural specification
-			specElement = DOMUtils.getDOMDirectChild(osElement, SS.getXMLTag());
-			ss.setFromDOM(specElement);
-
-			// Extend functional specification
-			specElement = DOMUtils.getDOMDirectChild(osElement, FS.getXMLTag());
-			fs.setFromDOM(specElement);
-
-			// Extend normative specification
-			specElement = DOMUtils.getDOMDirectChild(osElement, NS.getXMLTag());
-			if (specElement != null) {
-				ns.setFromDOM(specElement);
-			}
-
-		} catch (SAXException | IOException | ParserConfigurationException | MoiseException e) {
+			extend(doc);
+		} catch (SAXException | IOException | ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
