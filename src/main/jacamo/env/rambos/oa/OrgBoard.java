@@ -24,6 +24,7 @@
 package rambos.oa;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -46,7 +47,6 @@ import cartago.*;
 import jason.asSyntax.Atom;
 import jason.util.Config;
 import moise.common.MoiseException;
-import moise.os.OS;
 import moise.os.ns.NS;
 import moise.xml.DOMUtils;
 import moise.xml.ToXML;
@@ -56,10 +56,12 @@ import npl.parser.ParseException;
 import ora4mas.nopl.WebInterface;
 import rambos.mechanism.rep.DeJure;
 import rambos.oa.util.DJUtil;
+import rambos.os.OS;
 
 public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	String osFile = null;
 	protected ArtifactId deJure;
+	protected OS os;
 
 	Map<String, ArtifactId> aids = new HashMap<String, ArtifactId>();
 	protected Logger logger = Logger.getLogger(OrgBoard.class.getName());
@@ -85,8 +87,11 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 			Document doc = DJUtil.parseDocument(osFile);
 			Node nsNode = doc.getElementsByTagName(NS.getXMLTag()).item(0);
 			doc.getDocumentElement().removeChild(nsNode);
+			
 			Document nsDoc = DJUtil.nodeToDocument(nsNode);
 			execInternalOp("createDeJure", nsDoc);
+			
+			createOS(doc);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,6 +124,20 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	public void createDeJure(Document ns) throws OperationException {
 		String DJName = getId().getName() + ".DeJure";
 		deJure = makeArtifact(DJName, DeJure.class.getName(), new ArtifactConfig(ns));
+	}
+	
+	/**
+	 * Create {@link OS} instance which will be shared with every
+	 * {@link GroupBoard}, {@link SchemeBoard}, and {@link NormativeBoard} that
+	 * belongs with this {@link OrgBoard} instance.
+	 * 
+	 * @param osDoc organisational specification
+	 */
+	protected void createOS(Document osDoc) {
+		String mechanismOSFile = "/org/org.xml";
+		InputStream mechanismOSResource = getClass().getResourceAsStream(mechanismOSFile);
+		os = OS.create(mechanismOSResource);
+		os.extend(osDoc);
 	}
 
 //	public String specToStr(ToXML spec, Transformer transformer) throws Exception {
