@@ -109,4 +109,43 @@ public class OS extends moise.os.OS {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Extend specification by adding all of the data contained in the passed
+	 * organisational specification. In other words, this method will
+	 * incorporate the given specification into the current one as if they were
+	 * originally one.
+	 * 
+	 * @param os
+	 *            organisational specification
+	 */
+	public void extend(Document os) {
+		try {
+			DOMUtils.getOSSchemaValidator().validate(new DOMSource(os));
+
+			Element osElement = (Element) os.getElementsByTagName(OS.getXMLTag()).item(0);
+			this.setId(osElement.getAttribute("id"));
+			this.setPropertiesFromDOM(osElement);
+
+			Element specElement;
+
+			// Extend structural specification
+			specElement = DOMUtils.getDOMDirectChild(osElement, SS.getXMLTag());
+			ss.setFromDOM(specElement);
+
+			// Extend functional specification
+			specElement = DOMUtils.getDOMDirectChild(osElement, FS.getXMLTag());
+			fs.setFromDOM(specElement);
+
+			// Extend normative specification
+			specElement = DOMUtils.getDOMDirectChild(osElement, NS.getXMLTag());
+			if (specElement != null) {
+				ns.setFromDOM(specElement);
+			}
+
+		} catch (SAXException | IOException | MoiseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
