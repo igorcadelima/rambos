@@ -25,35 +25,21 @@ package rambos.oa;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import cartago.*;
 import jason.asSyntax.Atom;
-import jason.util.Config;
 import moise.common.MoiseException;
 import moise.os.ns.NS;
-import moise.xml.DOMUtils;
-import moise.xml.ToXML;
 import npl.parser.ParseException;
-//import ora4mas.nopl.GroupBoard;
-//import ora4mas.nopl.SchemeBoard;
-import ora4mas.nopl.WebInterface;
 import rambos.mechanism.rep.DeJure;
 import rambos.oa.util.DJUtil;
 import rambos.os.OS;
@@ -80,7 +66,6 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	 *             if parentGroupId doesn't exit
 	 */
 	public void init(final String osFile) {
-//		super.init(osFile);
 		this.osFile = osFile;
 		
 		try {
@@ -96,21 +81,6 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//		TODO: WebInterface is package private
-//		OS os = OS.loadOSFromURI(osFile);
-//
-//		if (!"false".equals(Config.get().getProperty(Config.START_WEB_OI))) {
-//			WebInterface w = WebInterface.get();
-//			try {
-//				String osSpec = specToStr(os, DOMUtils.getTransformerFactory().newTransformer(DOMUtils.getXSL("os")));
-//				String oeId = getCreatorId().getWorkspaceId().getName();
-//
-//				w.registerOSBrowserView(oeId, os.getId(), osSpec);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
 	}
 
 	/**
@@ -139,13 +109,6 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 		os = OS.create(mechanismOSResource);
 		os.extend(osDoc);
 	}
-
-//	public String specToStr(ToXML spec, Transformer transformer) throws Exception {
-//		StringWriter so = new StringWriter();
-//		InputSource si = new InputSource(new StringReader(DOMUtils.dom2txt(spec)));
-//		transformer.transform(new DOMSource(getParser().parse(si)), new StreamResult(so));
-//		return so.toString();
-//	}
 
 	@OPERATION
 	public void createGroup(String id, String type, OpFeedbackParam<ArtifactId> gaid) throws OperationException {
