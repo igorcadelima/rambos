@@ -88,6 +88,26 @@ public class DeJure extends Artifact {
 	private Map<String, Set<String>> links;
 
 	/**
+	 * Build a De Jure repository from the given normative specification, which
+	 * is passed as argument, if it is valid.
+	 * 
+	 * {@inheritDoc}
+	 * 
+	 * @param ns
+	 *            normative specification
+	 * @throws IOException
+	 * @throws SAXException
+	 */
+	public void init(Document ns) throws SAXException, IOException {
+		norms = new ConcurrentHashMap<String, Norm>();
+		sanctions = new ConcurrentHashMap<String, Sanction>();
+		links = new ConcurrentHashMap<String, Set<String>>();
+
+		DJUtil.validate(ns, DJUtil.NS_SCHEMA_PATH);
+		extractSpecData(ns);
+	}
+
+	/**
 	 * Build a De Jure repository from the given normative specification. In
 	 * order to build the repository, the specification file is parsed and then
 	 * checked for validity.
@@ -107,26 +127,6 @@ public class DeJure extends Artifact {
 
 		Document doc = DJUtil.parseDocument(nsFilePath, DJUtil.NS_SCHEMA_PATH);
 		extractSpecData(doc);
-	}
-
-	/**
-	 * Build a De Jure repository from the given normative specification, which
-	 * is passed as argument, if it is valid.
-	 * 
-	 * {@inheritDoc}
-	 * 
-	 * @param ns
-	 *            normative specification
-	 * @throws IOException
-	 * @throws SAXException
-	 */
-	public void init(Document ns) throws SAXException, IOException {
-		norms = new ConcurrentHashMap<String, Norm>();
-		sanctions = new ConcurrentHashMap<String, Sanction>();
-		links = new ConcurrentHashMap<String, Set<String>>();
-
-		DJUtil.validate(ns, DJUtil.NS_SCHEMA_PATH);
-		extractSpecData(ns);
 	}
 
 	/**
