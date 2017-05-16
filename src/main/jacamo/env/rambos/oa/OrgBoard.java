@@ -45,7 +45,7 @@ import rambos.oa.util.DJUtil;
 import rambos.os.OS;
 
 public class OrgBoard extends ora4mas.nopl.OrgBoard {
-	String osFile = null;
+	protected String osFile = null;
 	protected ArtifactId deJure;
 	protected OS os;
 
@@ -67,15 +67,15 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	 */
 	public void init(final String osFile) {
 		this.osFile = osFile;
-		
+
 		try {
 			Document doc = DJUtil.parseDocument(osFile);
 			Node nsNode = doc.getElementsByTagName(NS.getXMLTag()).item(0);
 			doc.getDocumentElement().removeChild(nsNode);
-			
+
 			Document nsDoc = DJUtil.nodeToDocument(nsNode);
 			execInternalOp("createDeJure", nsDoc);
-			
+
 			createOS(doc);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			// TODO Auto-generated catch block
@@ -87,7 +87,8 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	 * Create De Jure repository by extracting data from a {@link Document}
 	 * containing the normative specification.
 	 * 
-	 * @param ns normative specification
+	 * @param ns
+	 *            normative specification
 	 * @throws OperationException
 	 */
 	@INTERNAL_OPERATION
@@ -95,13 +96,14 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 		String DJName = getId().getName() + ".DeJure";
 		deJure = makeArtifact(DJName, DeJure.class.getName(), new ArtifactConfig(ns));
 	}
-	
+
 	/**
 	 * Create {@link OS} instance which will be shared with every
 	 * {@link GroupBoard}, {@link SchemeBoard}, and {@link NormativeBoard} that
 	 * belongs with this {@link OrgBoard} instance.
 	 * 
-	 * @param osDoc organisational specification
+	 * @param osDoc
+	 *            organisational specification
 	 */
 	protected void createOS(Document osDoc) {
 		String mechanismOSFile = "/org/org.xml";
