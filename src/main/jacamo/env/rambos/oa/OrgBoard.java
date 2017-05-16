@@ -161,4 +161,10 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 			e.printStackTrace();
 		}
 	}
+	
+	@LINK
+	@OPERATION
+	public void getDeJureId(OpFeedbackParam<ArtifactId> deJureId) {
+		deJureId.set(deJure);
+	}
 }
