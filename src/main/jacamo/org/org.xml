@@ -27,9 +27,11 @@
  -->
 
 <organisational-specification id="org"
-	os-version="0.8" xmlns='http://moise.sourceforge.net/os' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-	xsi:schemaLocation='http://moise.sourceforge.net/os
-                        http://moise.sourceforge.net/xml/os.xsd'>
+	os-version="0.8"
+	xmlns='https://github.com/igorcadelima/rambos'
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:schemaLocation='https://github.com/igorcadelima/rambos
+    					file:///home/igorcadelima/workspace/masters/rambos/src/main/resources/xsd/os.xsd'>
 
 	<structural-specification>
 
