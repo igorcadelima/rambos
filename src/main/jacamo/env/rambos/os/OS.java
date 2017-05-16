@@ -27,8 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.dom.DOMSource;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -59,7 +57,6 @@ public class OS extends moise.os.OS {
 	public static OS create(InputStream is) {
 		try {
 			Document doc = DOMUtils.getParser().parse(is);
-//			DOMUtils.getOSSchemaValidator().validate(new DOMSource(doc));
 			DJUtil.validate(doc, DJUtil.OS_SCHEMA_PATH);
 
 			OS os = new OS();
@@ -103,7 +100,6 @@ public class OS extends moise.os.OS {
 	public void extend(Document os) {
 		try {
 			DJUtil.validate(os, DJUtil.OS_SCHEMA_PATH);
-			//DOMUtils.getOSSchemaValidator().validate(new DOMSource(os));
 
 			Element osElement = (Element) os.getElementsByTagName(OS.getXMLTag()).item(0);
 			this.setId(osElement.getAttribute("id"));
