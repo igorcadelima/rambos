@@ -114,7 +114,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 
 	@OPERATION
 	public void createGroup(String id, String type, OpFeedbackParam<ArtifactId> gaid) throws OperationException {
-		ArtifactId aid = makeArtifact(id, GroupBoard.class.getName(), new ArtifactConfig(osFile, type));
+		ArtifactId aid = makeArtifact(id, GroupBoard.class.getName(), new ArtifactConfig(os, type));
 		aids.put(id, aid);
 		defineObsProperty("group", new Atom(id), new Atom(type), aid);
 		gaid.set(aid);
