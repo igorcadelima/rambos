@@ -105,6 +105,49 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
 ////        nengine.loadNP(scope);
 //    }
     
+	/**
+	 * Initialises the scheme board.
+	 * 
+	 * @param os
+	 *            organisational specification
+	 * @param schType
+	 *            the type of the scheme (as defined in the OS)
+	 * @throws ParseException
+	 *             if the OS file is not correct
+	 * @throws MoiseException
+	 *             if schType was not specified
+	 */
+	public void init(final OS os, final String schType) throws ParseException, MoiseException {
+		spec = os.getFS().findScheme(schType);
+
+		final String schName = getId().getName();
+		orgState = new Scheme(spec, schName);
+
+		if (spec == null)
+			throw new MoiseException("scheme " + schType + " does not exist!");
+
+		oeId = getCreatorId().getWorkspaceId().getName();
+
+		// load normative program
+		initNormativeEngine(os, "scheme(" + schType + ")");
+		installNormativeSignaler();
+		initWspRuleEngine();
+
+		// observable properties
+		updateGoalStateObsProp();
+		defineObsProperty(obsPropGroups, getSchState().getResponsibleGroupsAsProlog());
+		defineObsProperty(obsPropSpec, new JasonTermWrapper(spec.getAsProlog()));
+
+		if (!"false".equals(Config.get().getProperty(Config.START_WEB_OI))) {
+			WebInterface w = WebInterface.get();
+			try {
+				w.registerOEBrowserView(oeId, "/scheme/", schName, this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+    
     /**
      * Initialises the scheme artifact
      * 
