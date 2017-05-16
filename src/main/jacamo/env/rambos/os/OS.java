@@ -38,6 +38,7 @@ import moise.os.fs.FS;
 import moise.os.ns.NS;
 import moise.os.ss.SS;
 import moise.xml.DOMUtils;
+import rambos.oa.util.DJUtil;
 
 /**
  * @author igorcadelima
@@ -58,7 +59,8 @@ public class OS extends moise.os.OS {
 	public static OS create(InputStream is) {
 		try {
 			Document doc = DOMUtils.getParser().parse(is);
-			DOMUtils.getOSSchemaValidator().validate(new DOMSource(doc));
+//			DOMUtils.getOSSchemaValidator().validate(new DOMSource(doc));
+			DJUtil.validate(doc, DJUtil.OS_SCHEMA_PATH);
 
 			OS os = new OS();
 			os.setFromDOM(doc);
@@ -81,7 +83,7 @@ public class OS extends moise.os.OS {
 	 */
 	public void extend(String osFilePath) {
 		try {
-			Document doc = DOMUtils.getParser().parse(osFilePath);
+			Document doc = DJUtil.parseDocument(osFilePath);
 			extend(doc);
 		} catch (SAXException | IOException | ParserConfigurationException e) {
 			// TODO Auto-generated catch block
@@ -100,7 +102,8 @@ public class OS extends moise.os.OS {
 	 */
 	public void extend(Document os) {
 		try {
-			DOMUtils.getOSSchemaValidator().validate(new DOMSource(os));
+			DJUtil.validate(os, DJUtil.OS_SCHEMA_PATH);
+			//DOMUtils.getOSSchemaValidator().validate(new DOMSource(os));
 
 			Element osElement = (Element) os.getElementsByTagName(OS.getXMLTag()).item(0);
 			this.setId(osElement.getAttribute("id"));
