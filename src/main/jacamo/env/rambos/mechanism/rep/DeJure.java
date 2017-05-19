@@ -108,28 +108,6 @@ public class DeJure extends Artifact {
 	}
 
 	/**
-	 * Build a De Jure repository from the given normative specification. In
-	 * order to build the repository, the specification file is parsed and then
-	 * checked for validity.
-	 * 
-	 * {@inheritDoc}
-	 * 
-	 * @param nsFilePath
-	 *            path to normative specification file
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws ParserConfigurationException
-	 */
-	public void init(String nsFilePath) throws ParserConfigurationException, SAXException, IOException {
-		norms = new ConcurrentHashMap<String, Norm>();
-		sanctions = new ConcurrentHashMap<String, Sanction>();
-		links = new ConcurrentHashMap<String, Set<String>>();
-
-		Document doc = DJUtil.parseDocument(nsFilePath, DJUtil.NS_SCHEMA_PATH);
-		extractSpecData(doc);
-	}
-
-	/**
 	 * Extract specification data from document.
 	 * 
 	 * @param doc
