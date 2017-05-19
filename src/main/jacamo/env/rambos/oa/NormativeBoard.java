@@ -54,30 +54,30 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 	 */
 	public void init(String orgName) {
 		super.init();
+		execInternalOp("setup", orgName);
+	}
 
-		OpFeedbackParam<ArtifactId> deJureOut = new OpFeedbackParam<ArtifactId>();
-		execInternalOp("getDeJure", orgName, deJureOut);
-		deJure = deJureOut.get();
-
-		execInternalOp("deployDeJureNorms");
+	@INTERNAL_OPERATION
+	protected void setup(String orgName) throws OperationException {
+		deJure = getDeJure(orgName);
+		deployDeJureNorms();
 	}
 
 	/**
-	 * Get the De Jure repository from the {@code orgName} organisation and
-	 * return it through an output parameter.
+	 * Get id of {@link DeJure} repository from the {@code orgName}
+	 * organisation.
 	 * 
 	 * @param orgName
 	 *            name of the organisation
-	 * @param out
-	 *            output parameter use to return the id of De Jure
+	 * @return {@link DeJure} id
 	 * @throws OperationException
 	 * @see OrgBoard
-	 * @see DeJure
 	 */
-	@INTERNAL_OPERATION
-	protected synchronized void getDeJure(String orgName, OpFeedbackParam<ArtifactId> out) throws OperationException {
+	protected ArtifactId getDeJure(String orgName) throws OperationException {
 		ArtifactId orgBoardId = lookupArtifact(orgName);
+		OpFeedbackParam<ArtifactId> out = new OpFeedbackParam<ArtifactId>();
 		execLinkedOp(orgBoardId, "getDeJureId", out);
+		return out.get();
 	}
 
 	/**
@@ -86,8 +86,8 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 	 * 
 	 * @throws OperationException
 	 */
-	@INTERNAL_OPERATION
-	protected synchronized void deployDeJureNorms() throws OperationException {
+	protected void deployDeJureNorms() throws OperationException {
+		assert deJure != null;
 		OpFeedbackParam<Scope> scope = new OpFeedbackParam<Scope>();
 		execLinkedOp(deJure, "createNPLScope", scope);
 		nengine.loadNP(scope.get());
