@@ -55,11 +55,12 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 	protected ArtifactId deJure;
 
 	/**
-	 * Initialise a NormativeBoard retrieving DeJure the organisation and
-	 * deploying its norms to the normative engine.
+	 * Initialise a {@link NormativeBoard} retrieving {@link DeJure} from the
+	 * organisation and deploying its norms to the normative engine.
 	 * 
 	 * @param orgName
 	 *            name of the organisation
+	 * @see OrgBoard
 	 */
 	public void init(String orgName) {
 		super.init();
@@ -80,6 +81,8 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 	 * @param out
 	 *            output parameter use to return the id of De Jure
 	 * @throws OperationException
+	 * @see OrgBoard
+	 * @see DeJure
 	 */
 	@INTERNAL_OPERATION
 	protected synchronized void getDeJure(String orgName, OpFeedbackParam<ArtifactId> out) throws OperationException {
@@ -88,7 +91,8 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 	}
 
 	/**
-	 * Deploy available norms contained in De Jure to the normative engine.
+	 * Deploy available norms contained in {@link DeJure} to the normative
+	 * engine.
 	 * 
 	 * @throws OperationException
 	 */
