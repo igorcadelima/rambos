@@ -152,53 +152,6 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
 		}
 	}
     
-    /**
-     * Initialises the scheme artifact
-     * 
-     * @param osFile           the organisation specification file (path and file name)
-     * @param schType          the type of the scheme (as defined in the OS)
-     * @throws ParseException  if the OS file is not correct
-     * @throws MoiseException  if schType was not specified
-     */
-    public void init(final String osFile, final String nsFileUri, final String schType) throws ParseException, MoiseException {
-    	this.djSpecFileUri = nsFileUri;
-    	
-    	String mechanismOSFile = "/org/org.xml";
-    	InputStream mechanismOSResource = getClass().getResourceAsStream(mechanismOSFile);
-    	OS os = OS.create(mechanismOSResource);
-    	os.extend(osFile);
-    	
-        spec = os.getFS().findScheme(schType);
-        
-        final String schName = getId().getName();
-        orgState   = new Scheme(spec, schName);
-        
-        if (spec == null)
-            throw new MoiseException("scheme "+schType+" does not exist!");
-        
-        oeId = getCreatorId().getWorkspaceId().getName();
-
-        // load normative program
-        initNormativeEngine(os, "scheme("+schType+")");
-        installNormativeSignaler();
-        initWspRuleEngine();
-
-        // observable properties
-        updateGoalStateObsProp();
-        defineObsProperty(obsPropGroups,  getSchState().getResponsibleGroupsAsProlog());
-        defineObsProperty(obsPropSpec, new JasonTermWrapper(spec.getAsProlog()));
-        
-        if (! "false".equals(Config.get().getProperty(Config.START_WEB_OI))) {
-            WebInterface w = WebInterface.get();
-            try {
-                w.registerOEBrowserView(oeId, "/scheme/", schName, this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }                    
-    }
-    
-    
  // TODO: not working! UpdateGuiThread should be reimplemented
 //    @OPERATION public void debug(String kind) throws Exception {
 //        final String schId = getId().getName();
