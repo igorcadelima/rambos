@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package rambos.oa;
+package rambos.ora4mas;
 
 import java.io.File;
 import java.io.InputStream;
@@ -70,7 +70,7 @@ import ora4mas.nopl.oe.Group;
 import ora4mas.nopl.oe.Player;
 import ora4mas.nopl.oe.Scheme;
 import ora4mas.nopl.tools.os2nopl;
-import rambos.oa.util.DJUtil;
+import rambos.ora4mas.util.DJUtil;
 import rambos.os.OS;
 
 public class SchemeBoard extends ora4mas.nopl.SchemeBoard {

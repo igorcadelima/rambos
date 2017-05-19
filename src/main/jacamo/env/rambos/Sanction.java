@@ -21,12 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package rambos.mechanism;
+package rambos;
+
+import jason.asSyntax.LogicalFormula;
 
 /**
  * @author igorcadelima
  *
  */
-public enum SanctionDiscernability {
-	OBTRUSIVE, UNOBTRUSIVE
+public class Sanction {
+	protected String id;
+	protected Status status;
+	protected LogicalFormula condition;
+	protected SanctionCategory category;
+
+	/**
+	 * @param id
+	 * @param status
+	 * @param condition
+	 * @param category
+	 */
+	public Sanction(String id, Status status, LogicalFormula condition, SanctionCategory category) {
+		this.id = id;
+		this.status = status;
+		this.condition = condition;
+		this.category = category;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
 }

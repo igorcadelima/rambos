@@ -36,7 +36,7 @@ import moise.os.fs.FS;
 import moise.os.ns.NS;
 import moise.os.ss.SS;
 import moise.xml.DOMUtils;
-import rambos.oa.util.DJUtil;
+import rambos.ora4mas.util.DJUtil;
 
 /**
  * @author igorcadelima

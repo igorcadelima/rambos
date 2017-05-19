@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package rambos.mechanism;
+package rambos;
 
 /**
  * @author igorcadelima
  *
  */
-public enum SanctionLocus {
-	SELF_DIRECTED, OTHER_DIRECTED
+public enum SanctionMode {
+	DIRECT, INDIRECT
 }

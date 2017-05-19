@@ -21,8 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package rambos.mechanism;
+package rambos;
 
-public interface DJBridge {
-
+/**
+ * @author igorcadelima
+ *
+ */
+public enum SanctionPurpose {
+	PUNISHMENT, REWARD, INCAPACITATION, GUIDANCE, ENABLEMENT
 }

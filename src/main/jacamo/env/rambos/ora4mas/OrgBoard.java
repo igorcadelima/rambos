@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package rambos.oa;
+package rambos.ora4mas;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,8 +38,8 @@ import org.xml.sax.SAXException;
 import cartago.*;
 import jason.asSyntax.Atom;
 import moise.os.ns.NS;
-import rambos.mechanism.rep.DeJure;
-import rambos.oa.util.DJUtil;
+import rambos.ora4mas.db.DeJure;
+import rambos.ora4mas.util.DJUtil;
 import rambos.os.OS;
 
 public class OrgBoard extends ora4mas.nopl.OrgBoard {

@@ -21,12 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package rambos.mechanism;
+package rambos;
+
+import cartago.ArtifactObsProperty;
+import jason.asSyntax.Literal;
 
 /**
  * @author igorcadelima
  *
  */
-public enum SanctionIssuer {
-	FORMAL, INFORMAL
+public interface INorm {
+
+	/**
+	 * @return Norm's content
+	 */
+	public Literal getContent();
+
+	/**
+	 * @return Norm's id
+	 */
+	public String getId();
+
+	/**
+	 * @return Norm issuer's name
+	 */
+	public String getIssuer();
+
+	/**
+	 * @return true if norm is disabled, false otherwise
+	 */
+	public boolean isDisabled();
+
+	/**
+	 * Check whether the data content of an event is ruled by the norm.
+	 * 
+	 * @param nEngine
+	 * @param event
+	 * @return true if event data is ruled by the norm.
+	 */
+	public boolean match(ArtifactObsProperty event);
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package rambos.oa;
+package rambos.ora4mas;
 
 import java.util.Iterator;
 
@@ -34,8 +34,8 @@ import jason.asSemantics.Agent;
 import jason.asSemantics.Unifier;
 import jason.asSyntax.LogicalFormula;
 import npl.Scope;
-import rambos.mechanism.Norm;
-import rambos.mechanism.rep.DeJure;
+import rambos.Norm;
+import rambos.ora4mas.db.DeJure;
 
 /**
  * @author igorcadelima

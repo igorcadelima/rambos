@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package rambos.mechanism.rep;
+package rambos.ora4mas.db;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,17 +59,17 @@ import jason.asSyntax.parser.ParseException;
 import npl.NormativeProgram;
 import npl.Scope;
 import npl.TimeTerm;
-import rambos.mechanism.Norm;
-import rambos.mechanism.Sanction;
-import rambos.mechanism.SanctionCategory;
-import rambos.mechanism.SanctionDiscernability;
-import rambos.mechanism.SanctionIssuer;
-import rambos.mechanism.SanctionLocus;
-import rambos.mechanism.SanctionMode;
-import rambos.mechanism.SanctionPolarity;
-import rambos.mechanism.SanctionPurpose;
-import rambos.mechanism.Status;
-import rambos.oa.util.DJUtil;
+import rambos.Norm;
+import rambos.Sanction;
+import rambos.SanctionCategory;
+import rambos.SanctionDiscernability;
+import rambos.SanctionIssuer;
+import rambos.SanctionLocus;
+import rambos.SanctionMode;
+import rambos.SanctionPolarity;
+import rambos.SanctionPurpose;
+import rambos.Status;
+import rambos.ora4mas.util.DJUtil;
 
 /**
  * @author igorcadelima

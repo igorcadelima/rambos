@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package rambos.oa.util;
+package rambos.ora4mas.util;
 
 import java.io.File;
 import java.io.IOException;
