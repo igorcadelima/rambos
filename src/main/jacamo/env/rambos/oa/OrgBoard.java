@@ -105,6 +105,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 		os.extend(osDoc);
 	}
 
+	@Override
 	@OPERATION
 	public void createGroup(String id, String type, OpFeedbackParam<ArtifactId> gaid) throws OperationException {
 		ArtifactId aid = makeArtifact(id, GroupBoard.class.getName(), new ArtifactConfig(os, type));
@@ -113,6 +114,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 		gaid.set(aid);
 	}
 
+	@Override
 	@OPERATION
 	public void removeGroup(String id) {
 		try {
@@ -130,6 +132,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 		}
 	}
 
+	@Override
 	@OPERATION
 	public void createScheme(String id, String type, OpFeedbackParam<ArtifactId> said) throws OperationException {
 		String name = getId().getName();
@@ -139,6 +142,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 		said.set(aid);
 	}
 
+	@Override
 	@OPERATION
 	public void removeScheme(String id) {
 		try {
