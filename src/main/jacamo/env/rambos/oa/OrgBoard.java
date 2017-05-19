@@ -139,7 +139,8 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 
 	@OPERATION
 	public void createScheme(String id, String type, OpFeedbackParam<ArtifactId> said) throws OperationException {
-		ArtifactId aid = makeArtifact(id, SchemeBoard.class.getName(), new ArtifactConfig(os, type));
+		String name = getId().getName();
+		ArtifactId aid = makeArtifact(id, SchemeBoard.class.getName(), new ArtifactConfig(os, name, type));
 		aids.put(id, aid);
 		defineObsProperty("scheme", new Atom(id), new Atom(type), aid);
 		said.set(aid);

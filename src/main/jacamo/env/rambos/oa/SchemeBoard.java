@@ -75,6 +75,7 @@ import rambos.os.OS;
 
 public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
 	protected moise.os.fs.Scheme spec;
+	protected String orgName;
     protected String djSpecFileUri;
 //    public static final String obsPropSpec       = "specification";
 //    public static final String obsPropGroups     = "groups";
@@ -106,19 +107,22 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
 //    }
     
 	/**
-	 * Initialises the scheme board.
+	 * Initialise the scheme board.
 	 * 
 	 * @param os
 	 *            organisational specification
+	 * @param orgName
+	 *            name of the organisation
 	 * @param schType
-	 *            the type of the scheme (as defined in the OS)
+	 *            type of the scheme (as defined in the OS)
 	 * @throws ParseException
 	 *             if the OS file is not correct
 	 * @throws MoiseException
 	 *             if schType was not specified
 	 */
-	public void init(final OS os, final String schType) throws ParseException, MoiseException {
+	public void init(OS os, String orgName, String schType) throws ParseException, MoiseException {
 		spec = os.getFS().findScheme(schType);
+		this.orgName = orgName;
 
 		final String schName = getId().getName();
 		orgState = new Scheme(spec, schName);
@@ -193,6 +197,8 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
             }
         }                    
     }
+    
+    
  // TODO: not working! UpdateGuiThread should be reimplemented
 //    @OPERATION public void debug(String kind) throws Exception {
 //        final String schId = getId().getName();
@@ -473,20 +479,20 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
                 if (newLink) {
                     // First time the group is linked to this scheme, so create normative board
                     String nbId = grId+"."+orgState.getId();
-                    ArtifactId aid = makeArtifact(nbId, NormativeBoard.class.getName(), new ArtifactConfig() );  
-                    
-                    execLinkedOp(aid, "load", os2nopl.transform(spec, false));
-                    execLinkedOp(aid, "doSubscribeDFP", orgState.getId());
-                    
-                    String nplProgram = spec.getFS().getOS().getNS().getNPLNorms();
-                    if (nplProgram != null) {
-                        StringBuilder out = new StringBuilder();
-                        out.append("scope npl_norms_for_"+spec.getId()+" {\n");
-                        out.append(nplProgram);
-                        out.append("\n}");
-                        execLinkedOp(aid, "load", out.toString());
-                	}
-                    execLinkedOp(aid, "load", djSpecFileUri);
+                    ArtifactId aid = makeArtifact(nbId, NormativeBoard.class.getName(), new ArtifactConfig(orgName) );  
+//                    
+//                    execLinkedOp(aid, "load", os2nopl.transform(spec, false));
+//                    execLinkedOp(aid, "doSubscribeDFP", orgState.getId());
+//                    
+//                    String nplProgram = spec.getFS().getOS().getNS().getNPLNorms();
+//                    if (nplProgram != null) {
+//                        StringBuilder out = new StringBuilder();
+//                        out.append("scope npl_norms_for_"+spec.getId()+" {\n");
+//                        out.append(nplProgram);
+//                        out.append("\n}");
+//                        execLinkedOp(aid, "load", out.toString());
+//                	}
+//                    execLinkedOp(aid, "load", djSpecFileUri);
                 }
             }
         }, null);
