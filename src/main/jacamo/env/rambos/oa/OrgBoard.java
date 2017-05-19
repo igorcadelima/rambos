@@ -49,7 +49,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	protected ArtifactId deJure;
 	protected OS os;
 
-	Map<String, ArtifactId> aids = new HashMap<String, ArtifactId>();
+	protected Map<String, ArtifactId> aids = new HashMap<String, ArtifactId>();
 	protected Logger logger = Logger.getLogger(OrgBoard.class.getName());
 
 	/**
