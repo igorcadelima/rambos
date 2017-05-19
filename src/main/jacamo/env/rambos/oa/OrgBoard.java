@@ -162,7 +162,14 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Get the id of the organisation's {@link DeJure} and return it through an
+	 * output parameter.
+	 * 
+	 * @param deJureId
+	 *            output parameter which returns {@link DeJure}'s id
+	 */
 	@LINK
 	@OPERATION
 	public void getDeJureId(OpFeedbackParam<ArtifactId> deJureId) {
