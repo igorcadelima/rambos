@@ -23,29 +23,19 @@
  *******************************************************************************/
 package rambos.oa;
 
-import java.io.IOException;
 import java.util.Iterator;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
-import cartago.ArtifactConfig;
 import cartago.ArtifactId;
 import cartago.INTERNAL_OPERATION;
-import cartago.LINK;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
 import jason.asSemantics.Agent;
 import jason.asSemantics.Unifier;
 import jason.asSyntax.LogicalFormula;
-import moise.common.MoiseException;
 import npl.Scope;
-import npl.parser.ParseException;
 import rambos.mechanism.Norm;
 import rambos.mechanism.rep.DeJure;
-import rambos.oa.util.DJUtil;
 
 /**
  * @author igorcadelima
@@ -103,32 +93,6 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 		nengine.loadNP(scope.get());
 	}
 
-	@LINK
-	@OPERATION
-	@Override
-	public void load(String file) throws MoiseException, ParseException {
-		try {
-			// Validate spec file
-			DJUtil.parseDocument(file);
-
-			// Init DeJure
-			String djId = getId() + ".dj";
-			deJure = makeArtifact(djId, DeJure.class.getName(), new ArtifactConfig(file));
-
-			// Load normative program into the interpreter
-			OpFeedbackParam<Scope> scope = new OpFeedbackParam<Scope>();
-			execLinkedOp(deJure, "createNPLScope", scope);
-			nengine.loadNP(scope.get());
-		} catch (SAXException | IOException | ParserConfigurationException e) {
-			// Not a De Jure specification file
-			super.load(file);
-			// System.out.println(e);
-		} catch (OperationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Check whether a norm is applicable by testing the truth value of its
 	 * activation condition.
@@ -147,5 +111,4 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 		Iterator<Unifier> i = formula.logicalConsequence(ag, new Unifier());
 		ruled.set(i.hasNext());
 	}
-
 }
