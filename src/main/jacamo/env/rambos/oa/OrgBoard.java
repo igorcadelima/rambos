@@ -37,9 +37,7 @@ import org.xml.sax.SAXException;
 
 import cartago.*;
 import jason.asSyntax.Atom;
-import moise.common.MoiseException;
 import moise.os.ns.NS;
-import npl.parser.ParseException;
 import rambos.mechanism.rep.DeJure;
 import rambos.oa.util.DJUtil;
 import rambos.os.OS;
@@ -53,17 +51,12 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	protected Logger logger = Logger.getLogger(OrgBoard.class.getName());
 
 	/**
-	 * Initialises the organisational board
+	 * Initialise {@link OrgBoard} creating its {@link DeJure} repository and
+	 * {@link OS} according to the organisation specification passed as
+	 * argument.
 	 * 
 	 * @param osFile
-	 *            the organisation specification file (path and file name)
-	 *
-	 * @throws ParseException
-	 *             if the OS file is not correct
-	 * @throws MoiseException
-	 *             if grType was not specified
-	 * @throws OperationException
-	 *             if parentGroupId doesn't exit
+	 *            path to organisation specification
 	 */
 	public void init(final String osFile) {
 		this.osFile = osFile;
