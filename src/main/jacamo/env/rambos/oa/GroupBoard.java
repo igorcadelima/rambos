@@ -133,63 +133,6 @@ public class GroupBoard extends ora4mas.nopl.GroupBoard {
 		}
 	}
 
-	/**
-	 * Initialises the group board
-	 * 
-	 * @param osFile
-	 *            the organisation specification file (path and file name)
-	 * @param groupType
-	 *            the type of the group (as defined in the OS)
-	 * @throws ParseException
-	 *             if the OS file is not correct
-	 * @throws MoiseException
-	 *             if grType was not specified
-	 * @throws OperationException
-	 *             if parentGroupId doesn't exit
-	 */
-	public void init(final String osFile, final String groupType)
-			throws ParseException, MoiseException, OperationException {
-		final String groupName = getId().getName();
-		orgState = new Group(groupName);
-
-		String mechanismOSFile = "/org/org.xml";
-    	InputStream mechanismOSResource = getClass().getResourceAsStream(mechanismOSFile);
-    	OS os = OS.create(mechanismOSResource);
-    	os.extend(osFile);
-
-		spec = os.getSS().getRootGrSpec().findSubGroup(groupType);
-
-		if (spec == null)
-			throw new MoiseException("Group " + groupType + " does not exist!");
-
-		oeId = getCreatorId().getWorkspaceId().getName();
-
-		// observable properties
-		defineObsProperty(obsPropSchemes, getGrpState().getResponsibleForAsProlog());
-		defineObsProperty(obsWellFormed, new JasonTermWrapper("nok"));
-		defineObsProperty(obsPropSpec, new JasonTermWrapper(spec.getAsProlog()));
-		defineObsProperty(obsPropSubgroups, getGrpState().getSubgroupsAsProlog());
-		defineObsProperty(obsPropParentGroup, new JasonTermWrapper(getGrpState().getParentGroup()));
-
-		// load normative program
-		initNormativeEngine(os, "group(" + groupType + ")");
-		installNormativeSignaler(); // TODO replace this with the new one
-
-		// install monitor of agents quitting the system
-		initWspRuleEngine();
-
-		if (!"false".equals(Config.get().getProperty(Config.START_WEB_OI))) {
-			WebInterface w = WebInterface.get();
-			try {
-				w.registerOEBrowserView(oeId, "/group/", groupName, this);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	
-
 	// TODO: not working! UpdateGuiThread should be reimplemented
 //	@Override
 //	@OPERATION
