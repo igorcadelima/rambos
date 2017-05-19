@@ -433,19 +433,7 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
                     // First time the group is linked to this scheme, so create normative board
                     String nbId = grId+"."+orgState.getId();
                     ArtifactId aid = makeArtifact(nbId, NormativeBoard.class.getName(), new ArtifactConfig(orgName) );  
-//                    
-//                    execLinkedOp(aid, "load", os2nopl.transform(spec, false));
-//                    execLinkedOp(aid, "doSubscribeDFP", orgState.getId());
-//                    
-//                    String nplProgram = spec.getFS().getOS().getNS().getNPLNorms();
-//                    if (nplProgram != null) {
-//                        StringBuilder out = new StringBuilder();
-//                        out.append("scope npl_norms_for_"+spec.getId()+" {\n");
-//                        out.append(nplProgram);
-//                        out.append("\n}");
-//                        execLinkedOp(aid, "load", out.toString());
-//                	}
-//                    execLinkedOp(aid, "load", djSpecFileUri);
+                    execLinkedOp(aid, "load", os2nopl.transform(spec, false));
                 }
             }
         }, null);
