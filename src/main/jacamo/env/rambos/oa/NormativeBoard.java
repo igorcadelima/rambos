@@ -23,20 +23,16 @@
  *******************************************************************************/
 package rambos.oa;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import cartago.ArtifactConfig;
 import cartago.ArtifactId;
+import cartago.INTERNAL_OPERATION;
 import cartago.LINK;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
@@ -58,6 +54,51 @@ import rambos.oa.util.DJUtil;
 public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 	protected ArtifactId deJure;
 
+	/**
+	 * Initialise a NormativeBoard retrieving DeJure the organisation and
+	 * deploying its norms to the normative engine.
+	 * 
+	 * @param orgName
+	 *            name of the organisation
+	 */
+	public void init(String orgName) {
+		super.init();
+
+		OpFeedbackParam<ArtifactId> deJureOut = new OpFeedbackParam<ArtifactId>();
+		execInternalOp("getDeJure", orgName, deJureOut);
+		deJure = deJureOut.get();
+
+		execInternalOp("deployDeJureNorms");
+	}
+
+	/**
+	 * Get the De Jure repository from the {@code orgName} organisation and
+	 * return it through an output parameter.
+	 * 
+	 * @param orgName
+	 *            name of the organisation
+	 * @param out
+	 *            output parameter use to return the id of De Jure
+	 * @throws OperationException
+	 */
+	@INTERNAL_OPERATION
+	protected synchronized void getDeJure(String orgName, OpFeedbackParam<ArtifactId> out) throws OperationException {
+		ArtifactId orgBoardId = lookupArtifact(orgName);
+		execLinkedOp(orgBoardId, "getDeJureId", out);
+	}
+
+	/**
+	 * Deploy available norms contained in De Jure to the normative engine.
+	 * 
+	 * @throws OperationException
+	 */
+	@INTERNAL_OPERATION
+	protected synchronized void deployDeJureNorms() throws OperationException {
+		OpFeedbackParam<Scope> scope = new OpFeedbackParam<Scope>();
+		execLinkedOp(deJure, "createNPLScope", scope);
+		nengine.loadNP(scope.get());
+	}
+
 	@LINK
 	@OPERATION
 	@Override
@@ -65,11 +106,11 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 		try {
 			// Validate spec file
 			DJUtil.parseDocument(file);
-			
+
 			// Init DeJure
 			String djId = getId() + ".dj";
 			deJure = makeArtifact(djId, DeJure.class.getName(), new ArtifactConfig(file));
-			
+
 			// Load normative program into the interpreter
 			OpFeedbackParam<Scope> scope = new OpFeedbackParam<Scope>();
 			execLinkedOp(deJure, "createNPLScope", scope);
@@ -77,18 +118,23 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 		} catch (SAXException | IOException | ParserConfigurationException e) {
 			// Not a De Jure specification file
 			super.load(file);
-//			System.out.println(e);
+			// System.out.println(e);
 		} catch (OperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Check whether a norm is applicable by testing the truth value of its activation condition.
+	 * Check whether a norm is applicable by testing the truth value of its
+	 * activation condition.
 	 * 
-	 * @param norm Norm whose condition will be checked against the environmental facts
-	 * @param ruled Output parameter to return whether the given formula may be derived from the environment
+	 * @param norm
+	 *            Norm whose condition will be checked against the environmental
+	 *            facts
+	 * @param ruled
+	 *            Output parameter to return whether the given formula may be
+	 *            derived from the environment
 	 */
 	@OPERATION
 	protected void testCondition(Norm norm, OpFeedbackParam<Boolean> ruled) {
@@ -97,7 +143,5 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 		Iterator<Unifier> i = formula.logicalConsequence(ag, new Unifier());
 		ruled.set(i.hasNext());
 	}
-	
-	
-}
 
+}
