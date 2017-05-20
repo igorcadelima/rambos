@@ -39,6 +39,7 @@ import cartago.*;
 import jason.asSyntax.Atom;
 import moise.os.ns.NS;
 import rambos.ora4mas.db.DeJure;
+import rambos.ora4mas.db.AbstractDeJureBuilder;
 import rambos.ora4mas.util.DJUtil;
 import rambos.os.OS;
 
@@ -86,8 +87,12 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	 */
 	@INTERNAL_OPERATION
 	public void createDeJure(Document ns) throws OperationException {
-		String DJName = getId().getName() + ".DeJure";
-		deJure = makeArtifact(DJName, DeJure.class.getName(), new ArtifactConfig(ns));
+		String djName = getId().getName() + ".DeJure";
+		ArtifactId djb = makeArtifact("djb", DeJure.DeJureBuilder.class.getName(), new ArtifactConfig(ns));
+		OpFeedbackParam<ArtifactId> djOut = new OpFeedbackParam<ArtifactId>();
+		execLinkedOp(djb, "build", djName, djOut);
+		deJure = djOut.get();
+		execLinkedOp(djb, "destroy");
 	}
 
 	/**
