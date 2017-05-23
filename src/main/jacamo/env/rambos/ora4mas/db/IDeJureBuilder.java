@@ -23,9 +23,14 @@
  *******************************************************************************/
 package rambos.ora4mas.db;
 
+import java.util.Map;
+import java.util.Set;
+
 import cartago.ArtifactId;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
+import rambos.Norm;
+import rambos.Sanction;
 
 /**
  * @author igorcadelima
@@ -41,4 +46,31 @@ public interface IDeJureBuilder {
 	 * @throws OperationException
 	 */
 	public void build(String name, OpFeedbackParam<ArtifactId> out) throws OperationException;
+
+	/**
+	 * Set norms.
+	 * 
+	 * @param norms
+	 *            mapping of norms ids to norms themselves
+	 * @return builder after setting norms
+	 */
+	public IDeJureBuilder setNorms(Map<String, Norm> norms);
+
+	/**
+	 * Set sanctions.
+	 * 
+	 * @param sanctions
+	 *            mapping of sanctions ids to sanctions themselves
+	 * @return builder after setting sanctions
+	 */
+	public IDeJureBuilder setSanctions(Map<String, Sanction> sanctions);
+
+	/**
+	 * Set links between norms and sanctions.
+	 * 
+	 * @param links
+	 *            mapping of norms ids to a set of sanctions ids
+	 * @return builder after setting links
+	 */
+	public IDeJureBuilder setLinks(Map<String, Set<String>> links);
 }

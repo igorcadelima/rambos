@@ -529,4 +529,22 @@ public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureB
 		Sanction s = sanctions.get(sanctionId);
 		addLink(n, s);
 	}
+
+	@Override
+	public IDeJureBuilder setNorms(Map<String, Norm> norms) {
+		this.norms = norms;
+		return this;
+	}
+
+	@Override
+	public IDeJureBuilder setSanctions(Map<String, Sanction> sanctions) {
+		this.sanctions = sanctions;
+		return this;
+	}
+
+	@Override
+	public IDeJureBuilder setLinks(Map<String, Set<String>> links) {
+		this.links = links;
+		return this;
+	}
 }
