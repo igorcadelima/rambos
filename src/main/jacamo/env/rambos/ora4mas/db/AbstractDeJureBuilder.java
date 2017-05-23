@@ -75,11 +75,11 @@ public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureB
 	protected static final String LINKS_TAG = "links";
 
 	// normId -> norm
-	protected Map<String, Norm> norms;
+	protected Map<String, Norm> norms = new ConcurrentHashMap<String, Norm>();
 	// sanctionId -> sanction
-	protected Map<String, Sanction> sanctions;
+	protected Map<String, Sanction> sanctions = new ConcurrentHashMap<String, Sanction>();
 	// normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
-	protected Map<String, Set<String>> links;
+	protected Map<String, Set<String>> links = new ConcurrentHashMap<String, Set<String>>();
 
 	/**
 	 * Create a {@link DeJure} builder extracting data from the normative
@@ -91,10 +91,6 @@ public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureB
 	 * @throws SAXException
 	 */
 	public void init(Document ns) throws SAXException, IOException {
-		norms = new ConcurrentHashMap<String, Norm>();
-		sanctions = new ConcurrentHashMap<String, Sanction>();
-		links = new ConcurrentHashMap<String, Set<String>>();
-
 		DJUtil.validate(ns, DJUtil.NS_SCHEMA_PATH);
 		extractSpecData(ns);
 	}
