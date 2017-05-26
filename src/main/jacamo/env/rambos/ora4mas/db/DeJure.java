@@ -61,15 +61,14 @@ public class DeJure extends Artifact {
 	 * Initialise a {@link DeJure} repository based on data from the
 	 * {@link DeJureBuilder} passed as argument.
 	 * 
-	 * @param djb
-	 *            {@link DeJureBuilder} object from which data should be
-	 *            obtained
+	 * @param builder
+	 *            builder from which data should be obtained
 	 */
 	@SuppressWarnings("unused")
-	private void init(DeJureBuilder djb) throws SAXException, IOException {
-		norms = djb.norms;
-		sanctions = djb.sanctions;
-		links = djb.links;
+	private void init(DeJureBuilder builder) throws SAXException, IOException {
+		norms = builder.norms;
+		sanctions = builder.sanctions;
+		links = builder.links;
 	}
 
 	/**
