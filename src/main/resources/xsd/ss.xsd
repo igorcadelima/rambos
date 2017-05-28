@@ -4,7 +4,7 @@
 	xmlns:rambos="https://github.com/igorcadelima/rambos" targetNamespace="https://github.com/igorcadelima/rambos"
 	elementFormDefault="qualified">
 
-	<xsd:include schemaLocation="rambos-properties.xsd" />
+	<xsd:include schemaLocation="properties.xsd" />
 
 	<xsd:element name="structural-specification" type="rambos:ss" />
 	<xsd:complexType name="ss">
