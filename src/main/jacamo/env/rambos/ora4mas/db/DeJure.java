@@ -275,7 +275,8 @@ public class DeJure extends Artifact {
 			Literal id = ASSyntax.parseLiteral("np");
 			Scope scope = new Scope(id, null);
 			for (Norm n : getNorms().values()) {
-				scope.addNorm(n);
+				if (!n.isDisabled())
+					scope.addNorm(n);
 			}
 			outScope.set(scope);
 			return scope;
