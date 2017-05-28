@@ -39,7 +39,6 @@ import cartago.*;
 import jason.asSyntax.Atom;
 import moise.os.ns.NS;
 import rambos.ora4mas.db.DeJure;
-import rambos.ora4mas.db.AbstractDeJureBuilder;
 import rambos.ora4mas.util.DJUtil;
 import rambos.os.OS;
 
@@ -68,13 +67,29 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 			doc.getDocumentElement().removeChild(nsNode);
 
 			Document nsDoc = DJUtil.nodeToDocument(nsNode);
-			execInternalOp("createDeJure", nsDoc);
+
+			CartagoSession session = getCartagoSession();
+			session.doAction(getId(), new Op("createDeJure", nsDoc), null, -1);
 
 			createOS(doc);
-		} catch (ParserConfigurationException | SAXException | IOException e) {
+		} catch (ParserConfigurationException | SAXException | IOException | CartagoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Return Cartago session with the creator agent's name of this artefact as
+	 * credential.
+	 * 
+	 * @return cartago session
+	 * @throws CartagoException
+	 */
+	private CartagoSession getCartagoSession() throws CartagoException {
+		WorkspaceId wid = getId().getWorkspaceId();
+		String wspName = wid.getName();
+		AgentIdCredential credential = new AgentIdCredential(getCreatorId().getAgentName());
+		return (CartagoSession) CartagoService.startSession(wspName, credential, null);
 	}
 
 	/**
