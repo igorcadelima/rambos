@@ -41,6 +41,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import cartago.Artifact;
+import cartago.LINK;
+import cartago.OPERATION;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.ArithExpr;
 import jason.asSyntax.Atom;
@@ -526,18 +528,24 @@ public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureB
 		addLink(n, s);
 	}
 
+	@LINK
+	@OPERATION
 	@Override
 	public IDeJureBuilder setNorms(Map<String, Norm> norms) {
 		this.norms = norms;
 		return this;
 	}
 
+	@LINK
+	@OPERATION
 	@Override
 	public IDeJureBuilder setSanctions(Map<String, Sanction> sanctions) {
 		this.sanctions = sanctions;
 		return this;
 	}
 
+	@LINK
+	@OPERATION
 	@Override
 	public IDeJureBuilder setLinks(Map<String, Set<String>> links) {
 		this.links = links;
