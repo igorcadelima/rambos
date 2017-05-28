@@ -98,6 +98,12 @@ public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureB
 	}
 
 	/**
+	 * Default artefact initialiser.
+	 */
+	public void init() {
+	}
+
+	/**
 	 * Extract specification data from document.
 	 * 
 	 * @param doc

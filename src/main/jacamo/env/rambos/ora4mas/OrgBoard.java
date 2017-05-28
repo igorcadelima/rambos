@@ -39,6 +39,7 @@ import cartago.*;
 import jason.asSyntax.Atom;
 import moise.os.ns.NS;
 import rambos.ora4mas.db.DeJure;
+import rambos.ora4mas.db.DeJureDOMParser;
 import rambos.ora4mas.util.DJUtil;
 import rambos.os.OS;
 
@@ -93,8 +94,8 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	}
 
 	/**
-	 * Create De Jure repository by extracting data from a {@link Document}
-	 * containing the normative specification.
+	 * Create {@link DeJure} repository by extracting data from a
+	 * {@link Document} containing the normative specification.
 	 * 
 	 * @param ns
 	 *            normative specification
@@ -103,11 +104,15 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 	@INTERNAL_OPERATION
 	public void createDeJure(Document ns) throws OperationException {
 		String djName = getId().getName() + ".DeJure";
-		ArtifactId djb = makeArtifact("djb", DeJure.DeJureBuilder.class.getName(), new ArtifactConfig(ns));
+
+		ArtifactId djb = makeArtifact("djb", DeJure.DeJureBuilder.class.getName(), new ArtifactConfig());
+		ArtifactId djp = makeArtifact("djp", DeJureDOMParser.class.getName(), new ArtifactConfig(djb));
 		OpFeedbackParam<ArtifactId> djOut = new OpFeedbackParam<ArtifactId>();
-		execLinkedOp(djb, "build", djName, djOut);
+		execLinkedOp(djp, "parse", ns, djName, djOut);
 		deJure = djOut.get();
+
 		execLinkedOp(djb, "destroy");
+		execLinkedOp(djp, "destroy");
 	}
 
 	/**
