@@ -31,19 +31,19 @@ import jason.asSyntax.LogicalFormula;
  */
 public class Sanction {
 	protected String id;
-	protected Status status;
+	protected boolean disabled;
 	protected LogicalFormula condition;
 	protected SanctionCategory category;
 
 	/**
 	 * @param id
-	 * @param status
+	 * @param disabled
 	 * @param condition
 	 * @param category
 	 */
-	public Sanction(String id, Status status, LogicalFormula condition, SanctionCategory category) {
+	public Sanction(String id, boolean disabled, LogicalFormula condition, SanctionCategory category) {
 		this.id = id;
-		this.status = status;
+		this.disabled = disabled;
 		this.condition = condition;
 		this.category = category;
 	}

@@ -66,7 +66,6 @@ import rambos.SanctionLocus;
 import rambos.SanctionMode;
 import rambos.SanctionPolarity;
 import rambos.SanctionPurpose;
-import rambos.Status;
 import rambos.ora4mas.util.DJUtil;
 
 /**
@@ -133,16 +132,13 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 
 		for (Element sanctionEl : sanctions) {
 			String id = sanctionEl.getAttribute("id");
-			Status status = Status.ACTIVE;
+			boolean disabled = Boolean.valueOf(sanctionEl.getAttribute("disabled"));
 			LogicalFormula condition = null;
 			SanctionCategory category = null;
 
 			List<Element> properties = getChildElements(sanctionEl);
 			for (Element property : properties) {
 				switch (property.getNodeName()) {
-				case "status":
-					status = Status.valueOf(property.getTextContent().toUpperCase());
-					break;
 				case "condition":
 					try {
 						condition = ASSyntax.parseFormula(property.getTextContent());
@@ -156,7 +152,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 					break;
 				}
 			}
-			addSanction(new Sanction(id, status, condition, category));
+			addSanction(new Sanction(id, disabled, condition, category));
 		}
 		return this.sanctions;
 	}
