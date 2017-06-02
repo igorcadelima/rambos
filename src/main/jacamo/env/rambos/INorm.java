@@ -35,22 +35,22 @@ public interface INorm {
 	/**
 	 * @return Norm's content
 	 */
-	public Literal getContent();
+	Literal getContent();
 
 	/**
 	 * @return Norm's id
 	 */
-	public String getId();
+	String getId();
 
 	/**
 	 * @return Norm issuer's name
 	 */
-	public String getIssuer();
+	String getIssuer();
 
 	/**
 	 * @return true if norm is disabled, false otherwise
 	 */
-	public boolean isDisabled();
+	boolean isDisabled();
 
 	/**
 	 * Check whether the data content of an event is ruled by the norm.
@@ -59,5 +59,5 @@ public interface INorm {
 	 * @param event
 	 * @return true if event data is ruled by the norm.
 	 */
-	public boolean match(ArtifactObsProperty event);
+	boolean match(ArtifactObsProperty event);
 }
