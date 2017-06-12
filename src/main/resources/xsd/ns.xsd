@@ -70,6 +70,9 @@
 			<xsd:element name="category" minOccurs="1" maxOccurs="1"
 				type="rambos:sanctionCategory">
 			</xsd:element>
+			<xsd:element name="content" minOccurs="1" maxOccurs="1"
+				type="rambos:contentType">
+			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:string" use="required" />
 		<xsd:attribute name="disabled" type="xsd:boolean"

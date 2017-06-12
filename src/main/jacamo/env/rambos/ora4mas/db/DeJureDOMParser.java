@@ -135,6 +135,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 			boolean disabled = Boolean.valueOf(sanctionEl.getAttribute("disabled"));
 			LogicalFormula condition = null;
 			SanctionCategory category = null;
+			Literal content = null;
 
 			List<Element> properties = getChildElements(sanctionEl);
 			for (Element property : properties) {
@@ -150,9 +151,18 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 				case "category":
 					category = parseSanctionCategory(property);
 					break;
+				case "content":
+					// TODO Remove revalidation
+					try {
+						content = parseDeonticProposition(property.getTextContent(), id, condition);
+					} catch (DOMException | ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					break;
 				}
 			}
-			addSanction(new Sanction(id, disabled, condition, category));
+			addSanction(new Sanction(id, disabled, condition, category, content));
 		}
 		return this.sanctions;
 	}
