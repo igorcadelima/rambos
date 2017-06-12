@@ -282,7 +282,11 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 				issuer = propContent;
 				break;
 			case "content":
-				content = parseNormContent(propContent, id, issuer, condition);
+				content = parseDeonticProposition(propContent, id, condition);
+
+				// Add annotations
+				content.addAnnot(ASSyntax.createStructure("norm", new Atom(id)));
+				content.addAnnot(ASSyntax.createStructure("issuer", new Atom(issuer)));
 				break;
 			}
 		}
@@ -290,27 +294,25 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	}
 
 	/**
-	 * Parse norm content as literal.
+	 * Parse deontic proposition as literal.
 	 * 
-	 * @param content
-	 *            norm content
-	 * @param normId
-	 *            norm id
-	 * @param issuer
-	 *            issuer of the norm
-	 * @param normCondition
-	 *            activation condition of the norm
-	 * @return literal form of {@code content}
+	 * @param proposition
+	 *            deontic proposition
+	 * @param id
+	 *            id of the element
+	 * @param condition
+	 *            activation condition of the element
+	 * @return literal form of {@code proposition}
 	 * @throws ParseException
-	 *             if {@code content} does not have a valid format
+	 *             if {@code proposition} does not have a valid format
 	 */
-	private Literal parseNormContent(String content, String normId, String issuer, LogicalFormula normCondition)
+	private Literal parseDeonticProposition(String proposition, String id, LogicalFormula condition)
 			throws ParseException {
 		Literal literal;
 		try {
-			literal = parseNormFailContent(content);
+			literal = parseObligationProposition(proposition, id, condition);
 		} catch (ParseException e) {
-			literal = parseNormObligationContent(content, normId, normCondition, issuer);
+			literal = parseFailProposition(proposition);
 		}
 		return literal;
 	}
@@ -318,26 +320,23 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	/**
 	 * Parse string to obligation literal.
 	 * 
-	 * @param obligation
+	 * @param obl
 	 *            string with obligation
-	 * @param normId
-	 *            id of the norm
-	 * @param normCondition
-	 *            condition of the norm
-	 * @param issuer
-	 *            issuer of the norm
+	 * @param id
+	 *            id of the element
+	 * @param condition
+	 *            activation condition
 	 * @return obligation literal if {@code content} is a well-formed string
 	 * @throws ParseException
 	 */
-	private Literal parseNormObligationContent(String obligation, String normId, LogicalFormula normCondition,
-			String issuer) throws ParseException {
+	private Literal parseObligationProposition(String obl, String id, LogicalFormula condition) throws ParseException {
 		String obligationRegex = "obligation\\s*\\(\\s*(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(.+?)\\s*,\\s*(.+?)\\s*\\)";
 		Pattern pattern = Pattern.compile(obligationRegex);
-		Matcher matcher = pattern.matcher(obligation);
+		Matcher matcher = pattern.matcher(obl);
 
 		if (matcher.matches()) {
 			String agent = matcher.group(1);
-			String condition = matcher.group(2);
+			String maintCondition = matcher.group(2);
 			String goal = matcher.group(3);
 			String deadline = matcher.group(4);
 			Literal literal = ASSyntax.createLiteral(NormativeProgram.OblFunctor);
@@ -346,41 +345,38 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 			literal.addTerm(parseAgent(agent));
 
 			// Parse and add condition term
-			literal.addTerm(parseCondition(condition, normId, normCondition));
+			literal.addTerm(parseMaintenanceCondition(maintCondition, id, condition));
 
 			// Parse and add goal term
 			literal.addTerm(ASSyntax.parseFormula(goal));
 
 			// Solve and add deadline term
 			literal.addTerm(solveTimeExpression(deadline));
-
-			// Add annotations
-			literal.addAnnot(ASSyntax.createStructure("norm", new Atom(normId)));
-			literal.addAnnot(ASSyntax.createStructure("issuer", new Atom(issuer)));
 			return literal;
 		}
 		throw new ParseException();
 	}
 
 	/**
-	 * Parse {@code condition} using {@link ASSyntax#parseFormula(String)} and
-	 * return the result as a {@link Term}. If {@code condition} is equal to the
-	 * id of the norm, the norm's activation condition is returned. Otherwise,
-	 * the activation condition of the deontic modality is returned.
+	 * Parse maintenance condition using {@link ASSyntax#parseFormula(String)}
+	 * and return the result as a {@link Term}. If {@code maintCondition} is
+	 * equal to the id of the element, then {@code condition} is returned.
+	 * Otherwise, the maintenance condition is returned.
 	 * 
+	 * @param maintCondition
+	 *            maintenance condition of the element
+	 * @param id
+	 *            id of the element
 	 * @param condition
-	 *            activation condition of the deontic modality
-	 * @param normId
-	 *            id of the norm
-	 * @param normCondition
-	 *            activation condition of the norm
+	 *            activation condition of the element
 	 * @return parsed condition as a {@link Term}
 	 * @throws ParseException
 	 */
-	private Term parseCondition(String condition, String normId, LogicalFormula normCondition) throws ParseException {
-		LogicalFormula conditionLiteral = ASSyntax.parseFormula(condition);
-		if (((Literal) conditionLiteral).getFunctor().equals(normId)) {
-			return normCondition;
+	private Term parseMaintenanceCondition(String maintCondition, String id, LogicalFormula condition)
+			throws ParseException {
+		LogicalFormula conditionLiteral = ASSyntax.parseFormula(maintCondition);
+		if (((Literal) conditionLiteral).getFunctor().equals(id)) {
+			return condition;
 		} else {
 			return conditionLiteral;
 		}
@@ -424,17 +420,18 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	}
 
 	/**
-	 * Parse string to fail literal.
+	 * Parse proposition to {@link Literal} whose functor is {@literal "fail"}.
 	 * 
-	 * @param content
-	 *            content of the norm
-	 * @return fail literal content if {@code content} is a well-formed string
+	 * @param proposition
+	 *            deontic proposition
+	 * @return fail literal content if {@code proposition} is a well-formed
+	 *         string
 	 * @throws ParseException
 	 */
-	private Literal parseNormFailContent(String content) throws ParseException {
+	private Literal parseFailProposition(String proposition) throws ParseException {
 		String failureRegex = "fail\\s*\\(\\s*(.+)\\s*\\)";
 		Pattern pattern = Pattern.compile(failureRegex);
-		Matcher matcher = pattern.matcher(content);
+		Matcher matcher = pattern.matcher(proposition);
 
 		if (matcher.matches()) {
 			String resonStr = matcher.group(1);
