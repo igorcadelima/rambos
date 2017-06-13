@@ -25,6 +25,7 @@ package rambos;
 
 import cartago.ArtifactObsProperty;
 import jason.asSyntax.Literal;
+import jason.asSyntax.LogicalFormula;
 
 /**
  * @author igorcadelima
@@ -33,25 +34,29 @@ import jason.asSyntax.Literal;
 public interface INorm {
 
 	/**
-	 * @return Norm's content
-	 */
-	Literal getContent();
-
-	/**
-	 * @return Norm's id
+	 * @return norm's id
 	 */
 	String getId();
-
-	/**
-	 * @return Norm issuer's name
-	 */
-	String getIssuer();
-
+	
 	/**
 	 * @return true if norm is disabled, false otherwise
 	 */
 	boolean isDisabled();
-
+	
+	/**
+	 * @return norm's activation condition
+	 */
+	LogicalFormula getCondition();
+	
+	/**
+	 * @return norm issuer's name
+	 */
+	String getIssuer();
+	/**
+	 * @return norm's content
+	 */
+	Literal getContent();
+	
 	/**
 	 * Check whether the data content of an event is ruled by the norm.
 	 * 
