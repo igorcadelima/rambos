@@ -29,6 +29,8 @@ import cartago.ArtifactObsProperty;
 import jason.RevisionFailedException;
 import jason.asSemantics.Agent;
 import jason.asSemantics.Unifier;
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
@@ -89,6 +91,19 @@ public class Norm extends AbstractNorm implements INorm {
 		clone.issuer = issuer;
 		clone.consequence = consequence;
 		return clone;
+	}
+	
+	@Override
+	public String toString() {
+		Atom disabledTerm = ASSyntax.createAtom(String.valueOf(disabled));
+		
+		Literal l = ASSyntax.createLiteral("norm");
+		l.addTerm(condition);
+		l.addTerm(ASSyntax.createString(issuer));
+		l.addTerm(consequence);
+		l.addAnnot(ASSyntax.createStructure("id", new Atom(id)));
+		l.addAnnot(ASSyntax.createStructure("disabled", disabledTerm));
+		return l.toString();
 	}
 
 	public static final class NormBuilder {
