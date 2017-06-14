@@ -32,24 +32,15 @@ import jason.asSemantics.Unifier;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
+import npl.AbstractNorm;
 
 import static jason.asSyntax.ASSyntax.parseLiteral;
 
-public class Norm extends npl.Norm implements INorm {
-	protected boolean disabled;
+public class Norm extends AbstractNorm implements INorm {
+	protected boolean disabled = false;
 	protected String issuer;
 
-	/**
-	 * @param id
-	 * @param disabled
-	 * @param condition
-	 * @param issuer
-	 * @param content
-	 */
-	public Norm(String id, boolean disabled, LogicalFormula condition, String issuer, Literal content) {
-		super(id, content, condition);
-		this.disabled = disabled;
-		this.issuer = issuer;
+	private Norm() {
 	}
 
 	@Override
@@ -86,6 +77,62 @@ public class Norm extends npl.Norm implements INorm {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
+		}
+	}
+
+	@Override
+	public AbstractNorm clone() {
+		Norm clone = new Norm();
+		clone.id = id;
+		clone.disabled = disabled;
+		clone.condition = condition;
+		clone.issuer = issuer;
+		clone.consequence = consequence;
+		return clone;
+	}
+
+	public static final class NormBuilder {
+		private Norm norm = new Norm();
+
+		public NormBuilder setId(String id) {
+			norm.id = id;
+			return this;
+		}
+
+		public NormBuilder setDisabled(boolean disabled) {
+			norm.disabled = disabled;
+			return this;
+		}
+
+		public NormBuilder setCondition(LogicalFormula condition) {
+			norm.condition = condition;
+			return this;
+		}
+
+		public NormBuilder setIssuer(String issuer) {
+			norm.issuer = issuer;
+			return this;
+		}
+
+		public NormBuilder setContent(Literal content) {
+			norm.consequence = content;
+			return this;
+		}
+
+		/**
+		 * Build a {@link Norm} with the set building state.
+		 * 
+		 * In order to successfully build a {@link Norm}, the following
+		 * properties should be different from {@code null}: {@code id},
+		 * {@code condition}, {@code issuer}, {@code content}.
+		 * 
+		 * @return {@link Norm} instance with the set building state
+		 */
+		public Norm build() {
+			if ((norm.id != null) && (norm.condition != null) && (norm.issuer != null) && (norm.consequence != null)) {
+				return (Norm) norm.clone();
+			}
+			throw new RuntimeException("The following properties should be set: id, condition, issuer, content.");
 		}
 	}
 }

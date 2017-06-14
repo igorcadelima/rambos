@@ -58,6 +58,7 @@ import jason.asSyntax.parser.ParseException;
 import npl.NormativeProgram;
 import npl.TimeTerm;
 import rambos.Norm;
+import rambos.Norm.NormBuilder;
 import rambos.Sanction;
 import rambos.SanctionCategory;
 import rambos.SanctionDiscernability;
@@ -300,7 +301,13 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 				break;
 			}
 		}
-		return new Norm(id, disabled, condition, issuer, content);
+		NormBuilder builder = new NormBuilder();
+		builder.setId(id);
+		builder.setDisabled(disabled);
+		builder.setCondition(condition);
+		builder.setIssuer(issuer);
+		builder.setContent(content);
+		return builder.build();
 	}
 
 	/**
