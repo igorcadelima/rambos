@@ -57,7 +57,7 @@ import jason.asSyntax.ArithExpr.ArithmeticOp;
 import jason.asSyntax.parser.ParseException;
 import npl.NormativeProgram;
 import npl.TimeTerm;
-import rambos.Norm;
+import rambos.INorm;
 import rambos.Norm.NormBuilder;
 import rambos.Sanction;
 import rambos.SanctionCategory;
@@ -79,7 +79,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	protected static final String LINKS_TAG = "links";
 
 	// normId -> norm
-	private Map<String, Norm> norms;
+	private Map<String, INorm> norms;
 	// sanctionId -> sanction
 	private Map<String, Sanction> sanctions;
 	// normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
@@ -89,7 +89,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	@OPERATION
 	@Override
 	public void parse(Document ns, String deJureName, OpFeedbackParam<ArtifactId> deJureOut) {
-		norms = new ConcurrentHashMap<String, Norm>();
+		norms = new ConcurrentHashMap<String, INorm>();
 		sanctions = new ConcurrentHashMap<String, Sanction>();
 		links = new ConcurrentHashMap<String, Set<String>>();
 
@@ -106,7 +106,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	}
 
 	@Override
-	protected Map<String, Norm> extractNorms(Document ns) {
+	protected Map<String, INorm> extractNorms(Document ns) {
 		Node normsRootEl = ns.getElementsByTagName(NORMS_TAG).item(0);
 		List<Element> norms = getChildElements(normsRootEl);
 
@@ -115,8 +115,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 			boolean disabled = Boolean.valueOf(normEl.getAttribute("disabled"));
 			NodeList properties = normEl.getChildNodes();
 			try {
-				Norm norm = createNorm(properties, id, disabled);
-				// addNormToMap(norm, this.norms);
+				INorm norm = createNorm(properties, id, disabled);
 				addNorm(norm);
 			} catch (DOMException | ParseException | npl.parser.ParseException e) {
 				// TODO Auto-generated catch block
@@ -275,7 +274,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	 * @throws ParseException
 	 * @throws npl.parser.ParseException
 	 */
-	private Norm createNorm(NodeList properties, String id, boolean disabled)
+	private INorm createNorm(NodeList properties, String id, boolean disabled)
 			throws DOMException, ParseException, npl.parser.ParseException {
 		LogicalFormula condition = null;
 		String issuer = null;
@@ -500,7 +499,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	 * @param n
 	 *            norm to be added
 	 */
-	private void addNorm(Norm n) {
+	private void addNorm(INorm n) {
 		if (norms.put(n.getId(), n) == n) {
 			links.put(n.getId(), new HashSet<String>());
 		}
@@ -524,7 +523,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	 * @param s
 	 *            the sanction
 	 */
-	private void addLink(Norm n, Sanction s) {
+	private void addLink(INorm n, Sanction s) {
 		assert n != null;
 		assert s != null;
 
@@ -543,7 +542,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	 *            the sanction id
 	 */
 	private void addLink(String normId, String sanctionId) {
-		Norm n = norms.get(normId);
+		INorm n = norms.get(normId);
 		Sanction s = sanctions.get(sanctionId);
 		addLink(n, s);
 	}
