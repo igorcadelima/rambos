@@ -33,7 +33,24 @@ import jason.asSyntax.Term;
  */
 public class Failure implements IRegimentationContent {
 
+	protected Literal literal;
 	protected Term reason;
+
+	public Failure(Term reason) {
+		this.reason = reason;
+	}
+
+	public Failure(Literal literal) {
+		int nTerms = literal.getTerms().size();
+		boolean equalFunctors = literal.getFunctor() == getFunctor();
+
+		if (equalFunctors && nTerms == 1) {
+			this.literal = literal;
+			this.reason = literal.getTerm(0);
+		} else {
+			throw new IllegalArgumentException("Invalid literal");
+		}
+	}
 
 	@Override
 	public String getFunctor() {
@@ -44,11 +61,13 @@ public class Failure implements IRegimentationContent {
 	public Term getReason() {
 		return reason;
 	}
-	
+
 	@Override
 	public String toString() {
-		Literal l = ASSyntax.createLiteral(getFunctor());
-		l.addTerm(reason);
-		return l.toString();
+		if (literal == null) {
+			literal = ASSyntax.createLiteral(getFunctor());
+			literal.addTerm(reason);
+		}
+		return literal.toString();
 	}
 }
