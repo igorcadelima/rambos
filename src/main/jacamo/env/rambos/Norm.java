@@ -23,131 +23,42 @@
  *******************************************************************************/
 package rambos;
 
-import java.util.Iterator;
+public class Norm extends AbstractNorm {
 
-import cartago.ArtifactObsProperty;
-import jason.RevisionFailedException;
-import jason.asSemantics.Agent;
-import jason.asSemantics.Unifier;
-import jason.asSyntax.ASSyntax;
-import jason.asSyntax.Atom;
-import jason.asSyntax.Literal;
-import jason.asSyntax.LogicalFormula;
-import jason.asSyntax.parser.ParseException;
-import npl.AbstractNorm;
-
-import static jason.asSyntax.ASSyntax.parseLiteral;
-
-public class Norm extends AbstractNorm implements INorm {
-	protected boolean disabled = false;
-	protected String issuer;
-
-	private Norm() {
-	}
-
-	@Override
-	public Literal getContent() {
-		return getConsequence();
-	}
-
-	@Override
-	public String getIssuer() {
-		return issuer;
-	}
-
-	@Override
-	public boolean isDisabled() {
-		return disabled;
-	}
-
-	@Override
-	public boolean match(ArtifactObsProperty event) {
-		try {
-			// Parse event data to Literal
-			Literal propLiteral = parseLiteral(event.toString());
-
-			// Add parsed Literal to BB to check norm condition against it
-			Agent ag = new Agent();
-			ag.addBel(propLiteral);
-
-			// Get norm condition to see whether the event is ruled by it
-			LogicalFormula condition = getCondition();
-			Iterator<Unifier> i = condition.logicalConsequence(ag, new Unifier());
-
-			return i.hasNext();
-		} catch (ParseException | RevisionFailedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
+	/**
+	 * Norm constructor.
+	 * 
+	 * In order to successfully create a norm, none of the builder's attributes
+	 * should be {@code null}.
+	 * 
+	 * @param builder
+	 *            builder from which data should be obtained
+	 */
+	private Norm(NormBuilder builder) {
+		if ((builder.id != null) && (builder.condition != null) && (builder.issuer != null)
+				&& (builder.content != null)) {
+			id = builder.id;
+			disabled = builder.disabled;
+			condition = builder.condition;
+			issuer = builder.issuer;
+			content = builder.content;
+		} else {
+			throw new RuntimeException("The following properties should not be null: id, condition, issuer, content.");
 		}
 	}
 
-	@Override
-	public AbstractNorm clone() {
-		Norm clone = new Norm();
-		clone.id = id;
-		clone.disabled = disabled;
-		clone.condition = condition;
-		clone.issuer = issuer;
-		clone.consequence = consequence;
-		return clone;
-	}
-	
-	@Override
-	public String toString() {
-		Atom disabledTerm = ASSyntax.createAtom(String.valueOf(disabled));
-		
-		Literal l = ASSyntax.createLiteral("norm");
-		l.addTerm(condition);
-		l.addTerm(ASSyntax.createString(issuer));
-		l.addTerm(consequence);
-		l.addAnnot(ASSyntax.createStructure("id", new Atom(id)));
-		l.addAnnot(ASSyntax.createStructure("disabled", disabledTerm));
-		return l.toString();
-	}
+	public static final class NormBuilder extends AbstractNormBuilder<NormBuilder> {
 
-	public static final class NormBuilder {
-		private Norm norm = new Norm();
-
-		public NormBuilder setId(String id) {
-			norm.id = id;
+		@Override
+		protected NormBuilder getThis() {
 			return this;
 		}
 
-		public NormBuilder setDisabled(boolean disabled) {
-			norm.disabled = disabled;
-			return this;
-		}
-
-		public NormBuilder setCondition(LogicalFormula condition) {
-			norm.condition = condition;
-			return this;
-		}
-
-		public NormBuilder setIssuer(String issuer) {
-			norm.issuer = issuer;
-			return this;
-		}
-
-		public NormBuilder setContent(Literal content) {
-			norm.consequence = content;
-			return this;
-		}
-
-		/**
-		 * Build a {@link Norm} with the set building state.
-		 * 
-		 * In order to successfully build a {@link Norm}, the following
-		 * properties should be different from {@code null}: {@code id},
-		 * {@code condition}, {@code issuer}, {@code content}.
-		 * 
-		 * @return {@link Norm} instance with the set building state
-		 */
+		@Override
 		public Norm build() {
-			if ((norm.id != null) && (norm.condition != null) && (norm.issuer != null) && (norm.consequence != null)) {
-				return (Norm) norm.clone();
-			}
-			throw new RuntimeException("The following properties should be set: id, condition, issuer, content.");
+			return new Norm(getThis());
 		}
+
 	}
+
 }

@@ -57,6 +57,8 @@ import jason.asSyntax.ArithExpr.ArithmeticOp;
 import jason.asSyntax.parser.ParseException;
 import npl.NormativeProgram;
 import npl.TimeTerm;
+import rambos.ContentStringParser;
+import rambos.IContent;
 import rambos.INorm;
 import rambos.Norm.NormBuilder;
 import rambos.Sanction;
@@ -111,11 +113,8 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 		List<Element> norms = getChildElements(normsRootEl);
 
 		for (Element normEl : norms) {
-			String id = normEl.getAttribute("id");
-			boolean disabled = Boolean.valueOf(normEl.getAttribute("disabled"));
-			NodeList properties = normEl.getChildNodes();
 			try {
-				INorm norm = createNorm(properties, id, disabled);
+				INorm norm = createNorm(normEl);
 				addNorm(norm);
 			} catch (DOMException | ParseException | npl.parser.ParseException e) {
 				// TODO Auto-generated catch block
@@ -260,26 +259,23 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	}
 
 	/**
-	 * Create a norm based on {@code properties} identified by {@code id}. The
-	 * norm might be initially {@code disabled} or not.
+	 * Create a norm based on {@code normEl}.
 	 * 
-	 * @param properties
-	 *            {@link NodeList} containing condition, issuer, and content
-	 * @param id
-	 *            norm id
-	 * @param disabled
-	 *            availability of the norm
+	 * @param normEl
+	 *            {@link Element} holding the norm
 	 * @return new norm
 	 * @throws DOMException
 	 * @throws ParseException
 	 * @throws npl.parser.ParseException
 	 */
-	private INorm createNorm(NodeList properties, String id, boolean disabled)
-			throws DOMException, ParseException, npl.parser.ParseException {
+	private INorm createNorm(Element normEl) throws DOMException, ParseException, npl.parser.ParseException {
+		String id = normEl.getAttribute("id");
+		boolean disabled = Boolean.valueOf(normEl.getAttribute("disabled"));
 		LogicalFormula condition = null;
 		String issuer = null;
-		Literal content = null;
+		IContent content = null;
 
+		NodeList properties = normEl.getChildNodes();
 		for (int i = 0; i < properties.getLength(); i++) {
 			Node prop = properties.item(i);
 			String propContent = prop.getTextContent();
@@ -292,11 +288,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 				issuer = propContent;
 				break;
 			case "content":
-				content = parseDeonticProposition(propContent, id, condition);
-
-				// Add annotations
-				content.addAnnot(ASSyntax.createStructure("norm", new Atom(id)));
-				content.addAnnot(ASSyntax.createStructure("issuer", new Atom(issuer)));
+				content = new ContentStringParser().parse(propContent);
 				break;
 			}
 		}

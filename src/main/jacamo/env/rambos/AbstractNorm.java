@@ -145,7 +145,7 @@ public abstract class AbstractNorm implements INorm {
 			return getThis();
 		}
 
-		public T setId(IContent content) {
+		public T setContent(IContent content) {
 			this.content = content;
 			return getThis();
 		}
