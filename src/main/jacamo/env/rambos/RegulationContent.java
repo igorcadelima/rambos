@@ -28,6 +28,7 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.Term;
 import npl.TimeTerm;
+import rambos.Obligation.ObligationBuilder;
 
 /**
  * @author igorcadelima
@@ -68,6 +69,65 @@ public abstract class RegulationContent implements IRegulationContent {
 		l.addTerm(aim);
 		l.addTerm(deadline);
 		return l.toString();
+	}
+
+	protected RegulationContent(RegulationContentBuilder<?> builder) {
+		target = builder.target;
+		maintenanceCondition = builder.maintenanceCondition;
+		aim = builder.aim;
+		deadline = builder.deadline;
+	}
+
+	protected static abstract class RegulationContentBuilder<T extends RegulationContentBuilder<T>> {
+
+		private Term target;
+		private LogicalFormula maintenanceCondition;
+		private Literal aim;
+		private TimeTerm deadline;
+
+		/**
+		 * Set attributes based on {@code literal}.
+		 * 
+		 * @param literal
+		 * @return builder with updated state
+		 */
+		public T setFrom(Literal literal) {
+			target = literal.getTerm(0);
+			maintenanceCondition = (LogicalFormula) literal.getTerm(1);
+			aim = (Literal) literal.getTerm(2);
+			deadline = (TimeTerm) literal.getTerm(3);
+			return getThis();
+		}
+
+		/**
+		 * Get current instance of the class and return it.
+		 * 
+		 * @return current instance of the class
+		 * @see ObligationBuilder#getThis()
+		 */
+		protected abstract T getThis();
+
+		public T setTarget(Term target) {
+			this.target = target;
+			return getThis();
+		}
+
+		public T setMaintenanceCondition(LogicalFormula condition) {
+			this.maintenanceCondition = condition;
+			return getThis();
+		}
+
+		public T setAim(Literal aim) {
+			this.aim = aim;
+			return getThis();
+		}
+
+		public T setDeadline(TimeTerm deadline) {
+			this.deadline = deadline;
+			return getThis();
+		}
+
+		public abstract RegulationContent build();
 	}
 
 }

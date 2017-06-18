@@ -29,9 +29,27 @@ package rambos;
  */
 public class Obligation extends RegulationContent {
 
+	private Obligation(ObligationBuilder builder) {
+		super(builder);
+	}
+
 	@Override
 	public String getFunctor() {
 		return "obligation";
+	}
+
+	public static final class ObligationBuilder extends RegulationContentBuilder<ObligationBuilder> {
+
+		@Override
+		public Obligation build() {
+			return new Obligation(getThis());
+		}
+
+		@Override
+		protected ObligationBuilder getThis() {
+			return this;
+		}
+
 	}
 
 }
