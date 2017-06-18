@@ -24,6 +24,7 @@
 package rambos.ora4mas;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import cartago.ArtifactId;
 import cartago.INTERNAL_OPERATION;
@@ -32,7 +33,11 @@ import cartago.OpFeedbackParam;
 import cartago.OperationException;
 import jason.asSemantics.Agent;
 import jason.asSemantics.Unifier;
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Atom;
+import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
+import jason.asSyntax.parser.ParseException;
 import npl.Scope;
 import rambos.Norm;
 import rambos.ora4mas.db.DeJure;
@@ -60,7 +65,7 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 	@INTERNAL_OPERATION
 	protected void setup(String orgName) throws OperationException {
 		deJure = getDeJure(orgName);
-		deployDeJureNorms();
+		deployNorms();
 	}
 
 	/**
@@ -81,16 +86,41 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
 	}
 
 	/**
-	 * Deploy available norms contained in {@link DeJure} to the normative
-	 * engine.
+	 * Deploy norms contained in {@link DeJure} to the normative engine.
 	 * 
 	 * @throws OperationException
 	 */
-	protected void deployDeJureNorms() throws OperationException {
+	protected void deployNorms() throws OperationException {
 		assert deJure != null;
-		OpFeedbackParam<Scope> scope = new OpFeedbackParam<Scope>();
-		execLinkedOp(deJure, "createNPLScope", scope);
-		nengine.loadNP(scope.get());
+		OpFeedbackParam<Set<Norm>> norms = new OpFeedbackParam<Set<Norm>>();
+		execLinkedOp(deJure, "getNorms", norms);
+		Scope scope = createNPLScope(norms.get());
+		nengine.loadNP(scope);
+	}
+
+	/**
+	 * Create a {@link Scope} with {@code norms} which are enabled.
+	 * 
+	 * @param norms
+	 *            norms to be added to the scope
+	 * @return {@link Scope} with {@code norms}
+	 */
+	private Scope createNPLScope(Set<Norm> norms) {
+		try {
+			Literal id = ASSyntax.parseLiteral("np");
+			Scope scope = new Scope(id, null);
+			for (Norm n : norms) {
+				Literal nplNormConsequence = new Atom(n.getContent().toString());
+				npl.Norm nplNorm = new npl.Norm(n.getId(), nplNormConsequence, n.getCondition());
+				if (!n.isDisabled())
+					scope.addNorm(nplNorm);
+			}
+			return scope;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**

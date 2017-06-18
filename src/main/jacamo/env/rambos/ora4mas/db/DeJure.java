@@ -38,10 +38,6 @@ import cartago.LINK;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
-import jason.asSyntax.ASSyntax;
-import jason.asSyntax.Literal;
-import jason.asSyntax.parser.ParseException;
-import npl.Scope;
 import rambos.Norm;
 import rambos.Sanction;
 
@@ -226,15 +222,15 @@ public class DeJure extends Artifact {
 	}
 
 	/**
-	 * Get norms set as a {@link Map<{@link String}, {@link Norm}>}, whose keys
-	 * are norms ids.
+	 * Return norms set through {@link out}.
 	 * 
-	 * @return copy of the norms
+	 * @return norms
 	 */
 	@LINK
 	@OPERATION
-	public Map<String, Norm> getNorms() {
-		return new ConcurrentHashMap<String, Norm>(norms);
+	public void getNorms(OpFeedbackParam<Set<Norm>> out) {
+		Set<Norm> set = new HashSet<Norm>(norms.values());
+		out.set(set);
 	}
 
 	/**
@@ -259,32 +255,6 @@ public class DeJure extends Artifact {
 	@OPERATION
 	public Map<String, Set<String>> getLinks() {
 		return new ConcurrentHashMap<String, Set<String>>(links);
-	}
-
-	/**
-	 * Create a NPL Scope based on the repository's properties.
-	 * 
-	 * @param dj
-	 *            the DeJure repository
-	 * @return a NPL Scope extracted from the repository's properties
-	 */
-	@LINK
-	@OPERATION
-	public Scope createNPLScope(OpFeedbackParam<Scope> outScope) {
-		try {
-			Literal id = ASSyntax.parseLiteral("np");
-			Scope scope = new Scope(id, null);
-			for (Norm n : getNorms().values()) {
-				if (!n.isDisabled())
-					scope.addNorm(n);
-			}
-			outScope.set(scope);
-			return scope;
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	public static class DeJureBuilder extends AbstractDeJureBuilder {
