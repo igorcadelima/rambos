@@ -38,6 +38,9 @@ import cartago.LINK;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Literal;
+import jason.asSyntax.parser.ParseException;
 import rambos.Norm;
 import rambos.Sanction;
 
@@ -47,7 +50,7 @@ import rambos.Sanction;
  */
 public class DeJure extends Artifact {
 	// normId -> norm
-	private Map<String, Norm> norms;
+	private Map<String, Norm> norms = new ConcurrentHashMap<String, Norm>();;
 	// sanctionId -> sanction
 	private Map<String, Sanction> sanctions;
 	// normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
@@ -68,21 +71,27 @@ public class DeJure extends Artifact {
 	}
 
 	/**
-	 * Add norm to norms set.
+	 * Add {@code n} to norms set if there is no other norm with the same id.
+	 * 
+	 * Nothing is done if there is already a norm with the same id in the norms
+	 * set.
 	 * 
 	 * @param n
-	 *            norm o be added
-	 * @return true if norm is added successfully
+	 *            norm to be added
+	 * @throws ParseException
 	 */
 	@LINK
 	@OPERATION
-	public synchronized boolean addNorm(Norm n) {
+	public void addNorm(Norm n) throws ParseException {
 		// TODO: check whether operator agent is a legislator
-		if (norms.put(n.getId(), n) == n) {
-			links.put(n.getId(), new HashSet<String>());
-			return true;
-		}
-		return false;
+		if (norms.containsKey(n.getId()))
+			return;
+
+		Literal literalNorm = ASSyntax.parseLiteral(n.toString());
+		norms.put(n.getId(), n);
+
+		defineObsProperty("norm", literalNorm.getTerms().toArray());
+		links.put(n.getId(), new HashSet<String>());
 	}
 
 	/**
