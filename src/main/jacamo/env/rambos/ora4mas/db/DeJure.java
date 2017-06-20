@@ -50,11 +50,11 @@ import rambos.Sanction;
  */
 public class DeJure extends Artifact {
 	// normId -> norm
-	private Map<String, Norm> norms = new ConcurrentHashMap<String, Norm>();;
+	private Map<String, Norm> norms = new ConcurrentHashMap<String, Norm>();
 	// sanctionId -> sanction
 	private Map<String, Sanction> sanctions;
 	// normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
-	private Map<String, Set<String>> links;
+	private Map<String, Set<String>> links = new ConcurrentHashMap<String, Set<String>>();
 
 	/**
 	 * Initialise a {@link DeJure} repository based on data from the
@@ -71,10 +71,10 @@ public class DeJure extends Artifact {
 	}
 
 	/**
-	 * Add {@code n} to norms set if there is no other norm with the same id.
+	 * Put {@code n} into norms set.
 	 * 
-	 * Nothing is done if there is already a norm with the same id in the norms
-	 * set.
+	 * If there is already a norm with the same id as {@code n}, the previous
+	 * norm is replaced by {@code n}.
 	 * 
 	 * @param n
 	 *            norm to be added
@@ -82,10 +82,8 @@ public class DeJure extends Artifact {
 	 */
 	@LINK
 	@OPERATION
-	public void addNorm(Norm n) throws ParseException {
+	public void putNorm(Norm n) throws ParseException {
 		// TODO: check whether operator agent is a legislator
-		if (norms.containsKey(n.getId()))
-			return;
 
 		Literal literalNorm = ASSyntax.parseLiteral(n.toString());
 		norms.put(n.getId(), n);
