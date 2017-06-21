@@ -24,6 +24,7 @@
 package rambos.ora4mas.db;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -68,6 +69,25 @@ public class DeJure extends Artifact {
 		norms = builder.norms;
 		sanctions = builder.sanctions;
 		links = builder.links;
+	}
+
+	/**
+	 * Put norms from {@code norms} into norms set.
+	 * 
+	 * If there is already a norm with the same id as any of the ones in
+	 * {@code norms}, the existing norm in the set is replaced by the new one.
+	 * 
+	 * @param norms
+	 *            norms to be added
+	 * @throws ParseException
+	 *             if {@link #putNorm(Norm)} throws {@link ParseException}
+	 */
+	@LINK
+	@OPERATION
+	public void putNorms(Collection<Norm> norms) throws ParseException {
+		for (Norm n : norms) {
+			putNorm(n);
+		}
 	}
 
 	/**
