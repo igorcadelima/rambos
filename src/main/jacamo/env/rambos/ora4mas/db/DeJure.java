@@ -23,14 +23,11 @@
  *******************************************************************************/
 package rambos.ora4mas.db;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.xml.sax.SAXException;
 
 import cartago.Artifact;
 import cartago.ArtifactConfig;
@@ -63,10 +60,11 @@ public class DeJure extends Artifact {
 	 * 
 	 * @param builder
 	 *            builder from which data should be obtained
+	 * @throws ParseException
 	 */
 	@SuppressWarnings("unused")
-	private void init(DeJureBuilder builder) throws SAXException, IOException {
-		norms = builder.norms;
+	private void init(DeJureBuilder builder) throws ParseException {
+		putNorms(builder.norms.values());
 		sanctions = builder.sanctions;
 		links = builder.links;
 	}
