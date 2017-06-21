@@ -91,25 +91,25 @@ public class DeJure extends Artifact {
 	}
 
 	/**
-	 * Put {@code n} into norms set.
+	 * Put {@code norm} into norms set.
 	 * 
-	 * If there is already a norm with the same id as {@code n}, the previous
-	 * norm is replaced by {@code n}.
+	 * If there is already a norm with the same id as {@code norm}, the existing
+	 * norm in the set is replaced by the new one.
 	 * 
-	 * @param n
+	 * @param norm
 	 *            norm to be added
 	 * @throws ParseException
 	 */
 	@LINK
 	@OPERATION
-	public void putNorm(Norm n) throws ParseException {
+	public void putNorm(Norm norm) throws ParseException {
 		// TODO: check whether operator agent is a legislator
 
-		Literal literalNorm = ASSyntax.parseLiteral(n.toString());
-		norms.put(n.getId(), n);
+		Literal literalNorm = ASSyntax.parseLiteral(norm.toString());
+		norms.put(norm.getId(), norm);
 
 		defineObsProperty("norm", literalNorm.getTerms().toArray());
-		links.put(n.getId(), new HashSet<String>());
+		links.put(norm.getId(), new HashSet<String>());
 	}
 
 	/**
