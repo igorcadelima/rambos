@@ -23,7 +23,6 @@
  *******************************************************************************/
 package rambos.ora4mas.db;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -64,50 +63,60 @@ public class DeJure extends Artifact {
 	 */
 	@SuppressWarnings("unused")
 	private void init(DeJureBuilder builder) throws ParseException {
-		putNorms(builder.norms.values());
+		addNorm(builder.norms.values().toArray(new Norm[0]));
 		sanctions = builder.sanctions;
 		links = builder.links;
 	}
 
 	/**
-	 * Put norms from {@code norms} into norms set.
+	 * Add new norms into norms set.
 	 * 
-	 * If there is already a norm with the same id as any of the ones in
-	 * {@code norms}, the existing norm in the set is replaced by the new one.
+	 * For each added norm, an empty set is created and linked to it in the
+	 * links set. Additionally, observable properties are created for the norm
+	 * and the link created.
 	 * 
-	 * @param norms
+	 * Only norms with different ids from the ones in the set can be added.
+	 * 
+	 * @param ns
 	 *            norms to be added
 	 * @throws ParseException
-	 *             if {@link #putNorm(Norm)} throws {@link ParseException}
 	 */
 	@LINK
 	@OPERATION
-	public void putNorms(Collection<Norm> norms) throws ParseException {
-		for (Norm n : norms) {
-			putNorm(n);
+	public void addNorm(Norm[] ns) throws ParseException {
+		// TODO: check whether operator agent is a legislator
+		for (Norm n : ns) {
+			if (norms.containsKey(n.getId())) {
+				break;
+			}
+
+			Literal literalNorm = ASSyntax.parseLiteral(n.toString());
+			norms.put(n.getId(), n);
+			defineObsProperty("norm", literalNorm.getTerms().toArray());
+
+			// Create empty set and link it to norm
+			links.put(n.getId(), new HashSet<String>());
+			defineObsProperty("link", n.getId(), new String[0]);
 		}
 	}
 
 	/**
-	 * Put {@code norm} into norms set.
+	 * Put {@code n} into norms set.
 	 * 
-	 * If there is already a norm with the same id as {@code norm}, the existing
+	 * If there is already a norm with the same id as {@code n}, the existing
 	 * norm in the set is replaced by the new one.
 	 * 
-	 * @param norm
+	 * @param n
 	 *            norm to be added
 	 * @throws ParseException
 	 */
 	@LINK
 	@OPERATION
-	public void putNorm(Norm norm) throws ParseException {
+	public void putNorm(Norm n) throws ParseException {
 		// TODO: check whether operator agent is a legislator
-
-		Literal literalNorm = ASSyntax.parseLiteral(norm.toString());
-		norms.put(norm.getId(), norm);
-
+		Literal literalNorm = ASSyntax.parseLiteral(n.toString());
+		norms.put(n.getId(), n);
 		defineObsProperty("norm", literalNorm.getTerms().toArray());
-		links.put(norm.getId(), new HashSet<String>());
 	}
 
 	/**
