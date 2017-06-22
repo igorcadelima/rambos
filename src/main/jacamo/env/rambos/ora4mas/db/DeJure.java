@@ -152,30 +152,30 @@ public class DeJure extends Artifact {
 	}
 
 	/**
-	 * Add link to links set.
+	 * Add link between norm and sanction to links set.
+	 * 
+	 * If there is already a link between the norm and the sanction, no changes
+	 * are performed.
 	 * 
 	 * @param normId
-	 *            the norm id
+	 *            norm id
 	 * @param sanctionId
-	 *            the sanction id
-	 * @return true if link is created successfully
+	 *            sanction id
 	 */
 	@LINK
 	@OPERATION
-	public synchronized boolean addLink(String normId, String sanctionId) {
+	public void addLink(String normId, String sanctionId) {
 		// TODO: check whether operator agent is a legislator
 		Norm n = norms.get(normId);
 		Sanction s = sanctions.get(sanctionId);
+
 		if (n == null || s == null)
-			return false;
+			throw new IllegalArgumentException("Arguments can not be null.");
 
 		Set<String> linkedSanctions = links.get(n.getId());
 		if (linkedSanctions.add(s.getId())) {
 			links.put(n.getId(), linkedSanctions);
-			return true;
 		}
-
-		return false;
 	}
 
 	/**
