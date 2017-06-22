@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -65,6 +64,7 @@ import rambos.ora4mas.util.DJUtil;
  *
  */
 public class DeJureDOMParser extends DeJureParser<Document> {
+
 	protected static final String NORMS_TAG = "norms";
 	protected static final String SANCTIONS_TAG = "sanctions";
 	protected static final String LINKS_TAG = "links";
@@ -105,7 +105,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 			try {
 				INorm norm = createNorm(normEl);
 				addNorm(norm);
-			} catch (DOMException | ParseException | npl.parser.ParseException e) {
+			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -131,7 +131,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 				case "condition":
 					try {
 						condition = ASSyntax.parseFormula(p.getTextContent());
-					} catch (DOMException | ParseException e) {
+					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -246,11 +246,9 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 	 * @param normEl
 	 *            {@link Element} holding the norm
 	 * @return new norm
-	 * @throws DOMException
 	 * @throws ParseException
-	 * @throws npl.parser.ParseException
 	 */
-	private INorm createNorm(Element normEl) throws DOMException, ParseException, npl.parser.ParseException {
+	private INorm createNorm(Element normEl) throws ParseException {
 		String id = normEl.getAttribute("id");
 		boolean disabled = Boolean.valueOf(normEl.getAttribute("disabled"));
 		LogicalFormula condition = null;
