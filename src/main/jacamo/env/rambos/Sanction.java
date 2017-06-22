@@ -23,19 +23,13 @@
  *******************************************************************************/
 package rambos;
 
-import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 
 /**
  * @author igorcadelima
  *
  */
-public class Sanction {
-	protected String id;
-	protected boolean disabled;
-	protected LogicalFormula condition;
-	protected SanctionCategory category;
-	protected Literal content;
+public class Sanction extends AbstractSanction {
 
 	/**
 	 * @param id
@@ -43,18 +37,12 @@ public class Sanction {
 	 * @param condition
 	 * @param category
 	 */
-	public Sanction(String id, boolean disabled, LogicalFormula condition, SanctionCategory category, Literal content) {
+	public Sanction(String id, boolean disabled, LogicalFormula condition, SanctionCategory category,
+			IContent content) {
 		this.id = id;
 		this.disabled = disabled;
 		this.condition = condition;
 		this.category = category;
 		this.content = content;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
 	}
 }
