@@ -166,22 +166,6 @@ public class DeJure extends Artifact {
 		// TODO: check whether operator agent is a legislator
 		Norm n = norms.get(normId);
 		Sanction s = sanctions.get(sanctionId);
-		return addLink(n, s);
-	}
-
-	/**
-	 * Add link to links set.
-	 * 
-	 * @param n
-	 *            the norm
-	 * @param s
-	 *            the sanction
-	 * @return true if link is created successfully
-	 */
-	@LINK
-	@OPERATION
-	public synchronized boolean addLink(Norm n, Sanction s) {
-		// TODO: check whether operator agent is a legislator
 		if (n == null || s == null)
 			return false;
 
