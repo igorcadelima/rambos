@@ -98,10 +98,10 @@ public abstract class AbstractNorm implements INorm {
 	@Override
 	public String toString() {
 		Literal l = ASSyntax.createLiteral("norm");
-		l.addTerm(ASSyntax.createString(id));
+		l.addTerm(ASSyntax.createAtom(id));
 		l.addTerm(ASSyntax.createAtom(String.valueOf(disabled)));
 		l.addTerm(condition);
-		l.addTerm(ASSyntax.createString(issuer));
+		l.addTerm(ASSyntax.createAtom(issuer));
 		l.addTerm(ASSyntax.createLiteral(content.toString()));
 		return l.toString();
 	}

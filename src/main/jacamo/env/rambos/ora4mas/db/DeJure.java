@@ -97,7 +97,7 @@ public class DeJure extends Artifact {
 
 			// Create empty set and link it to norm
 			links.put(n.getId(), new HashSet<String>());
-			defineObsProperty("link", n.getId(), new String[0]);
+			defineObsProperty("link", ASSyntax.createAtom(n.getId()), new String[0]);
 		}
 	}
 
@@ -176,7 +176,7 @@ public class DeJure extends Artifact {
 		Set<String> linkedSanctions = links.get(n.getId());
 		if (linkedSanctions.add(s.getId())) {
 			links.put(n.getId(), linkedSanctions);
-			updateObsProperty("link", n.getId(), linkedSanctions.toArray());
+			updateObsProperty("link", ASSyntax.createAtom(n.getId()), linkedSanctions.toArray());
 		}
 	}
 
