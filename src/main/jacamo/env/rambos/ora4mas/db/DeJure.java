@@ -46,6 +46,7 @@ import rambos.Sanction;
  *
  */
 public class DeJure extends Artifact {
+
 	// normId -> norm
 	private Map<String, Norm> norms = new ConcurrentHashMap<String, Norm>();
 	// sanctionId -> sanction
@@ -98,25 +99,6 @@ public class DeJure extends Artifact {
 			links.put(n.getId(), new HashSet<String>());
 			defineObsProperty("link", n.getId(), new String[0]);
 		}
-	}
-
-	/**
-	 * Put {@code n} into norms set.
-	 * 
-	 * If there is already a norm with the same id as {@code n}, the existing
-	 * norm in the set is replaced by the new one.
-	 * 
-	 * @param n
-	 *            norm to be added
-	 * @throws ParseException
-	 */
-	@LINK
-	@OPERATION
-	public void putNorm(Norm n) throws ParseException {
-		// TODO: check whether operator agent is a legislator
-		Literal literalNorm = ASSyntax.parseLiteral(n.toString());
-		norms.put(n.getId(), n);
-		defineObsProperty("norm", literalNorm.getTerms().toArray());
 	}
 
 	/**
