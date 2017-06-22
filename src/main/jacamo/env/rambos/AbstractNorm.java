@@ -32,7 +32,6 @@ import jason.RevisionFailedException;
 import jason.asSemantics.Agent;
 import jason.asSemantics.Unifier;
 import jason.asSyntax.ASSyntax;
-import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
@@ -98,14 +97,12 @@ public abstract class AbstractNorm implements INorm {
 
 	@Override
 	public String toString() {
-		Atom disabledTerm = ASSyntax.createAtom(String.valueOf(disabled));
-
 		Literal l = ASSyntax.createLiteral("norm");
+		l.addTerm(ASSyntax.createString(id));
+		l.addTerm(ASSyntax.createAtom(String.valueOf(disabled)));
 		l.addTerm(condition);
 		l.addTerm(ASSyntax.createString(issuer));
-		l.addTerm(new Atom(content.toString()));
-		l.addAnnot(ASSyntax.createStructure("id", new Atom(id)));
-		l.addAnnot(ASSyntax.createStructure("disabled", disabledTerm));
+		l.addTerm(ASSyntax.createLiteral(content.toString()));
 		return l.toString();
 	}
 
