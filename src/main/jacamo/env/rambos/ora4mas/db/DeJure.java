@@ -154,8 +154,9 @@ public class DeJure extends Artifact {
 	/**
 	 * Add link between norm and sanction to links set.
 	 * 
-	 * If there is already a link between the norm and the sanction, no changes
-	 * are performed.
+	 * The observable property containing the link is also updated to reflect
+	 * the changes in the links set. However, if there is already a link between
+	 * the norm and the sanction, no changes at all are performed.
 	 * 
 	 * @param normId
 	 *            norm id
@@ -175,6 +176,7 @@ public class DeJure extends Artifact {
 		Set<String> linkedSanctions = links.get(n.getId());
 		if (linkedSanctions.add(s.getId())) {
 			links.put(n.getId(), linkedSanctions);
+			updateObsProperty("link", n.getId(), linkedSanctions.toArray());
 		}
 	}
 
