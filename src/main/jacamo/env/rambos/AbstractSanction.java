@@ -3,23 +3,20 @@
  *
  * Copyright (c) Igor Conrado Alves de Lima <igorcadelima@gmail.com>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *******************************************************************************/
 package rambos;
 
@@ -31,34 +28,34 @@ import jason.asSyntax.LogicalFormula;
  */
 public class AbstractSanction implements ISanction {
 
-	protected String id;
-	protected State state;
-	protected LogicalFormula condition;
-	protected SanctionCategory category;
-	protected IContent content;
+  protected String id;
+  protected State state;
+  protected LogicalFormula condition;
+  protected SanctionCategory category;
+  protected IContent content;
 
-	@Override
-	public String getId() {
-		return id;
-	}
+  @Override
+  public String getId() {
+    return id;
+  }
 
-	@Override
-	public State getState() {
-		return state;
-	}
+  @Override
+  public State getState() {
+    return state;
+  }
 
-	@Override
-	public LogicalFormula getCondition() {
-		return condition;
-	}
+  @Override
+  public LogicalFormula getCondition() {
+    return condition;
+  }
 
-	@Override
-	public SanctionCategory getCategory() {
-		return category;
-	}
+  @Override
+  public SanctionCategory getCategory() {
+    return category;
+  }
 
-	@Override
-	public IContent getContent() {
-		return content;
-	}
+  @Override
+  public IContent getContent() {
+    return content;
+  }
 }
