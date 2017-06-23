@@ -255,7 +255,11 @@ public class DeJureDOMParser extends DeJureParser<Document> {
    */
   private INorm createNorm(Element normEl) throws ParseException {
     String id = normEl.getAttribute("id");
-    boolean disabled = Boolean.valueOf(normEl.getAttribute("disabled"));
+    String stateStr = Optional.ofNullable(normEl.getAttribute("state"))
+                              .filter(s -> !s.isEmpty())
+                              .map(String::toUpperCase)
+                              .orElse(State.ENABLED.name());
+    State state = State.valueOf(stateStr);
     LogicalFormula condition = null;
     String issuer = null;
     IContent content = null;
@@ -279,7 +283,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
     }
     NormBuilder builder = new NormBuilder();
     builder.setId(id);
-    builder.setDisabled(disabled);
+    builder.setState(state);
     builder.setCondition(condition);
     builder.setIssuer(issuer);
     builder.setContent(content);

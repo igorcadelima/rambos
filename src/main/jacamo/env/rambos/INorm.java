@@ -35,9 +35,10 @@ public interface INorm {
   String getId();
 
   /**
-   * @return true if norm is disabled, false otherwise
+   * @return state
+   * @see State
    */
-  boolean isDisabled();
+  State getState();
 
   /**
    * @return norm's activation condition

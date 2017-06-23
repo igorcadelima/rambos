@@ -47,8 +47,8 @@
 			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:string" use="required" />
-		<xsd:attribute name="disabled" type="xsd:boolean"
-			default="false" />
+		<xsd:attribute name="state" type="rambos:state"
+			default="enabled" />
 	</xsd:complexType>
 	<xsd:simpleType name="contentType">
 		<xsd:restriction base="xsd:string">

@@ -40,7 +40,7 @@ import jason.asSyntax.parser.ParseException;
 public abstract class AbstractNorm implements INorm {
 
   protected String id;
-  protected boolean disabled = false;
+  protected State state = State.ENABLED;
   protected LogicalFormula condition;
   protected String issuer;
   protected IContent content;
@@ -51,8 +51,8 @@ public abstract class AbstractNorm implements INorm {
   }
 
   @Override
-  public boolean isDisabled() {
-    return disabled;
+  public State getState() {
+    return state;
   }
 
   @Override
@@ -96,7 +96,7 @@ public abstract class AbstractNorm implements INorm {
   public String toString() {
     Literal l = ASSyntax.createLiteral("norm");
     l.addTerm(ASSyntax.createAtom(id));
-    l.addTerm(ASSyntax.createAtom(String.valueOf(disabled)));
+    l.addTerm(ASSyntax.createAtom(state.toString()));
     l.addTerm(condition);
     l.addTerm(ASSyntax.createAtom(issuer));
     l.addTerm(ASSyntax.createLiteral(content.toString()));
@@ -106,7 +106,7 @@ public abstract class AbstractNorm implements INorm {
   protected static abstract class AbstractNormBuilder<T extends AbstractNormBuilder<T>> {
 
     protected String id;
-    protected boolean disabled = false;
+    protected State state = State.ENABLED;
     protected LogicalFormula condition;
     protected String issuer;
     protected IContent content;
@@ -124,8 +124,8 @@ public abstract class AbstractNorm implements INorm {
       return getThis();
     }
 
-    public T setDisabled(boolean disabled) {
-      this.disabled = disabled;
+    public T setState(State state) {
+      this.state = state;
       return getThis();
     }
 
@@ -146,5 +146,4 @@ public abstract class AbstractNorm implements INorm {
 
     public abstract AbstractNorm build();
   }
-
 }

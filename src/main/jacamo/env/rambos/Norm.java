@@ -34,7 +34,7 @@ public class Norm extends AbstractNorm {
     if ((builder.id != null) && (builder.condition != null) && (builder.issuer != null)
         && (builder.content != null)) {
       id = builder.id;
-      disabled = builder.disabled;
+      state = builder.state;
       condition = builder.condition;
       issuer = builder.issuer;
       content = builder.content;
@@ -55,7 +55,5 @@ public class Norm extends AbstractNorm {
     public Norm build() {
       return new Norm(getThis());
     }
-
   }
-
 }
