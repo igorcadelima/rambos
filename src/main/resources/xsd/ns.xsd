@@ -56,6 +56,12 @@
 				value="(obligation\s*\(\s*(\w+)\s*,\s*(\w+)\s*,\s*(.+)\s*,\s*(.+)\s*\))|fail\s*\(\s*(.+)\s*\)" />
 		</xsd:restriction>
 	</xsd:simpleType>
+	<xsd:simpleType name="state">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="enabled" />
+			<xsd:enumeration value="disabled" />
+		</xsd:restriction>
+	</xsd:simpleType>
 	<xsd:complexType name="sanctions">
 		<xsd:sequence>
 			<xsd:element name="sanction" minOccurs="0" maxOccurs="unbounded"
@@ -75,8 +81,8 @@
 			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:string" use="required" />
-		<xsd:attribute name="disabled" type="xsd:boolean"
-			default="false" />
+		<xsd:attribute name="state" type="rambos:state"
+			default="enabled" />
 	</xsd:complexType>
 
 	<xsd:complexType name="sanctionCategory">

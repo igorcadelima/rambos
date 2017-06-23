@@ -37,9 +37,10 @@ public interface ISanction {
 	public String getId();
 	
 	/**
-	 * @return true if sanction is disabled
+	 * @return state
+	 * @see State
 	 */
-	boolean isDisabled();
+	State getState();
 
 	/**
 	 * @return activation condition

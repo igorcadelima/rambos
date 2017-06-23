@@ -33,14 +33,14 @@ public class Sanction extends AbstractSanction {
 
 	/**
 	 * @param id
-	 * @param disabled
+	 * @param state
 	 * @param condition
 	 * @param category
 	 */
-	public Sanction(String id, boolean disabled, LogicalFormula condition, SanctionCategory category,
+	public Sanction(String id, State state, LogicalFormula condition, SanctionCategory category,
 			IContent content) {
 		this.id = id;
-		this.disabled = disabled;
+		this.state = state;
 		this.condition = condition;
 		this.category = category;
 		this.content = content;

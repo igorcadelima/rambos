@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -57,6 +58,7 @@ import rambos.SanctionLocus;
 import rambos.SanctionMode;
 import rambos.SanctionPolarity;
 import rambos.SanctionPurpose;
+import rambos.State;
 import rambos.ora4mas.util.DJUtil;
 
 /**
@@ -120,7 +122,11 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 
 		for (Element sanctionEl : sanctions) {
 			String id = sanctionEl.getAttribute("id");
-			boolean disabled = Boolean.valueOf(sanctionEl.getAttribute("disabled"));
+			String stateStr = Optional.ofNullable(sanctionEl.getAttribute("state"))
+									  .filter(s -> !s.isEmpty())
+									  .map(String::toUpperCase)
+									  .orElse(State.ENABLED.name());
+			State state = State.valueOf(stateStr);
 			LogicalFormula condition = null;
 			SanctionCategory category = null;
 			IContent content = null;
@@ -143,7 +149,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 					content = new ContentStringParser().parse(p.getTextContent());
 				}
 			}
-			addSanction(new Sanction(id, disabled, condition, category, content));
+			addSanction(new Sanction(id, state, condition, category, content));
 		}
 		return this.sanctions;
 	}
@@ -334,5 +340,4 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 		Sanction s = sanctions.get(sanctionId);
 		addLink(n, s);
 	}
-
 }

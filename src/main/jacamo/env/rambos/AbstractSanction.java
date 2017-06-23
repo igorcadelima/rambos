@@ -32,7 +32,7 @@ import jason.asSyntax.LogicalFormula;
 public class AbstractSanction implements ISanction {
 
 	protected String id;
-	protected boolean disabled;
+	protected State state;
 	protected LogicalFormula condition;
 	protected SanctionCategory category;
 	protected IContent content;
@@ -43,8 +43,8 @@ public class AbstractSanction implements ISanction {
 	}
 
 	@Override
-	public boolean isDisabled() {
-		return disabled;
+	public State getState() {
+		return state;
 	}
 
 	@Override
