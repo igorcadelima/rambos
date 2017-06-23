@@ -35,8 +35,9 @@ import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
+import npl.Norm;
 import npl.Scope;
-import rambos.Norm;
+import rambos.INorm;
 import rambos.State;
 import rambos.ora4mas.db.DeJure;
 
@@ -45,6 +46,7 @@ import rambos.ora4mas.db.DeJure;
  *
  */
 public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
+
   protected ArtifactId deJure;
 
   /**
@@ -87,7 +89,7 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
    */
   protected void deployNorms() throws OperationException {
     assert deJure != null;
-    OpFeedbackParam<Set<Norm>> norms = new OpFeedbackParam<Set<Norm>>();
+    OpFeedbackParam<Set<INorm>> norms = new OpFeedbackParam<Set<INorm>>();
     execLinkedOp(deJure, "getNorms", norms);
     Scope scope = createNPLScope(norms.get());
     nengine.loadNP(scope);
@@ -99,14 +101,14 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
    * @param norms norms to be added to the scope
    * @return {@link Scope} with {@code norms}
    */
-  private Scope createNPLScope(Set<Norm> norms) {
+  private Scope createNPLScope(Set<INorm> norms) {
     try {
       Literal id = ASSyntax.parseLiteral("np");
       Scope scope = new Scope(id, null);
-      for (Norm n : norms) {
+      for (INorm n : norms) {
         Literal nplNormConsequence = new Atom(n.getContent()
                                                .toString());
-        npl.Norm nplNorm = new npl.Norm(n.getId(), nplNormConsequence, n.getCondition());
+        Norm nplNorm = new Norm(n.getId(), nplNormConsequence, n.getCondition());
         if (n.getState() == State.ENABLED)
           scope.addNorm(nplNorm);
       }
@@ -126,7 +128,7 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
    *        environment
    */
   @OPERATION
-  protected void testCondition(Norm norm, OpFeedbackParam<Boolean> ruled) {
+  protected void testCondition(INorm norm, OpFeedbackParam<Boolean> ruled) {
     LogicalFormula formula = norm.getCondition();
     Agent ag = nengine.getAg();
     Iterator<Unifier> i = formula.logicalConsequence(ag, new Unifier());

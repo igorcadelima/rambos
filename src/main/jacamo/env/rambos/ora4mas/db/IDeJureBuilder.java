@@ -26,7 +26,7 @@ import java.util.Set;
 import cartago.ArtifactId;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
-import rambos.Norm;
+import rambos.INorm;
 import rambos.Sanction;
 
 /**
@@ -48,7 +48,7 @@ public interface IDeJureBuilder {
    * @param norms mapping of norms ids to norms themselves
    * @return builder after setting norms
    */
-  IDeJureBuilder setNorms(Map<String, Norm> norms);
+  IDeJureBuilder setNorms(Map<String, INorm> norms);
 
   /**
    * Set sanctions.
