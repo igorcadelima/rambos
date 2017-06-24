@@ -5,6 +5,9 @@ engines:
   checkstyle:
     enabled: true
     channel: "beta"
+    checks:
+      com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck:
+        enabled: false
   pmd:
     enabled: true
     channel: "beta"
