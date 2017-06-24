@@ -8,6 +8,8 @@ engines:
     checks:
       com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck:
         enabled: false
+      com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck:
+        enabled: false
   pmd:
     enabled: true
     channel: "beta"
