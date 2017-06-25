@@ -38,7 +38,6 @@ import jason.asSyntax.parser.ParseException;
  *
  */
 public abstract class AbstractNorm implements INorm {
-
   protected String id;
   protected State state = State.ENABLED;
   protected LogicalFormula condition;
@@ -103,8 +102,8 @@ public abstract class AbstractNorm implements INorm {
     return l.toString();
   }
 
-  protected static abstract class AbstractNormBuilder<T extends AbstractNormBuilder<T>> {
-
+  protected static abstract class AbstractNormBuilder<T extends AbstractNormBuilder<T>>
+      implements INormBuilder<T> {
     protected String id;
     protected State state = State.ENABLED;
     protected LogicalFormula condition;
@@ -119,31 +118,34 @@ public abstract class AbstractNorm implements INorm {
      */
     protected abstract T getThis();
 
+    @Override
     public T setId(String id) {
       this.id = id;
       return getThis();
     }
 
+    @Override
     public T setState(State state) {
       this.state = state;
       return getThis();
     }
 
+    @Override
     public T setCondition(LogicalFormula condition) {
       this.condition = condition;
       return getThis();
     }
 
+    @Override
     public T setIssuer(String issuer) {
       this.issuer = issuer;
       return getThis();
     }
 
+    @Override
     public T setContent(IContent content) {
       this.content = content;
       return getThis();
     }
-
-    public abstract AbstractNorm build();
   }
 }
