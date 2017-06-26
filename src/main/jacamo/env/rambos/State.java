@@ -20,6 +20,9 @@
  *******************************************************************************/
 package rambos;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author igorcadelima
  *
@@ -33,4 +36,25 @@ public enum State {
     return name().toLowerCase();
   }
 
+  private static final Map<String, State> stringToEnum = new HashMap<String, State>();
+  static { // Initialise map from constant name to enum constant
+    for (State s : values()) {
+      String str = s.toString();
+      stringToEnum.put(str, s);
+      stringToEnum.put(str.toLowerCase(), s);
+    }
+  }
+
+  /**
+   * Return state for string.
+   * 
+   * The only accepted strings are: {@code enabled}, {@code ENABLED}, {@code disabled}, and
+   * {@code DISABLED}.
+   * 
+   * @param s string
+   * @return State for string, or {@code null} if string is invalid
+   */
+  public static State fromString(String s) {
+    return stringToEnum.get(s);
+  }
 }
