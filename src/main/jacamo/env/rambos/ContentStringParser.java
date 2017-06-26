@@ -119,17 +119,18 @@ public class ContentStringParser implements ContentParser<String> {
   }
 
   /**
-   * Solve a time expression such as {@code `now` + `2 days`} and return the result as
-   * {@link TimeTerm}.
+   * Solve a time expression such as {@code `now` + `2 days`} or {@code now + 2 days} and return the
+   * result as {@link TimeTerm}.
    * 
    * @param time string with expression to be solved
    * @return resolved {@link TimeTerm}.
    */
   private TimeTerm solveTimeExpression(String time) {
-    String[] deadlineTerms = time.split("`");
-    NumberTerm t1 = parseTimeTerm(deadlineTerms[1]);
+    String[] deadlineTerms = time.replace("`", "")
+                                 .split("\\+|\\-");
+    NumberTerm t1 = parseTimeTerm(deadlineTerms[0]);
 
-    for (int k = 2; k < deadlineTerms.length; k += 2) {
+    for (int k = 1; k < deadlineTerms.length; k += 2) {
       ArithmeticOp op = parseArithmeticOp(deadlineTerms[k]);
       NumberTerm t2 = parseTimeTerm(deadlineTerms[k + 1]);
       t1 = new ArithExpr(t1, op, t2);
