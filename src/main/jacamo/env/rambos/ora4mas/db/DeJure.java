@@ -59,7 +59,7 @@ public class DeJure extends Artifact {
    */
   @SuppressWarnings("unused")
   private void init(DeJureBuilder builder) throws ParseException {
-    addNorm(builder.norms.values()
+    addNorms(builder.norms.values()
                          .toArray(new INorm[0]));
     sanctions = builder.sanctions;
     links = builder.links;
@@ -78,7 +78,7 @@ public class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public void addNorm(INorm... ns) throws ParseException {
+  public void addNorms(INorm... ns) throws ParseException {
     // TODO: check whether operator agent is a legislator
     for (INorm n : ns) {
       if (norms.containsKey(n.getId())) {
