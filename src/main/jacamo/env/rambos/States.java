@@ -20,15 +20,50 @@
  *******************************************************************************/
 package rambos;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author igorcadelima
  *
  */
-public enum State {
-  ENABLED, DISABLED;
+public final class States {
+  private static final Map<String, State> stringToEnum = new HashMap<String, State>();
+  static { // Initialise map from constant name to enum constant
+    for (State s : State.values()) {
+      String str = s.toString();
+      stringToEnum.put(str, s);
+      stringToEnum.put(str.toLowerCase(), s);
+    }
+  }
 
-  @Override
-  public String toString() {
-    return name().toLowerCase();
+  /**
+   * Return state for string.
+   * 
+   * The only accepted strings are: {@code enabled}, {@code ENABLED}, {@code disabled}, and
+   * {@code DISABLED}.
+   * 
+   * @param s string
+   * @return State for string, or {@code null} if string is invalid
+   */
+  public static State fromString(String s) {
+    return stringToEnum.get(s);
+  }
+
+  /**
+   * Try to return State for string.
+   * 
+   * @param s string to be parsed
+   * @param defaultValue State to be returned if {@code s} can not be parsed
+   * @return state State for string, or {@code defaultValue} if string can not be parsed
+   */
+  public static State tryParse(String s, State defaultValue) {
+    if (s == null)
+      return defaultValue;
+
+    State state = fromString(s);
+    if (state == null)
+      return defaultValue;
+    return state;
   }
 }
