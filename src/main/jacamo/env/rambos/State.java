@@ -57,4 +57,21 @@ public enum State {
   public static State fromString(String s) {
     return stringToEnum.get(s);
   }
+
+  /**
+   * Try to return State for string.
+   * 
+   * @param s string to be parsed
+   * @param defaultValue State to be returned if {@code s} can not be parsed
+   * @return state State for string, or {@code defaultValue} if string can not be parsed
+   */
+  public static State tryParse(String s, State defaultValue) {
+    if (s == null)
+      return defaultValue;
+
+    State state = State.fromString(s);
+    if (state == null)
+      return defaultValue;
+    return state;
+  }
 }
