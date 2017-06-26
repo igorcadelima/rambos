@@ -60,9 +60,23 @@ public class DeJure extends Artifact {
   @SuppressWarnings("unused")
   private void init(DeJureBuilder builder) throws ParseException {
     addNorms(builder.norms.values()
-                         .toArray(new INorm[0]));
+                          .toArray(new INorm[0]));
     sanctions = builder.sanctions;
     links = builder.links;
+  }
+
+  /**
+   * Add new norm into norms set.
+   * 
+   * This method just calls {@link #addNorms(INorm...)} passing {@code n} as argument.
+   * 
+   * @param n norm to be added
+   * @throws ParseException
+   */
+  @LINK
+  @OPERATION
+  public void addNorm(INorm n) throws ParseException {
+    addNorms(n);
   }
 
   /**
