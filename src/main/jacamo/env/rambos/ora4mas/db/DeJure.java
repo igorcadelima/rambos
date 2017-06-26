@@ -43,7 +43,6 @@ import rambos.Sanction;
  *
  */
 public class DeJure extends Artifact {
-
   // normId -> norm
   private Map<String, INorm> norms = new ConcurrentHashMap<String, INorm>();
   // sanctionId -> sanction
@@ -79,7 +78,7 @@ public class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public void addNorm(INorm[] ns) throws ParseException {
+  public void addNorm(INorm... ns) throws ParseException {
     // TODO: check whether operator agent is a legislator
     for (INorm n : ns) {
       if (norms.containsKey(n.getId())) {
