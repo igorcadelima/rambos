@@ -273,13 +273,12 @@ public class DeJureDOMParser extends DeJureParser<Document> {
           break;
       }
     }
-    NormBuilder builder = new NormBuilder();
-    builder.setId(id);
-    builder.setState(state);
-    builder.setCondition(condition);
-    builder.setIssuer(issuer);
-    builder.setContent(content);
-    return builder.build();
+    return new NormBuilder().setId(id)
+                            .setState(state)
+                            .setCondition(condition)
+                            .setIssuer(issuer)
+                            .setContent(content)
+                            .build();
   }
 
   /**
