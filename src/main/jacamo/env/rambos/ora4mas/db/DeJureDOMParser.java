@@ -55,6 +55,7 @@ import rambos.SanctionMode;
 import rambos.SanctionPolarity;
 import rambos.SanctionPurpose;
 import rambos.State;
+import rambos.States;
 import rambos.ora4mas.util.DJUtil;
 
 /**
@@ -120,7 +121,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 
     for (Element sanctionEl : sanctions) {
       String id = sanctionEl.getAttribute("id");
-      State state = tryParseState(sanctionEl.getAttribute("state"), State.ENABLED);
+      State state = States.tryParse(sanctionEl.getAttribute("state"), State.ENABLED);
       LogicalFormula condition = null;
       SanctionCategory category = null;
       IContent content = null;
@@ -250,7 +251,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
    */
   private INorm createNorm(Element normEl) throws ParseException {
     String id = normEl.getAttribute("id");
-    State state = tryParseState(normEl.getAttribute("state"), State.ENABLED);
+    State state = States.tryParse(normEl.getAttribute("state"), State.ENABLED);
     LogicalFormula condition = null;
     String issuer = null;
     IContent content = null;
@@ -279,24 +280,6 @@ public class DeJureDOMParser extends DeJureParser<Document> {
     builder.setIssuer(issuer);
     builder.setContent(content);
     return builder.build();
-  }
-
-  /**
-   * Parse state or return default value.
-   * 
-   * @param s string to be parsed
-   * @param defaultValue state to be returned if {@code s} can not be parsed
-   * @return state
-   */
-  private State tryParseState(String s, State defaultValue) {
-    if (s == null || s.isEmpty()) {
-      return defaultValue;
-    }
-    try {
-      return State.valueOf(s.toUpperCase());
-    } catch (Exception e) {
-      return defaultValue;
-    }
   }
 
   /**
