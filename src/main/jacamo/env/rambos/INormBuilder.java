@@ -26,7 +26,7 @@ import jason.asSyntax.LogicalFormula;
  * @author igorcadelima
  *
  */
-public interface INormBuilder<T extends INormBuilder<T>> {
+public interface INormBuilder<T extends INormBuilder<T>> extends Builder<INorm>{
   /**
    * Set id for the norm.
    * 
