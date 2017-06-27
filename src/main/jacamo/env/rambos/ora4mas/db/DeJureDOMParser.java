@@ -102,13 +102,8 @@ public class DeJureDOMParser extends DeJureParser<Document> {
     List<Element> norms = getChildElements(normsRootEl);
 
     for (Element normEl : norms) {
-      try {
-        INorm norm = createNorm(normEl);
-        addNorm(norm);
-      } catch (ParseException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      INorm norm = createNorm(normEl);
+      addNorm(norm);
     }
     return this.norms;
   }
@@ -245,25 +240,29 @@ public class DeJureDOMParser extends DeJureParser<Document> {
   /**
    * Create a norm based on {@code normEl}.
    * 
-   * @param normEl {@link Element} holding the norm
+   * @param el {@link Element} holding the norm
    * @return new norm
-   * @throws ParseException
+   * @throws IllegalArgumentException if Element does not contain a parsable norm
    */
-  private INorm createNorm(Element normEl) throws ParseException {
-    String id = normEl.getAttribute("id");
-    State state = States.tryParse(normEl.getAttribute("state"), State.ENABLED);
+  private INorm createNorm(Element el) {
+    String id = el.getAttribute("id");
+    State state = States.tryParse(el.getAttribute("state"), State.ENABLED);
     LogicalFormula condition = null;
     String issuer = null;
     IContent content = null;
 
-    NodeList properties = normEl.getChildNodes();
+    NodeList properties = el.getChildNodes();
     for (int i = 0; i < properties.getLength(); i++) {
       Node prop = properties.item(i);
       String propContent = prop.getTextContent();
 
       switch (prop.getNodeName()) {
         case "condition":
-          condition = ASSyntax.parseFormula(propContent);
+          try {
+            condition = ASSyntax.parseFormula(propContent);
+          } catch (ParseException e) {
+            throw new IllegalArgumentException("Element does not contain a parsable norm");
+          }
           break;
         case "issuer":
           issuer = propContent;
