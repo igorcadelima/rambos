@@ -20,6 +20,11 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Literal;
+import jason.asSyntax.LogicalFormula;
+import jason.asSyntax.parser.ParseException;
+
 /**
  * Static utility methods pertaining to {@link INorm} instances.
  * 
@@ -28,4 +33,35 @@ package rambos;
  */
 public final class Norms {
   private Norms() {}
+
+  /**
+   * Return a new norm initialised to the value represented by the specified {@code String}.
+   * 
+   * @param in string to be parsed
+   * @return norm represented by the string argument
+   * @throws IllegalArgumentException if string is does not contain a parsable norm
+   * @throws NullPointerException if string is {@code null}
+   */
+  public static INorm parse(String in) {
+    try {
+      Literal l = ASSyntax.parseLiteral(in);
+      String id = l.getTerm(0)
+                   .toString();
+      State state = States.fromString(l.getTerm(1)
+                                       .toString());
+      LogicalFormula condition = (LogicalFormula) l.getTerm(2);
+      String issuer = l.getTerm(3)
+                       .toString();
+      IContent content = new ContentStringParser().parse(l.getTerm(4)
+                                                          .toString());
+      return new Norm.NormBuilder().setId(id)
+                                   .setState(state)
+                                   .setCondition(condition)
+                                   .setIssuer(issuer)
+                                   .setContent(content)
+                                   .build();
+    } catch (ParseException e) {
+      throw new IllegalArgumentException("String does not contain a parsable norm.");
+    }
+  }
 }
