@@ -245,11 +245,9 @@ public class DeJureDOMParser extends DeJureParser<Document> {
    * @throws IllegalArgumentException if Element does not contain a parsable norm
    */
   private INorm createNorm(Element el) {
-    String id = el.getAttribute("id");
-    State state = States.tryParse(el.getAttribute("state"), State.ENABLED);
-    LogicalFormula condition = null;
-    String issuer = null;
-    IContent content = null;
+    NormBuilder builder = new NormBuilder();
+    builder.setId(el.getAttribute("id"))
+           .setState(States.tryParse(el.getAttribute("state"), State.ENABLED));
 
     NodeList properties = el.getChildNodes();
     for (int i = 0; i < properties.getLength(); i++) {
@@ -259,25 +257,20 @@ public class DeJureDOMParser extends DeJureParser<Document> {
       switch (prop.getNodeName()) {
         case "condition":
           try {
-            condition = ASSyntax.parseFormula(propContent);
+            builder.setCondition(ASSyntax.parseFormula(propContent));
           } catch (ParseException e) {
             throw new IllegalArgumentException("Element does not contain a parsable norm");
           }
           break;
         case "issuer":
-          issuer = propContent;
+          builder.setIssuer(propContent);
           break;
         case "content":
-          content = new ContentStringParser().parse(propContent);
+          builder.setContent(new ContentStringParser().parse(propContent));
           break;
       }
     }
-    return new NormBuilder().setId(id)
-                            .setState(state)
-                            .setCondition(condition)
-                            .setIssuer(issuer)
-                            .setContent(content)
-                            .build();
+    return builder.build();
   }
 
   /**
