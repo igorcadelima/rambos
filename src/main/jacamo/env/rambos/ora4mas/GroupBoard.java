@@ -20,10 +20,6 @@
  *******************************************************************************/
 package rambos.ora4mas;
 
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,28 +34,17 @@ import cartago.CartagoException;
 import cartago.LINK;
 import cartago.OPERATION;
 import cartago.OperationException;
-import jason.NoValueException;
-import jason.asSyntax.ASSyntax;
-import jason.asSyntax.Literal;
-import jason.asSyntax.NumberTerm;
-import jason.asSyntax.Term;
 import jason.util.Config;
 import moise.common.MoiseException;
-import moise.oe.GroupInstance;
-import moise.oe.RolePlayer;
 import moise.os.Cardinality;
-import moise.tools.os2dot;
-import moise.xml.DOMUtils;
 import npl.NormativeFailureException;
 import npl.parser.ParseException;
-import ora4mas.nopl.GUIInterface;
 import ora4mas.nopl.JasonTermWrapper;
 import ora4mas.nopl.Operation;
 import ora4mas.nopl.WebInterface;
 import ora4mas.nopl.oe.Group;
 import ora4mas.nopl.oe.Player;
 import ora4mas.nopl.tools.os2nopl;
-import rambos.ora4mas.util.DJUtil;
 import rambos.os.OS;
 
 public class GroupBoard extends ora4mas.nopl.GroupBoard {
@@ -93,8 +78,6 @@ public class GroupBoard extends ora4mas.nopl.GroupBoard {
    * @throws ParseException if group scope cannot be found in OS
    */
   public void init(OS os, final String type) throws MoiseException, ParseException {
-    final String groupName = getId().getName();
-    orgState = new Group(groupName);
     spec = os.getSS()
              .getRootGrSpec()
              .findSubGroup(type);
@@ -102,15 +85,11 @@ public class GroupBoard extends ora4mas.nopl.GroupBoard {
     if (spec == null)
       throw new MoiseException("Group " + type + " does not exist!");
 
+    final String groupName = getId().getName();
+    orgState = new Group(groupName);
     oeId = getCreatorId().getWorkspaceId()
                          .getName();
-
-    // observable properties
-    defineObsProperty(obsPropSchemes, getGrpState().getResponsibleForAsProlog());
-    defineObsProperty(obsWellFormed, new JasonTermWrapper("nok"));
-    defineObsProperty(obsPropSpec, new JasonTermWrapper(spec.getAsProlog()));
-    defineObsProperty(obsPropSubgroups, getGrpState().getSubgroupsAsProlog());
-    defineObsProperty(obsPropParentGroup, new JasonTermWrapper(getGrpState().getParentGroup()));
+    defineObsProperties();
 
     // load normative program
     initNormativeEngine(os, "group(" + type + ")");
@@ -128,6 +107,17 @@ public class GroupBoard extends ora4mas.nopl.GroupBoard {
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * Define observable properties.
+   */
+  protected void defineObsProperties() {
+    defineObsProperty(obsPropSchemes, getGrpState().getResponsibleForAsProlog());
+    defineObsProperty(obsWellFormed, new JasonTermWrapper("nok"));
+    defineObsProperty(obsPropSpec, new JasonTermWrapper(spec.getAsProlog()));
+    defineObsProperty(obsPropSubgroups, getGrpState().getSubgroupsAsProlog());
+    defineObsProperty(obsPropParentGroup, new JasonTermWrapper(getGrpState().getParentGroup()));
   }
 
   // TODO: not working! UpdateGuiThread should be reimplemented
