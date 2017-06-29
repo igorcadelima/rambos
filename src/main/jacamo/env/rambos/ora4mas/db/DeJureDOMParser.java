@@ -45,7 +45,7 @@ import jason.asSyntax.parser.ParseException;
 import rambos.ContentStringParser;
 import rambos.IContent;
 import rambos.INorm;
-import rambos.Norm.NormBuilder;
+import rambos.Norms;
 import rambos.Sanction;
 import rambos.SanctionCategory;
 import rambos.SanctionDiscernability;
@@ -63,7 +63,6 @@ import rambos.ora4mas.util.DJUtil;
  *
  */
 public class DeJureDOMParser extends DeJureParser<Document> {
-
   protected static final String NORMS_TAG = "norms";
   protected static final String SANCTIONS_TAG = "sanctions";
   protected static final String LINKS_TAG = "links";
@@ -102,7 +101,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
     List<Element> norms = getChildElements(normsRootEl);
 
     for (Element normEl : norms) {
-      INorm norm = createNorm(normEl);
+      INorm norm = Norms.parse(normEl);
       addNorm(norm);
     }
     return this.norms;
@@ -235,42 +234,6 @@ public class DeJureDOMParser extends DeJureParser<Document> {
       }
     }
     return nodes;
-  }
-
-  /**
-   * Create a norm based on {@code normEl}.
-   * 
-   * @param el {@link Element} holding the norm
-   * @return new norm
-   * @throws IllegalArgumentException if Element does not contain a parsable norm
-   */
-  private INorm createNorm(Element el) {
-    NormBuilder builder = new NormBuilder();
-    builder.setId(el.getAttribute("id"))
-           .setState(States.tryParse(el.getAttribute("state"), State.ENABLED));
-
-    NodeList properties = el.getChildNodes();
-    for (int i = 0; i < properties.getLength(); i++) {
-      Node prop = properties.item(i);
-      String propContent = prop.getTextContent();
-
-      switch (prop.getNodeName()) {
-        case "condition":
-          try {
-            builder.setCondition(ASSyntax.parseFormula(propContent));
-          } catch (ParseException e) {
-            throw new IllegalArgumentException("Element does not contain a parsable norm");
-          }
-          break;
-        case "issuer":
-          builder.setIssuer(propContent);
-          break;
-        case "content":
-          builder.setContent(new ContentStringParser().parse(propContent));
-          break;
-      }
-    }
-    return builder.build();
   }
 
   /**

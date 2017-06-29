@@ -20,10 +20,15 @@
  *******************************************************************************/
 package rambos;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
+import rambos.Norm.NormBuilder;
 
 /**
  * Static utility methods pertaining to {@link INorm} instances.
@@ -61,7 +66,36 @@ public final class Norms {
                                    .setContent(content)
                                    .build();
     } catch (ParseException e) {
-      throw new IllegalArgumentException("String does not contain a parsable norm.");
+      throw new IllegalArgumentException("String does not contain a parsable norm");
     }
+  }
+
+  public static INorm parse(Element el) {
+    NormBuilder builder = new NormBuilder();
+    builder.setId(el.getAttribute("id"))
+           .setState(States.tryParse(el.getAttribute("state"), State.ENABLED));
+
+    NodeList properties = el.getChildNodes();
+    for (int i = 0; i < properties.getLength(); i++) {
+      Node prop = properties.item(i);
+      String propContent = prop.getTextContent();
+
+      switch (prop.getNodeName()) {
+        case "condition":
+          try {
+            builder.setCondition(ASSyntax.parseFormula(propContent));
+          } catch (ParseException e) {
+            throw new IllegalArgumentException("Element does not contain a parsable norm");
+          }
+          break;
+        case "issuer":
+          builder.setIssuer(propContent);
+          break;
+        case "content":
+          builder.setContent(new ContentStringParser().parse(propContent));
+          break;
+      }
+    }
+    return builder.build();
   }
 }
