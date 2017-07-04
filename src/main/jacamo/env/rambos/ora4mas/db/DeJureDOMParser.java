@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -263,10 +264,8 @@ public class DeJureDOMParser extends DeJureParser<Document> {
    * @param s the sanction
    */
   private void addLink(INorm n, Sanction s) {
-    assert n != null;
-    assert s != null;
-
-    Set<String> linkedSanctions = links.get(n.getId());
+    Set<String> linkedSanctions = Optional.ofNullable(links.get(n.getId()))
+                                          .orElse(new HashSet<String>());
     if (linkedSanctions.add(s.getId())) {
       links.put(n.getId(), linkedSanctions);
     }
