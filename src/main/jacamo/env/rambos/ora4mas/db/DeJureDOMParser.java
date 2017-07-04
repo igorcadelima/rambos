@@ -191,30 +191,22 @@ public class DeJureDOMParser extends DeJureParser<Document> {
 
   @Override
   protected Map<String, Set<String>> extractLinks(Document ns) {
-    Node linksRootEl = ns.getElementsByTagName(LINKS_TAG)
-                         .item(0);
-    NodeList linkNodes = linksRootEl.getChildNodes();
-    for (int i = 0; i < linkNodes.getLength(); i++) {
-      Node linkNode = linkNodes.item(i);
-
-      if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
-        Node normIdNode = linkNode.getFirstChild();
-        String normId = normIdNode.getTextContent();
-
-        Node sanctionsNode = linkNode.getLastChild();
-        NodeList sanctionIdsList = sanctionsNode.getChildNodes();
-        for (int j = 0; j < sanctionIdsList.getLength(); j++) {
-          Node sanctionIdNode = sanctionIdsList.item(j);
-
-          if (sanctionIdNode.getNodeType() == Node.ELEMENT_NODE) {
-            String sanctionId = sanctionIdNode.getTextContent();
-            addLink(normId, sanctionId);
-          }
-        }
-      }
+    Node linksNode = ns.getElementsByTagName(LINKS_TAG)
+                       .item(0);
+    List<Element> links = getChildElements(linksNode);
+    for (Element linkEl : links) {
+      String normId = linkEl.getElementsByTagName("norm-id")
+                            .item(0)
+                            .getTextContent();
+      Node sanctionIdsNode = linkEl.getElementsByTagName("sanction-ids")
+                                   .item(0);
+      List<Element> sanctionIds = getChildElements(sanctionIdsNode);
+      for (Element sanctionId : sanctionIds)
+        addLink(normId, sanctionId.getTextContent());
     }
     return this.links;
   }
+
 
   /**
    * Extract and return {@code parant} node's child elements.
