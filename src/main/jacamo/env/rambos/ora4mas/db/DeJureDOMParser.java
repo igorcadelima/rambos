@@ -194,22 +194,21 @@ public class DeJureDOMParser extends DeJureParser<Document> {
     Node linksNode = ns.getElementsByTagName(LINKS_TAG)
                        .item(0);
     List<Element> links = getChildElements(linksNode);
-    for (Element linkEl : links) {
-      String normId = linkEl.getElementsByTagName("norm-id")
-                            .item(0)
-                            .getTextContent();
-      Node sanctionIdsNode = linkEl.getElementsByTagName("sanction-ids")
-                                   .item(0);
+    links.forEach(l -> {
+      String normId = l.getElementsByTagName("norm-id")
+                       .item(0)
+                       .getTextContent();
+      Node sanctionIdsNode = l.getElementsByTagName("sanction-ids")
+                              .item(0);
       List<Element> sanctionIds = getChildElements(sanctionIdsNode);
-      for (Element sanctionId : sanctionIds)
-        addLink(normId, sanctionId.getTextContent());
-    }
+      sanctionIds.forEach(s -> addLink(normId, s.getTextContent()));
+    });
     return this.links;
   }
 
 
   /**
-   * Extract and return {@code parant} node's child elements.
+   * Extract and return {@code parent} node's child elements.
    * 
    * @param parent parent node
    * @return list of child elements
@@ -258,9 +257,8 @@ public class DeJureDOMParser extends DeJureParser<Document> {
   private void addLink(INorm n, Sanction s) {
     Set<String> linkedSanctions = Optional.ofNullable(links.get(n.getId()))
                                           .orElse(new HashSet<String>());
-    if (linkedSanctions.add(s.getId())) {
+    if (linkedSanctions.add(s.getId()))
       links.put(n.getId(), linkedSanctions);
-    }
   }
 
   /**
