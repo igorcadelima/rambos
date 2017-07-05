@@ -59,8 +59,7 @@ public class DeJure extends Artifact {
    */
   @SuppressWarnings("unused")
   private void init(DeJureBuilder builder) throws ParseException {
-    addNorms(builder.norms.values()
-                          .toArray(new INorm[0]));
+    builder.norms.forEach((__, v) -> addNorm(v));
     sanctions = builder.sanctions;
     builder.links.forEach((k, v) -> {
       v.forEach(s -> addLink(k, s));
