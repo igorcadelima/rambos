@@ -49,6 +49,7 @@ import rambos.INorm;
 import rambos.Norms;
 import rambos.Sanction;
 import rambos.SanctionCategory;
+import rambos.SanctionCategory.SanctionCategoryBuilder;
 import rambos.SanctionDiscernability;
 import rambos.SanctionIssuer;
 import rambos.SanctionLocus;
@@ -186,7 +187,14 @@ public class DeJureDOMParser extends DeJureParser<Document> {
           break;
       }
     }
-    return new SanctionCategory(purpose, issuer, locus, mode, polarity, discernability);
+    SanctionCategoryBuilder builder = new SanctionCategoryBuilder();
+    return builder.setPurpose(purpose)
+                  .setIssuer(issuer)
+                  .setLocus(locus)
+                  .setMode(mode)
+                  .setPolarity(polarity)
+                  .setDiscernability(discernability)
+                  .build();
   }
 
   @Override
