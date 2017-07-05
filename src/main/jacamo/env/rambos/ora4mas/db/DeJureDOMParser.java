@@ -41,13 +41,12 @@ import cartago.OPERATION;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
 import jason.asSyntax.ASSyntax;
-import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
 import rambos.ContentStringParser;
-import rambos.IContent;
 import rambos.INorm;
 import rambos.Norms;
 import rambos.Sanction;
+import rambos.Sanction.SanctionBuilder;
 import rambos.SanctionCategory;
 import rambos.SanctionCategory.SanctionCategoryBuilder;
 import rambos.SanctionDiscernability;
@@ -114,33 +113,31 @@ public class DeJureDOMParser extends DeJureParser<Document> {
     Node sanctionsRootEl = ns.getElementsByTagName(SANCTIONS_TAG)
                              .item(0);
     List<Element> sanctions = getChildElements(sanctionsRootEl);
+    SanctionBuilder builder = new SanctionBuilder();
 
     for (Element sanctionEl : sanctions) {
-      String id = sanctionEl.getAttribute("id");
-      State state = States.tryParse(sanctionEl.getAttribute("state"), State.ENABLED);
-      LogicalFormula condition = null;
-      SanctionCategory category = null;
-      IContent content = null;
+      builder.setId(sanctionEl.getAttribute("id"))
+             .setState(States.tryParse(sanctionEl.getAttribute("state"), State.ENABLED));
 
       List<Element> properties = getChildElements(sanctionEl);
       for (Element p : properties) {
         switch (p.getNodeName()) {
           case "condition":
             try {
-              condition = ASSyntax.parseFormula(p.getTextContent());
+              builder.setCondition(ASSyntax.parseFormula(p.getTextContent()));
             } catch (ParseException e) {
               // TODO Auto-generated catch block
               e.printStackTrace();
             }
             break;
           case "category":
-            category = parseSanctionCategory(p);
+            builder.setCategory(parseSanctionCategory(p));
             break;
           case "content":
-            content = new ContentStringParser().parse(p.getTextContent());
+            builder.setContent(new ContentStringParser().parse(p.getTextContent()));
         }
       }
-      addSanction(new Sanction(id, state, condition, category, content));
+      addSanction(builder.build());
     }
     return this.sanctions;
   }
