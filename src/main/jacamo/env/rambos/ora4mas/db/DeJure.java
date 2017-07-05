@@ -77,7 +77,7 @@ public class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public void addNorm(INorm n) throws ParseException {
+  public void addNorm(INorm n) {
     addNorms(n);
   }
 
@@ -90,21 +90,23 @@ public class DeJure extends Artifact {
    * Only norms with different ids from the ones in the set can be added.
    * 
    * @param ns norms to be added
-   * @throws ParseException
    */
   @LINK
   @OPERATION
-  public void addNorms(INorm... ns) throws ParseException {
+  public void addNorms(INorm... ns) {
     // TODO: check whether operator agent is a legislator
     for (INorm n : ns) {
-      if (norms.containsKey(n.getId())) {
+      if (norms.containsKey(n.getId()))
         break;
-      }
 
-      Literal literalNorm = ASSyntax.parseLiteral(n.toString());
-      norms.put(n.getId(), n);
-      defineObsProperty("norm", literalNorm.getTerms()
-                                           .toArray());
+      try {
+        Literal literalNorm = ASSyntax.parseLiteral(n.toString());
+        norms.put(n.getId(), n);
+        defineObsProperty("norm", literalNorm.getTerms()
+                                             .toArray());
+      } catch (ParseException e) {
+        continue;
+      }
 
       // Create empty set and link it to norm
       links.put(n.getId(), new HashSet<String>());
