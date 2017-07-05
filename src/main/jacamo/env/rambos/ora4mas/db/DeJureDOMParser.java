@@ -40,24 +40,10 @@ import cartago.LINK;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
-import jason.asSyntax.ASSyntax;
-import jason.asSyntax.parser.ParseException;
-import rambos.ContentStringParser;
 import rambos.INorm;
 import rambos.Norms;
 import rambos.ISanction;
-import rambos.Sanction.SanctionBuilder;
-import rambos.SanctionCategories;
-import rambos.SanctionCategory;
-import rambos.SanctionCategory.SanctionCategoryBuilder;
-import rambos.SanctionDiscernability;
-import rambos.SanctionIssuer;
-import rambos.SanctionLocus;
-import rambos.SanctionMode;
-import rambos.SanctionPolarity;
-import rambos.SanctionPurpose;
-import rambos.State;
-import rambos.States;
+import rambos.Sanctions;
 import rambos.ora4mas.util.DJUtil;
 
 /**
@@ -114,32 +100,10 @@ public class DeJureDOMParser extends DeJureParser<Document> {
     Node sanctionsRootEl = ns.getElementsByTagName(SANCTIONS_TAG)
                              .item(0);
     List<Element> sanctions = getChildElements(sanctionsRootEl);
-    SanctionBuilder builder = new SanctionBuilder();
 
-    for (Element sanctionEl : sanctions) {
-      builder.setId(sanctionEl.getAttribute("id"))
-             .setState(States.tryParse(sanctionEl.getAttribute("state"), State.ENABLED));
-
-      List<Element> properties = getChildElements(sanctionEl);
-      for (Element p : properties) {
-        switch (p.getNodeName()) {
-          case "condition":
-            try {
-              builder.setCondition(ASSyntax.parseFormula(p.getTextContent()));
-            } catch (ParseException e) {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-            break;
-          case "category":
-            builder.setCategory(SanctionCategories.parse(p));
-            break;
-          case "content":
-            builder.setContent(new ContentStringParser().parse(p.getTextContent()));
-        }
-      }
-      addSanction(builder.build());
-    }
+    for (Element sanctionEl : sanctions)
+      addSanction(Sanctions.parse(sanctionEl));
+    
     return this.sanctions;
   }
 
