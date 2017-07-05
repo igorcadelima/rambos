@@ -42,4 +42,39 @@ public class Sanction extends AbstractSanction {
     this.category = category;
     this.content = content;
   }
+
+  /**
+   * Sanction constructor.
+   * 
+   * In order to successfully create a sanction, none of the builder's attributes should be
+   * {@code null}.
+   * 
+   * @param builder
+   */
+  private Sanction(SanctionBuilder builder) {
+    if ((builder.id != null) && (builder.condition != null) && (builder.category != null)
+        && (builder.content != null)) {
+      this.id = builder.id;
+      this.state = builder.state;
+      this.condition = builder.condition;
+      this.category = builder.category;
+      this.content = builder.content;
+    } else {
+      throw new RuntimeException(
+          "The following properties should not be null: id, condition, category, content");
+    }
+  }
+
+  public static final class SanctionBuilder extends AbstractSanctionBuilder<SanctionBuilder> {
+
+    @Override
+    protected SanctionBuilder getThis() {
+      return this;
+    }
+
+    @Override
+    public Sanction build() {
+      return new Sanction(getThis());
+    }
+  }
 }
