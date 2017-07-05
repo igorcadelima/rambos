@@ -27,9 +27,8 @@ import jason.asSyntax.LogicalFormula;
  *
  */
 public class AbstractSanction implements ISanction {
-
   protected String id;
-  protected State state;
+  protected State state = State.ENABLED;
   protected LogicalFormula condition;
   protected SanctionCategory category;
   protected IContent content;
