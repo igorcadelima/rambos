@@ -41,7 +41,7 @@ public class SanctionCategory {
    * @param discernability
    */
   public SanctionCategory(SanctionPurpose purpose, SanctionIssuer issuer, SanctionLocus locus,
-      SanctionMode mode, SanctionPolarity polarity, SanctionDiscernability discernability) {
+      SanctionPolarity polarity, SanctionDiscernability discernability) {
     super();
     this.purpose = purpose;
     this.issuer = issuer;
@@ -52,31 +52,33 @@ public class SanctionCategory {
   }
 
   /**
+   * SanctionCategory constructor.
+   * 
+   * 
+   * @param builder
+   */
+  public SanctionCategory(SanctionCategoryBuilder builder) {
+    this.purpose = builder.purpose;
+    this.issuer = builder.issuer;
+    this.locus = builder.locus;
+    this.mode = builder.mode;
+    this.polarity = builder.polarity;
+    this.discernability = builder.discernability;
+  }
+
+  /**
    * @return the purpose
    */
   public SanctionPurpose getPurpose() {
     return purpose;
   }
 
-  /**
-   * @param purpose the purpose to set
-   */
-  public void setPurpose(SanctionPurpose purpose) {
-    this.purpose = purpose;
-  }
 
   /**
    * @return the issuer
    */
   public SanctionIssuer getIssuer() {
     return issuer;
-  }
-
-  /**
-   * @param issuer the issuer to set
-   */
-  public void setIssuer(SanctionIssuer issuer) {
-    this.issuer = issuer;
   }
 
   /**
@@ -87,24 +89,10 @@ public class SanctionCategory {
   }
 
   /**
-   * @param locus the locus to set
-   */
-  public void setLocus(SanctionLocus locus) {
-    this.locus = locus;
-  }
-
-  /**
    * @return the mode
    */
   public SanctionMode getMode() {
     return mode;
-  }
-
-  /**
-   * @param mode the mode to set
-   */
-  public void setMode(SanctionMode mode) {
-    this.mode = mode;
   }
 
   /**
@@ -115,24 +103,71 @@ public class SanctionCategory {
   }
 
   /**
-   * @param polarity the polarity to set
-   */
-  public void setPolarity(SanctionPolarity polarity) {
-    this.polarity = polarity;
-  }
-
-  /**
    * @return the discernability
    */
   public SanctionDiscernability getDiscernability() {
     return discernability;
   }
 
-  /**
-   * @param discernability the discernability to set
-   */
-  public void setDiscernability(SanctionDiscernability discernability) {
-    this.discernability = discernability;
-  }
+  public static final class SanctionCategoryBuilder implements rambos.Builder<SanctionCategory> {
+    private SanctionPurpose purpose;
+    private SanctionIssuer issuer;
+    private SanctionLocus locus;
+    private SanctionMode mode;
+    private SanctionPolarity polarity;
+    private SanctionDiscernability discernability;
 
+    /**
+     * @param purpose sanction purpose
+     */
+    public SanctionCategoryBuilder setPurpose(SanctionPurpose purpose) {
+      this.purpose = purpose;
+      return this;
+    }
+
+    /**
+     * @param issuer sanction issuer
+     */
+    public SanctionCategoryBuilder setIssuer(SanctionIssuer issuer) {
+      this.issuer = issuer;
+      return this;
+    }
+
+    /**
+     * @param locus sanction locus
+     */
+    public SanctionCategoryBuilder setLocus(SanctionLocus locus) {
+      this.locus = locus;
+      return this;
+    }
+
+    /**
+     * @param mode sanction mode
+     */
+    public SanctionCategoryBuilder setMode(SanctionMode mode) {
+      this.mode = mode;
+      return this;
+    }
+
+    /**
+     * @param polarity sanction polarity
+     */
+    public SanctionCategoryBuilder setPolarity(SanctionPolarity polarity) {
+      this.polarity = polarity;
+      return this;
+    }
+
+    /**
+     * @param discernability sanction discernability
+     */
+    public SanctionCategoryBuilder setDiscernability(SanctionDiscernability discernability) {
+      this.discernability = discernability;
+      return this;
+    }
+
+    @Override
+    public SanctionCategory build() {
+      return new SanctionCategory(this);
+    }
+  }
 }
