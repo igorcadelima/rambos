@@ -47,6 +47,7 @@ import rambos.INorm;
 import rambos.Norms;
 import rambos.ISanction;
 import rambos.Sanction.SanctionBuilder;
+import rambos.SanctionCategories;
 import rambos.SanctionCategory;
 import rambos.SanctionCategory.SanctionCategoryBuilder;
 import rambos.SanctionDiscernability;
@@ -131,7 +132,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
             }
             break;
           case "category":
-            builder.setCategory(parseSanctionCategory(p));
+            builder.setCategory(SanctionCategories.parse(p));
             break;
           case "content":
             builder.setContent(new ContentStringParser().parse(p.getTextContent()));
@@ -140,58 +141,6 @@ public class DeJureDOMParser extends DeJureParser<Document> {
       addSanction(builder.build());
     }
     return this.sanctions;
-  }
-
-  /**
-   * Extract the category dimensions from {@code category}, create a {@link SanctionCategory}, and
-   * return it.
-   * 
-   * @param category
-   * @return parsed {@link SanctionCategory} based on given node
-   */
-  private SanctionCategory parseSanctionCategory(Node category) {
-    NodeList dimensions = category.getChildNodes();
-    SanctionPurpose purpose = null;
-    SanctionIssuer issuer = null;
-    SanctionLocus locus = null;
-    SanctionMode mode = null;
-    SanctionPolarity polarity = null;
-    SanctionDiscernability discernability = null;
-
-    for (int i = 0; i < dimensions.getLength(); i++) {
-      Node dimension = dimensions.item(i);
-      String dimensionContent = dimension.getTextContent()
-                                         .toUpperCase();
-
-      switch (dimension.getNodeName()) {
-        case "purpose":
-          purpose = SanctionPurpose.valueOf(dimensionContent);
-          break;
-        case "issuer":
-          issuer = SanctionIssuer.valueOf(dimensionContent);
-          break;
-        case "locus":
-          locus = SanctionLocus.valueOf(dimensionContent);
-          break;
-        case "mode":
-          mode = SanctionMode.valueOf(dimensionContent);
-          break;
-        case "polarity":
-          polarity = SanctionPolarity.valueOf(dimensionContent);
-          break;
-        case "discernability":
-          discernability = SanctionDiscernability.valueOf(dimensionContent);
-          break;
-      }
-    }
-    SanctionCategoryBuilder builder = new SanctionCategoryBuilder();
-    return builder.setPurpose(purpose)
-                  .setIssuer(issuer)
-                  .setLocus(locus)
-                  .setMode(mode)
-                  .setPolarity(polarity)
-                  .setDiscernability(discernability)
-                  .build();
   }
 
   @Override
