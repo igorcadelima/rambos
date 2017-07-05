@@ -27,22 +27,6 @@ import jason.asSyntax.LogicalFormula;
  *
  */
 public class Sanction extends AbstractSanction {
-
-  /**
-   * @param id
-   * @param state
-   * @param condition
-   * @param category
-   */
-  public Sanction(String id, State state, LogicalFormula condition, SanctionCategory category,
-      IContent content) {
-    this.id = id;
-    this.state = state;
-    this.condition = condition;
-    this.category = category;
-    this.content = content;
-  }
-
   /**
    * Sanction constructor.
    * 
