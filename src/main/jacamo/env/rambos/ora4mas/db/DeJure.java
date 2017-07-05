@@ -87,7 +87,8 @@ public class DeJure extends Artifact {
    * For each added norm, an empty set is created and linked to it in the links set. Additionally,
    * observable properties are created for the norm and the link created.
    * 
-   * Only norms with different ids from the ones in the set can be added.
+   * Only norms with different ids from the ones in the set can be added. If an already existing
+   * norm is tried to be added, such addition is just ignored.
    * 
    * @param ns norms to be added
    */
@@ -97,7 +98,7 @@ public class DeJure extends Artifact {
     // TODO: check whether operator agent is a legislator
     for (INorm n : ns) {
       if (norms.containsKey(n.getId()))
-        break;
+        continue;
 
       try {
         Literal literalNorm = ASSyntax.parseLiteral(n.toString());
