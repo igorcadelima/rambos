@@ -33,29 +33,9 @@ public class SanctionCategory {
   protected SanctionDiscernability discernability;
 
   /**
-   * @param purpose
-   * @param issuer
-   * @param locus
-   * @param mode
-   * @param polarity
-   * @param discernability
-   */
-  public SanctionCategory(SanctionPurpose purpose, SanctionIssuer issuer, SanctionLocus locus,
-      SanctionPolarity polarity, SanctionDiscernability discernability) {
-    super();
-    this.purpose = purpose;
-    this.issuer = issuer;
-    this.locus = locus;
-    this.mode = mode;
-    this.polarity = polarity;
-    this.discernability = discernability;
-  }
-
-  /**
    * SanctionCategory constructor.
    * 
-   * 
-   * @param builder
+   * @param builder builder from which data should be obtained
    */
   public SanctionCategory(SanctionCategoryBuilder builder) {
     this.purpose = builder.purpose;
