@@ -62,7 +62,9 @@ public class DeJure extends Artifact {
     addNorms(builder.norms.values()
                           .toArray(new INorm[0]));
     sanctions = builder.sanctions;
-    links = builder.links;
+    builder.links.forEach((k, v) -> {
+      v.forEach(s -> addLink(k, s));
+    });
   }
 
   /**
@@ -168,6 +170,7 @@ public class DeJure extends Artifact {
    * 
    * @param normId norm id
    * @param sanctionId sanction id
+   * @throws NullPointerException if any of the arguments are {@code null}
    */
   @LINK
   @OPERATION
@@ -176,12 +179,9 @@ public class DeJure extends Artifact {
     INorm n = norms.get(normId);
     Sanction s = sanctions.get(sanctionId);
 
-    if (n == null || s == null)
-      throw new IllegalArgumentException("Arguments can not be null.");
-
-    Set<String> linkedSanctions = links.get(n.getId());
+    Set<String> linkedSanctions = links.get(normId);
     if (linkedSanctions.add(s.getId())) {
-      links.put(n.getId(), linkedSanctions);
+      links.put(normId, linkedSanctions);
       updateObsProperty("link", ASSyntax.createAtom(n.getId()), linkedSanctions.toArray());
     }
   }
