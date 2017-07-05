@@ -27,7 +27,7 @@ import cartago.ArtifactId;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
 import rambos.INorm;
-import rambos.Sanction;
+import rambos.ISanction;
 
 /**
  * @author igorcadelima
@@ -56,7 +56,7 @@ public interface IDeJureBuilder {
    * @param sanctions mapping of sanctions ids to sanctions themselves
    * @return builder after setting sanctions
    */
-  IDeJureBuilder setSanctions(Map<String, Sanction> sanctions);
+  IDeJureBuilder setSanctions(Map<String, ISanction> sanctions);
 
   /**
    * Set links between norms and sanctions.

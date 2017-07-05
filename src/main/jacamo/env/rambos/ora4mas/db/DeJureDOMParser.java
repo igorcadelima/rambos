@@ -45,7 +45,7 @@ import jason.asSyntax.parser.ParseException;
 import rambos.ContentStringParser;
 import rambos.INorm;
 import rambos.Norms;
-import rambos.Sanction;
+import rambos.ISanction;
 import rambos.Sanction.SanctionBuilder;
 import rambos.SanctionCategory;
 import rambos.SanctionCategory.SanctionCategoryBuilder;
@@ -71,7 +71,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
   // normId -> norm
   private Map<String, INorm> norms;
   // sanctionId -> sanction
-  private Map<String, Sanction> sanctions;
+  private Map<String, ISanction> sanctions;
   // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
   private Map<String, Set<String>> links;
 
@@ -80,7 +80,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
   @Override
   public void parse(Document ns, String deJureName, OpFeedbackParam<ArtifactId> deJureOut) {
     norms = new ConcurrentHashMap<String, INorm>();
-    sanctions = new ConcurrentHashMap<String, Sanction>();
+    sanctions = new ConcurrentHashMap<String, ISanction>();
     links = new ConcurrentHashMap<String, Set<String>>();
 
     try {
@@ -109,7 +109,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
   }
 
   @Override
-  protected Map<String, Sanction> extractSanctions(Document ns) {
+  protected Map<String, ISanction> extractSanctions(Document ns) {
     Node sanctionsRootEl = ns.getElementsByTagName(SANCTIONS_TAG)
                              .item(0);
     List<Element> sanctions = getChildElements(sanctionsRootEl);
@@ -249,7 +249,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
    * 
    * @param s sanction to be added
    */
-  private void addSanction(Sanction s) {
+  private void addSanction(ISanction s) {
     sanctions.put(s.getId(), s);
   }
 
@@ -259,7 +259,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
    * @param n the norm
    * @param s the sanction
    */
-  private void addLink(INorm n, Sanction s) {
+  private void addLink(INorm n, ISanction s) {
     Set<String> linkedSanctions = Optional.ofNullable(links.get(n.getId()))
                                           .orElse(new HashSet<String>());
     if (linkedSanctions.add(s.getId()))
@@ -274,7 +274,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
    */
   private void addLink(String normId, String sanctionId) {
     INorm n = norms.get(normId);
-    Sanction s = sanctions.get(sanctionId);
+    ISanction s = sanctions.get(sanctionId);
     addLink(n, s);
   }
 }

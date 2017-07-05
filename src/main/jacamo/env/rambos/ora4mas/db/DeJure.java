@@ -36,7 +36,7 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.parser.ParseException;
 import rambos.INorm;
-import rambos.Sanction;
+import rambos.ISanction;
 
 /**
  * @author igorcadelima
@@ -46,7 +46,7 @@ public class DeJure extends Artifact {
   // normId -> norm
   private Map<String, INorm> norms = new ConcurrentHashMap<String, INorm>();
   // sanctionId -> sanction
-  private Map<String, Sanction> sanctions;
+  private Map<String, ISanction> sanctions;
   // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
   private Map<String, Set<String>> links = new ConcurrentHashMap<String, Set<String>>();
 
@@ -139,7 +139,7 @@ public class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public synchronized boolean addSanction(Sanction s) {
+  public synchronized boolean addSanction(ISanction s) {
     // TODO: check whether operator agent is a legislator
     if (sanctions.put(s.getId(), s) == s) {
       return true;
@@ -155,7 +155,7 @@ public class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public synchronized boolean removeSanction(Sanction s) {
+  public synchronized boolean removeSanction(ISanction s) {
     // TODO: check whether operator agent is a legislator
     if (sanctions.remove(s.getId()) == s) {
       return true;
@@ -179,7 +179,7 @@ public class DeJure extends Artifact {
   public void addLink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
     INorm n = norms.get(normId);
-    Sanction s = sanctions.get(sanctionId);
+    ISanction s = sanctions.get(sanctionId);
 
     Set<String> linkedSanctions = links.get(normId);
     if (linkedSanctions.add(s.getId())) {
@@ -200,7 +200,7 @@ public class DeJure extends Artifact {
   public synchronized boolean removeLink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
     INorm n = norms.get(normId);
-    Sanction s = sanctions.get(sanctionId);
+    ISanction s = sanctions.get(sanctionId);
     return removeLink(n, s);
   }
 
@@ -213,7 +213,7 @@ public class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public synchronized boolean removeLink(INorm n, Sanction s) {
+  public synchronized boolean removeLink(INorm n, ISanction s) {
     // TODO: check whether operator agent is a legislator
     if (n == null || s == null)
       return false;
@@ -240,15 +240,15 @@ public class DeJure extends Artifact {
   }
 
   /**
-   * Get sanction set as a {@code {@link Map}<{@link String}, {@link Sanction}>}, whose keys are
+   * Get sanction set as a {@code {@link Map}<{@link String}, {@link ISanction}>}, whose keys are
    * sanctions ids.
    * 
    * @return copy of the sanctions
    */
   @LINK
   @OPERATION
-  public Map<String, Sanction> getSanctions() {
-    return new ConcurrentHashMap<String, Sanction>(sanctions);
+  public Map<String, ISanction> getSanctions() {
+    return new ConcurrentHashMap<String, ISanction>(sanctions);
   }
 
   /**

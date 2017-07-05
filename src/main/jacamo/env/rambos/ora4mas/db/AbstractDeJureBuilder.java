@@ -28,7 +28,7 @@ import cartago.Artifact;
 import cartago.LINK;
 import cartago.OPERATION;
 import rambos.INorm;
-import rambos.Sanction;
+import rambos.ISanction;
 
 /**
  * @author igorcadelima
@@ -39,7 +39,7 @@ public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureB
   // normId -> norm
   protected Map<String, INorm> norms = new ConcurrentHashMap<String, INorm>();
   // sanctionId -> sanction
-  protected Map<String, Sanction> sanctions = new ConcurrentHashMap<String, Sanction>();
+  protected Map<String, ISanction> sanctions = new ConcurrentHashMap<String, ISanction>();
   // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
   protected Map<String, Set<String>> links = new ConcurrentHashMap<String, Set<String>>();
 
@@ -59,7 +59,7 @@ public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureB
   @LINK
   @OPERATION
   @Override
-  public IDeJureBuilder setSanctions(Map<String, Sanction> sanctions) {
+  public IDeJureBuilder setSanctions(Map<String, ISanction> sanctions) {
     this.sanctions = sanctions;
     return this;
   }

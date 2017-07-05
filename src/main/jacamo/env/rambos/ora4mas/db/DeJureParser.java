@@ -29,6 +29,7 @@ import cartago.LINK;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
 import rambos.INorm;
+import rambos.ISanction;
 import rambos.Sanction;
 
 /**
@@ -73,7 +74,7 @@ public abstract class DeJureParser<T> extends Artifact {
    * @param ns normative specification
    * @return {@link Map} containing sanction id as key and {@link Sanction} as value
    */
-  protected abstract Map<String, Sanction> extractSanctions(T ns);
+  protected abstract Map<String, ISanction> extractSanctions(T ns);
 
   /**
    * Extract and return links map.
