@@ -46,7 +46,7 @@ public class DeJure extends Artifact {
   // normId -> norm
   private Map<String, INorm> norms = new ConcurrentHashMap<String, INorm>();
   // sanctionId -> sanction
-  private Map<String, ISanction> sanctions;
+  private Map<String, ISanction> sanctions = new ConcurrentHashMap<String, ISanction>();
   // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
   private Map<String, Set<String>> links = new ConcurrentHashMap<String, Set<String>>();
 
@@ -60,7 +60,7 @@ public class DeJure extends Artifact {
   @SuppressWarnings("unused")
   private void init(DeJureBuilder builder) throws ParseException {
     builder.norms.forEach((__, v) -> addNorm(v));
-    sanctions = builder.sanctions;
+    builder.sanctions.forEach((__, v) -> addSanction(v));
     builder.links.forEach((k, v) -> {
       v.forEach(s -> addLink(k, s));
     });
