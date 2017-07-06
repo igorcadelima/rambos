@@ -132,19 +132,31 @@ public class DeJure extends Artifact {
   }
 
   /**
-   * Add sanction to sanctions set.
+   * Add new sanction into sanctions set.
+   * 
+   * Only new sanctions can be added into the set. If this happens successfully, a observable
+   * property is created to inform such addition.
+   * 
+   * If an already existing sanction is tried to be added, such action is just ignored and nothing
+   * happens.
    * 
    * @param s sanction to be added
-   * @return true if sanction is added successfully
    */
   @LINK
   @OPERATION
-  public synchronized boolean addSanction(ISanction s) {
+  public void addSanction(ISanction s) {
     // TODO: check whether operator agent is a legislator
-    if (sanctions.put(s.getId(), s) == s) {
-      return true;
+    if (sanctions.containsKey(s.getId()))
+      return;
+
+    try {
+      Literal literalSanction = ASSyntax.parseLiteral(s.toString());
+      sanctions.put(s.getId(), s);
+      defineObsProperty("sanction", literalSanction.getTerms()
+                                                   .toArray());
+    } catch (ParseException e) {
+      return;
     }
-    return false;
   }
 
   /**
