@@ -43,4 +43,20 @@ public final class Enums {
         return ec;
     return null;
   }
+
+  /**
+   * Return {@link T} value from string regardless of the case, or default value if lookup fails.
+   * 
+   * @param e enumerator class
+   * @param s string representation of {@link T}
+   * @param d default value if lookup fails
+   * @return {@link T} value from string
+   */
+  public static <T extends Enum<?>> T lookup(Class<T> e, String s, T d) {
+    for (T ec : e.getEnumConstants())
+      if (ec.name()
+            .equalsIgnoreCase(s))
+        return ec;
+    return d;
+  }
 }
