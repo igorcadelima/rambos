@@ -20,6 +20,9 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Literal;
+
 /**
  * @author igorcadelima
  *
@@ -87,6 +90,18 @@ public class SanctionCategory {
    */
   public SanctionDiscernability getDiscernability() {
     return discernability;
+  }
+
+  @Override
+  public String toString() {
+    Literal l = ASSyntax.createLiteral("category");
+    l.addTerm(ASSyntax.createAtom(discernability.lowercase()));
+    l.addTerm(ASSyntax.createAtom(issuer.lowercase()));
+    l.addTerm(ASSyntax.createAtom(locus.lowercase()));
+    l.addTerm(ASSyntax.createAtom(mode.lowercase()));
+    l.addTerm(ASSyntax.createAtom(polarity.lowercase()));
+    l.addTerm(ASSyntax.createAtom(purpose.lowercase()));
+    return l.toString();
   }
 
   public static final class SanctionCategoryBuilder implements rambos.Builder<SanctionCategory> {

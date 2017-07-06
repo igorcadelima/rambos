@@ -20,10 +20,12 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.util.LowercaseEnum;
+
 /**
  * @author igorcadelima
  *
  */
-public enum SanctionDiscernability {
+public enum SanctionDiscernability implements LowercaseEnum<SanctionPurpose> {
   OBTRUSIVE, UNOBTRUSIVE
 }

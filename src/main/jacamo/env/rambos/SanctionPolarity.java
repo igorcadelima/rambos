@@ -20,10 +20,12 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.util.LowercaseEnum;
+
 /**
  * @author igorcadelima
  *
  */
-public enum SanctionPolarity {
+public enum SanctionPolarity implements LowercaseEnum<SanctionPurpose> {
   POSITIVE, NEGATIVE
 }

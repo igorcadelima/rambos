@@ -20,10 +20,12 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.util.LowercaseEnum;
+
 /**
  * @author igorcadelima
  *
  */
-public enum SanctionLocus {
+public enum SanctionLocus implements LowercaseEnum<SanctionPurpose> {
   SELF_DIRECTED, OTHER_DIRECTED
 }

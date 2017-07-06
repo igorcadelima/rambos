@@ -20,10 +20,12 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.util.LowercaseEnum;
+
 /**
  * @author igorcadelima
  *
  */
-public enum SanctionIssuer {
+public enum SanctionIssuer implements LowercaseEnum<SanctionPurpose> {
   FORMAL, INFORMAL
 }

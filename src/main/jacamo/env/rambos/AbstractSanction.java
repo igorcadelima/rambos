@@ -64,8 +64,7 @@ public class AbstractSanction implements ISanction {
   public String toString() {
     Literal l = ASSyntax.createLiteral("sanction");
     l.addTerm(ASSyntax.createAtom(id));
-    l.addTerm(ASSyntax.createAtom(state.toString()
-                                       .toLowerCase()));
+    l.addTerm(ASSyntax.createAtom(state.lowercase()));
     l.addTerm(condition);
     l.addTerm(ASSyntax.createAtom(category.toString()));
     l.addTerm(ASSyntax.createLiteral(content.toString()));

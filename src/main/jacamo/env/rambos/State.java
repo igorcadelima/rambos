@@ -20,15 +20,12 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.util.LowercaseEnum;
+
 /**
  * @author igorcadelima
  *
  */
-public enum State {
-  ENABLED, DISABLED;
-
-  @Override
-  public String toString() {
-    return name().toLowerCase();
-  }
+public enum State implements LowercaseEnum<State> {
+  ENABLED, DISABLED
 }
