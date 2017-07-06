@@ -20,6 +20,8 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 
 /**
@@ -56,5 +58,16 @@ public class AbstractSanction implements ISanction {
   @Override
   public IContent getContent() {
     return content;
+  }
+  
+  @Override
+  public String toString() {
+    Literal l = ASSyntax.createLiteral("sanction");
+    l.addTerm(ASSyntax.createAtom(id));
+    l.addTerm(ASSyntax.createAtom(state.toString()));
+    l.addTerm(condition);
+    l.addTerm(ASSyntax.createAtom(category.toString()));
+    l.addTerm(ASSyntax.createLiteral(content.toString()));
+    return l.toString();
   }
 }

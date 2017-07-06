@@ -20,8 +20,6 @@
  *******************************************************************************/
 package rambos;
 
-import jason.asSyntax.LogicalFormula;
-
 /**
  * @author igorcadelima
  *
