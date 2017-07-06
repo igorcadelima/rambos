@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import rambos.SanctionCategory.SanctionCategoryBuilder;
+import rambos.util.Enums;
 
 /**
  * Static utility methods pertaining to {@link SanctionCategory} instances.
@@ -48,28 +49,27 @@ public final class SanctionCategories {
     SanctionCategoryBuilder builder = new SanctionCategoryBuilder();
 
     for (int i = 0; i < dimensions.getLength(); i++) {
-      Node dimension = dimensions.item(i);
-      String dimensionContent = dimension.getTextContent()
-                                         .toUpperCase();
+      Node dimensionNode = dimensions.item(i);
+      String dimension = dimensionNode.getTextContent();
 
-      switch (dimension.getNodeName()) {
+      switch (dimensionNode.getNodeName()) {
         case "purpose":
-          builder.setPurpose(SanctionPurpose.valueOf(dimensionContent));
+          builder.setPurpose(Enums.lookup(SanctionPurpose.class, dimension));
           break;
         case "issuer":
-          builder.setIssuer(SanctionIssuer.valueOf(dimensionContent));
+          builder.setIssuer(Enums.lookup(SanctionIssuer.class, dimension));
           break;
         case "locus":
-          builder.setLocus(SanctionLocus.valueOf(dimensionContent));
+          builder.setLocus(Enums.lookup(SanctionLocus.class, dimension));
           break;
         case "mode":
-          builder.setMode(SanctionMode.valueOf(dimensionContent));
+          builder.setMode(Enums.lookup(SanctionMode.class, dimension));
           break;
         case "polarity":
-          builder.setPolarity(SanctionPolarity.valueOf(dimensionContent));
+          builder.setPolarity(Enums.lookup(SanctionPolarity.class, dimension));
           break;
         case "discernability":
-          builder.setDiscernability(SanctionDiscernability.valueOf(dimensionContent));
+          builder.setDiscernability(Enums.lookup(SanctionDiscernability.class, dimension));
           break;
       }
     }

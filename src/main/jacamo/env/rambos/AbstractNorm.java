@@ -95,7 +95,8 @@ public abstract class AbstractNorm implements INorm {
   public String toString() {
     Literal l = ASSyntax.createLiteral("norm");
     l.addTerm(ASSyntax.createAtom(id));
-    l.addTerm(ASSyntax.createAtom(state.toString()));
+    l.addTerm(ASSyntax.createAtom(state.toString()
+                                       .toLowerCase()));
     l.addTerm(condition);
     l.addTerm(ASSyntax.createAtom(issuer));
     l.addTerm(ASSyntax.createLiteral(content.toString()));

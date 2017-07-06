@@ -29,6 +29,7 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
 import rambos.Norm.NormBuilder;
+import rambos.util.Enums;
 
 /**
  * Static utility methods pertaining to {@link INorm} instances.
@@ -52,8 +53,8 @@ public final class Norms {
       Literal l = ASSyntax.parseLiteral(in);
       String id = l.getTerm(0)
                    .toString();
-      State state = States.fromString(l.getTerm(1)
-                                       .toString());
+      State state = Enums.lookup(State.class, l.getTerm(1)
+                                               .toString());
       LogicalFormula condition = (LogicalFormula) l.getTerm(2);
       String issuer = l.getTerm(3)
                        .toString();
@@ -73,7 +74,7 @@ public final class Norms {
   public static INorm parse(Element el) {
     NormBuilder builder = new NormBuilder();
     builder.setId(el.getAttribute("id"))
-           .setState(States.tryParse(el.getAttribute("state"), State.ENABLED));
+           .setState(Enums.lookup(State.class, el.getAttribute("state"), State.ENABLED));
 
     NodeList properties = el.getChildNodes();
     for (int i = 0; i < properties.getLength(); i++) {

@@ -27,6 +27,7 @@ import org.w3c.dom.NodeList;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.parser.ParseException;
 import rambos.Sanction.SanctionBuilder;
+import rambos.util.Enums;
 
 /**
  * Static utility methods pertaining to {@link ISanction} instances.
@@ -48,7 +49,7 @@ public final class Sanctions {
   public static ISanction parse(Element el) {
     SanctionBuilder builder = new SanctionBuilder();
     builder.setId(el.getAttribute("id"))
-           .setState(States.tryParse(el.getAttribute("state"), State.ENABLED));
+           .setState(Enums.lookup(State.class, el.getAttribute("state"), State.ENABLED));
 
     NodeList properties = el.getChildNodes();
     for (int i = 0; i < properties.getLength(); i++) {
