@@ -37,6 +37,7 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.parser.ParseException;
 import rambos.INorm;
 import rambos.ISanction;
+import rambos.Norms;
 
 /**
  * @author igorcadelima
@@ -69,15 +70,24 @@ public class DeJure extends Artifact {
   /**
    * Add new norm into norms set.
    * 
-   * This method just calls {@link #addNorms(INorm...)} passing {@code n} as argument.
+   * Only instances of {@link INorm} or {@link String} should be passed as argument. For both cases,
+   * the norm will be added using {@link #addNorms(INorm...)}. If {@code n} is an instance of
+   * {@link String}, then it will be parsed using {@link Norms#parse(String)} before being added to
+   * the norms set.
    * 
    * @param n norm to be added
-   * @throws ParseException
    */
   @LINK
   @OPERATION
-  public void addNorm(INorm n) {
-    addNorms(n);
+  public <T> void addNorm(T n) {
+    if (n instanceof INorm)
+      addNorms((INorm) n);
+    else if (n instanceof String)
+      addNorms(Norms.parse((String) n));
+    else
+      failed("Expected " + String.class.getCanonicalName() + " or " + INorm.class.getCanonicalName()
+          + " but got " + n.getClass()
+                           .getCanonicalName());
   }
 
   /**
