@@ -45,7 +45,7 @@ public final class Norms {
    * 
    * @param in string to be parsed
    * @return norm represented by the string argument
-   * @throws IllegalArgumentException if string is does not contain a parsable norm
+   * @throws IllegalArgumentException if string does not contain a parsable norm
    * @throws NullPointerException if string is {@code null}
    */
   public static INorm parse(String in) {
