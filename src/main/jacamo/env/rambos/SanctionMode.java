@@ -26,6 +26,6 @@ import rambos.util.LowercaseEnum;
  * @author igorcadelima
  *
  */
-public enum SanctionMode implements LowercaseEnum<SanctionPurpose> {
+public enum SanctionMode implements LowercaseEnum<SanctionMode> {
   DIRECT, INDIRECT
 }

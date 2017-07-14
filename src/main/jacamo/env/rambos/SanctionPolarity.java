@@ -26,6 +26,6 @@ import rambos.util.LowercaseEnum;
  * @author igorcadelima
  *
  */
-public enum SanctionPolarity implements LowercaseEnum<SanctionPurpose> {
+public enum SanctionPolarity implements LowercaseEnum<SanctionPolarity> {
   POSITIVE, NEGATIVE
 }

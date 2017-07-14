@@ -26,6 +26,6 @@ import rambos.util.LowercaseEnum;
  * @author igorcadelima
  *
  */
-public enum SanctionLocus implements LowercaseEnum<SanctionPurpose> {
+public enum SanctionLocus implements LowercaseEnum<SanctionLocus> {
   SELF_DIRECTED, OTHER_DIRECTED
 }
