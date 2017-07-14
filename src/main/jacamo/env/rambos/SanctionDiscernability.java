@@ -27,5 +27,5 @@ import rambos.util.LowercaseEnum;
  *
  */
 public enum SanctionDiscernability implements LowercaseEnum<SanctionPurpose> {
-  OBTRUSIVE, UNOBTRUSIVE
+  NOTICEABLE, UNNOTICEABLE
 }
