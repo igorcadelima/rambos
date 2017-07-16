@@ -31,7 +31,6 @@ import cartago.OperationException;
 import jason.asSemantics.Agent;
 import jason.asSemantics.Unifier;
 import jason.asSyntax.ASSyntax;
-import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
@@ -106,8 +105,8 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
       Literal id = ASSyntax.parseLiteral("np");
       Scope scope = new Scope(id, null);
       for (INorm n : norms) {
-        Literal nplNormConsequence = new Atom(n.getContent()
-                                               .toString());
+        Literal nplNormConsequence = ASSyntax.parseLiteral(n.getContent()
+                                                            .toString());
         Norm nplNorm = new Norm(n.getId(), nplNormConsequence, n.getCondition());
         if (n.getState() == State.ENABLED)
           scope.addNorm(nplNorm);
