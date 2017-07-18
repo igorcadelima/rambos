@@ -26,6 +26,9 @@ import java.util.Set;
 import cartago.Artifact;
 import cartago.LINK;
 import cartago.OPERATION;
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Literal;
+import jason.asSyntax.parser.ParseException;
 import rambos.IFact;
 
 /**
@@ -43,7 +46,15 @@ public class DeFacto extends Artifact {
   @LINK
   @OPERATION
   public void addFact(IFact fact) {
-    facts.add(fact);
+    try {
+      Literal literalFact = ASSyntax.parseLiteral(fact.toString());
+      facts.add(fact);
+      defineObsProperty("fact", literalFact.getTerms()
+                                           .toArray());
+    } catch (ParseException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   /**
