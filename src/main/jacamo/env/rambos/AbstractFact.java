@@ -20,6 +20,9 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Literal;
+
 /**
  * @author igorcadelima
  *
@@ -65,5 +68,17 @@ public abstract class AbstractFact implements IFact {
   @Override
   public void setEfficacy(Boolean efficacy) {
     this.efficacy = efficacy;
+  }
+
+  @Override
+  public String toString() {
+    Literal l = ASSyntax.createLiteral("fact");
+    l.addTerm(ASSyntax.createNumber(time));
+    l.addTerm(ASSyntax.createAtom(sanctioner));
+    l.addTerm(ASSyntax.createAtom(sanctionee));
+    l.addTerm(ASSyntax.createAtom(norm));
+    l.addTerm(ASSyntax.createAtom(sanction));
+    l.addTerm(ASSyntax.createAtom(efficacy == null ? "nd" : efficacy.toString()));
+    return l.toString();
   }
 }
