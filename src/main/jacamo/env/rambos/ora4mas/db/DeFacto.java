@@ -77,6 +77,14 @@ public class DeFacto extends Artifact {
   @LINK
   @OPERATION
   public void removeFact(IFact fact) {
-    facts.remove(fact);
+    try {
+      Literal literalFact = ASSyntax.parseLiteral(fact.toString());
+      facts.remove(fact);
+      removeObsPropertyByTemplate("fact", literalFact.getTerms()
+                                                     .toArray());
+    } catch (ParseException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 }
