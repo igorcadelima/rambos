@@ -83,21 +83,4 @@ public abstract class DeJureParser<T> extends Artifact {
    * @return {@link Map} containing norm id as key and sanction id as value
    */
   protected abstract Map<String, Set<String>> extractLinks(T ns);
-
-  /**
-   * Destroy this artefact by calling {@link Artifact#dispose(ArtifactId)}.
-   * 
-   * @throws OperationException
-   */
-  @LINK
-  public void destroy() throws OperationException {
-    try {
-      dispose(getId());
-    } catch (Exception e) {
-      /*
-       * CArtAgO's bug. An issue has been created in
-       * https://github.com/CArtAgO-lang/cartago/issues/2
-       */
-    }
-  }
 }

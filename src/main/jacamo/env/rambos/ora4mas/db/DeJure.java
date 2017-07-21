@@ -291,22 +291,5 @@ public class DeJure extends Artifact {
     public void build(String name, OpFeedbackParam<ArtifactId> out) throws OperationException {
       out.set(makeArtifact(name, DeJure.class.getName(), new ArtifactConfig(this)));
     }
-
-    /**
-     * Destroy this artefact by calling {@link Artifact#dispose(ArtifactId)}.
-     * 
-     * @throws OperationException
-     */
-    @LINK
-    public void destroy() throws OperationException {
-      try {
-        dispose(getId());
-      } catch (Exception e) {
-        /*
-         * CArtAgO's bug. An issue has been created in
-         * https://github.com/CArtAgO-lang/cartago/issues/2
-         */
-      }
-    }
   }
 }

@@ -104,8 +104,8 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
     execLinkedOp(djp, "parse", ns, djName, djOut);
     deJure = djOut.get();
 
-    execLinkedOp(djb, "destroy");
-    execLinkedOp(djp, "destroy");
+    dispose(djb);
+    dispose(djp);
   }
 
   /**
