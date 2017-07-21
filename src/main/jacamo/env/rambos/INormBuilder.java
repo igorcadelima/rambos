@@ -21,12 +21,13 @@
 package rambos;
 
 import jason.asSyntax.LogicalFormula;
+import rambos.util.Builder;
 
 /**
  * @author igorcadelima
  *
  */
-public interface INormBuilder<T extends INormBuilder<T>> extends Builder<INorm>{
+public interface INormBuilder<T extends INormBuilder<T>> extends Builder<INorm> {
   /**
    * Set id for the norm.
    * 

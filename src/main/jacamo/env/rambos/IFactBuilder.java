@@ -20,6 +20,8 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.util.Builder;
+
 /**
  * @author igorcadelima
  *

@@ -22,6 +22,7 @@ package rambos;
 
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
+import rambos.util.Builder;
 
 /**
  * @author igorcadelima
@@ -104,7 +105,7 @@ public class SanctionCategory {
     return l.toString();
   }
 
-  public static final class SanctionCategoryBuilder implements rambos.Builder<SanctionCategory> {
+  public static final class SanctionCategoryBuilder implements Builder<SanctionCategory> {
     private SanctionPurpose purpose;
     private SanctionIssuer issuer;
     private SanctionLocus locus;

@@ -21,6 +21,7 @@
 package rambos;
 
 import jason.asSyntax.LogicalFormula;
+import rambos.util.Builder;
 
 /**
  * @author igorcadelima
