@@ -70,21 +70,19 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   }
 
   /**
-   * Create {@link DeJure} repository by extracting data from a {@link Document} containing the
-   * normative specification.
+   * Create {@link DeJure} repository by extracting data from the normative specification.
    * 
-   * @param ns normative specification
    * @param aid output parameter which returns the {@link ArtifactId} of {@link DeJure}
    * @throws OperationException
    */
-  @INTERNAL_OPERATION
-  public void createDeJure(Document ns, OpFeedbackParam<ArtifactId> aid) throws OperationException {
-    String djName = getId().getName() + ".DeJure";
+  @OPERATION
+  public void createDeJure(OpFeedbackParam<ArtifactId> aid) throws OperationException {
+    String name = getId().getName() + ".DeJure";
 
     ArtifactId djb =
         makeArtifact("djb", DeJure.DeJureBuilder.class.getName(), new ArtifactConfig());
     ArtifactId djp = makeArtifact("djp", DeJureDOMParser.class.getName(), new ArtifactConfig(djb));
-    execLinkedOp(djp, "parse", ns, djName, aid);
+    execLinkedOp(djp, "parse", ns, name, aid);
     deJure = aid.get();
 
     dispose(djb);
