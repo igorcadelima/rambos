@@ -77,6 +77,10 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
    */
   @OPERATION
   public void createDeJure(OpFeedbackParam<ArtifactId> aid) throws OperationException {
+    if (deJure != null) {
+      failed("There cannot be more than one DeJure in an organisation");
+    }
+
     String name = getId().getName() + ".DeJure";
 
     ArtifactId djb =
