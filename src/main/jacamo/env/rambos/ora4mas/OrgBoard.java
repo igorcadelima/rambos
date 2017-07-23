@@ -93,7 +93,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
    * @param ns normative specification
    * @throws OperationException
    */
-  @INTERNAL_OPERATION
+  @OPERATION
   public void createDeJure(Document ns) throws OperationException {
     String djName = getId().getName() + ".DeJure";
 
