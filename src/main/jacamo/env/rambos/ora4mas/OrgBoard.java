@@ -43,6 +43,7 @@ import rambos.os.OS;
 public class OrgBoard extends ora4mas.nopl.OrgBoard {
   protected ArtifactId deJure;
   protected OS os;
+  protected Document ns;
 
   protected Map<String, ArtifactId> aids = new HashMap<String, ArtifactId>();
   protected Logger logger = Logger.getLogger(OrgBoard.class.getName());
@@ -61,10 +62,10 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
       doc.getDocumentElement()
          .removeChild(nsNode);
 
-      Document nsDoc = DJUtil.nodeToDocument(nsNode);
+      ns = DJUtil.nodeToDocument(nsNode);
 
       CartagoSession session = getCartagoSession();
-      session.doAction(getId(), new Op("createDeJure", nsDoc), null, -1);
+      session.doAction(getId(), new Op("createDeJure", ns), null, -1);
 
       createOS(doc);
     } catch (ParserConfigurationException | SAXException | IOException | CartagoException e) {
@@ -93,7 +94,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
    * @param ns normative specification
    * @throws OperationException
    */
-  @OPERATION
+  @INTERNAL_OPERATION
   public void createDeJure(Document ns) throws OperationException {
     String djName = getId().getName() + ".DeJure";
 
