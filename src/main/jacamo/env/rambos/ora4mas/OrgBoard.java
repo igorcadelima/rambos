@@ -71,7 +71,8 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   }
 
   /**
-   * Create {@link DeJure} repository by extracting data from the normative specification.
+   * Create {@link DeJure} repository named "<i>[org_name]</i>.de_jure", where <i>[org_name]</i> is
+   * the name of the organisation.
    * 
    * @param aid output parameter which returns the {@link ArtifactId} of {@link DeJure}
    * @throws OperationException
@@ -82,7 +83,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
       failed("There cannot be more than one DeJure in an organisation");
     }
 
-    String name = getId().getName() + ".DeJure";
+    String name = getId().getName() + ".de_jure";
     ArtifactId djb =
         makeArtifact("djb", DeJure.DeJureBuilder.class.getName(), new ArtifactConfig());
     ArtifactId djp = makeArtifact("djp", DeJureDOMParser.class.getName(), new ArtifactConfig(djb));
