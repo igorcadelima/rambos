@@ -49,8 +49,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   protected Logger logger = Logger.getLogger(OrgBoard.class.getName());
 
   /**
-   * Initialise {@link OrgBoard} creating its {@link DeJure} repository and {@link OS} according to
-   * the organisation specification passed as argument.
+   * Initialise {@link OrgBoard} separating the normative from the organisational specification.
    * 
    * @param osFile path to organisation specification
    */
@@ -63,28 +62,11 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
          .removeChild(nsNode);
 
       ns = DJUtil.nodeToDocument(nsNode);
-
-      CartagoSession session = getCartagoSession();
-      session.doAction(getId(), new Op("createDeJure", ns), null, -1);
-
       createOS(doc);
-    } catch (ParserConfigurationException | SAXException | IOException | CartagoException e) {
+    } catch (ParserConfigurationException | SAXException | IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-  }
-
-  /**
-   * Return Cartago session with the creator agent's name of this artefact as credential.
-   * 
-   * @return cartago session
-   * @throws CartagoException
-   */
-  private CartagoSession getCartagoSession() throws CartagoException {
-    WorkspaceId wid = getId().getWorkspaceId();
-    String wspName = wid.getName();
-    AgentIdCredential credential = new AgentIdCredential(getCreatorId().getAgentName());
-    return (CartagoSession) CartagoService.startSession(wspName, credential, null);
   }
 
   /**
