@@ -33,6 +33,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import cartago.*;
+import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
 import moise.os.ns.NS;
 import rambos.ora4mas.db.DeJure;
@@ -82,12 +83,12 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
     }
 
     String name = getId().getName() + ".DeJure";
-
     ArtifactId djb =
         makeArtifact("djb", DeJure.DeJureBuilder.class.getName(), new ArtifactConfig());
     ArtifactId djp = makeArtifact("djp", DeJureDOMParser.class.getName(), new ArtifactConfig(djb));
     execLinkedOp(djp, "parse", ns, name, aid);
     deJure = aid.get();
+    defineObsProperty("de_jure", ASSyntax.createAtom(name), aid);
 
     dispose(djb);
     dispose(djp);
