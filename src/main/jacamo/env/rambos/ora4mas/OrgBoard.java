@@ -173,7 +173,6 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
    * @param deJureId output parameter which returns {@link DeJure}'s id
    */
   @LINK
-  @OPERATION
   public void getDeJureId(OpFeedbackParam<ArtifactId> deJureId) {
     deJureId.set(deJure);
   }
