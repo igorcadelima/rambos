@@ -74,18 +74,18 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
    * normative specification.
    * 
    * @param ns normative specification
+   * @param aid output parameter which returns the {@link ArtifactId} of {@link DeJure}
    * @throws OperationException
    */
   @INTERNAL_OPERATION
-  public void createDeJure(Document ns) throws OperationException {
+  public void createDeJure(Document ns, OpFeedbackParam<ArtifactId> aid) throws OperationException {
     String djName = getId().getName() + ".DeJure";
 
     ArtifactId djb =
         makeArtifact("djb", DeJure.DeJureBuilder.class.getName(), new ArtifactConfig());
     ArtifactId djp = makeArtifact("djp", DeJureDOMParser.class.getName(), new ArtifactConfig(djb));
-    OpFeedbackParam<ArtifactId> djOut = new OpFeedbackParam<ArtifactId>();
-    execLinkedOp(djp, "parse", ns, djName, djOut);
-    deJure = djOut.get();
+    execLinkedOp(djp, "parse", ns, djName, aid);
+    deJure = aid.get();
 
     dispose(djb);
     dispose(djp);
