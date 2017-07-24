@@ -34,7 +34,30 @@ public final class Contents {
   private Contents() {}
 
   public enum Functor implements LowercaseEnum<Functor> {
-    FAIL, OBLIGATION
+    FAIL {
+      @Override
+      IContent newContent(Literal literal) {
+        return new Failure(literal);
+      }
+    },
+
+    OBLIGATION {
+      @Override
+      IContent newContent(Literal literal) {
+        ObligationBuilder builder = new ObligationBuilder();
+        return builder.setFrom(literal)
+                      .build();
+      }
+    };
+
+    /**
+     * Factory method that returns a new {@link IContent} instance whose literal representation is
+     * the given {@code literal}.
+     * 
+     * @param literal literal representation of the content
+     * @return new content
+     */
+    abstract IContent newContent(Literal literal);
   }
 
   public static IContent makeContent(Literal literal) {
