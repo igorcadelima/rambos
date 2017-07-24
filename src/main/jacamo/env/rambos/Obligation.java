@@ -20,7 +20,7 @@
  *******************************************************************************/
 package rambos;
 
-import rambos.ContentFactory.Functor;
+import rambos.Contents.Functor;
 
 /**
  * @author igorcadelima

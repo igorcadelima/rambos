@@ -23,7 +23,7 @@ package rambos;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Term;
-import rambos.ContentFactory.Functor;
+import rambos.Contents.Functor;
 
 /**
  * @author igorcadelima

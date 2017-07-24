@@ -28,7 +28,7 @@ import rambos.util.LowercaseEnum;
  * @author igorcadelima
  *
  */
-public class ContentFactory {
+public class Contents {
   public enum Functor implements LowercaseEnum<Functor> {
     FAIL, OBLIGATION
   }

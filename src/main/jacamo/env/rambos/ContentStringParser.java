@@ -34,7 +34,7 @@ import jason.asSyntax.VarTerm;
 import jason.asSyntax.ArithExpr.ArithmeticOp;
 import jason.asSyntax.parser.ParseException;
 import npl.TimeTerm;
-import rambos.ContentFactory.Functor;
+import rambos.Contents.Functor;
 
 /**
  * @author igorcadelima
@@ -49,7 +49,7 @@ public class ContentStringParser implements ContentParser<String> {
     } catch (ParseException e) {
       literal = parseFailProposition(in);
     }
-    return ContentFactory.makeContent(literal);
+    return Contents.makeContent(literal);
   }
 
   /**
