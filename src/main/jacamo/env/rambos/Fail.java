@@ -30,7 +30,7 @@ import rambos.Contents.Functor;
  *
  */
 public class Fail implements IRegimentationContent {
-  protected Literal literal;
+  private Literal literal;
   protected Term reason;
 
   public Fail(Term reason) {
