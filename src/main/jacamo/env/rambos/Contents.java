@@ -22,6 +22,7 @@ package rambos;
 
 import jason.asSyntax.Literal;
 import rambos.Obligation.ObligationBuilder;
+import rambos.util.Enums;
 import rambos.util.LowercaseEnum;
 
 /**
@@ -70,5 +71,20 @@ public final class Contents {
                       .build();
     }
     return null;
+  }
+
+  /**
+   * Return a new {@link IContent} instance whose literal representation is the given
+   * {@code literal}.
+   * 
+   * Unlike, {@link RegulationContentBuilder#setFrom(Literal)} and {@link Fails#of(Literal)}, this
+   * method considers not only number of terms, but also the functor.
+   * 
+   * @param literal literal representation of the content
+   * @return new content
+   */
+  public static IContent of(Literal literal) {
+    return Enums.lookup(Functor.class, literal.getFunctor())
+                .newContent(literal);
   }
 }
