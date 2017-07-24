@@ -49,7 +49,7 @@ public class ContentStringParser implements ContentParser<String> {
     } catch (ParseException e) {
       literal = parseFailProposition(in);
     }
-    return Contents.makeContent(literal);
+    return Contents.of(literal);
   }
 
   /**
