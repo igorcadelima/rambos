@@ -32,6 +32,8 @@ import rambos.Obligation.ObligationBuilder;
  *
  */
 public abstract class RegulationContent implements IRegulationContent {
+  private Literal literal;
+
   protected Term target;
   protected LogicalFormula maintenanceCondition;
   protected Literal aim;
@@ -59,12 +61,14 @@ public abstract class RegulationContent implements IRegulationContent {
 
   @Override
   public String toString() {
-    Literal l = ASSyntax.createLiteral(getFunctor().lowercase());
-    l.addTerm(target);
-    l.addTerm(maintenanceCondition);
-    l.addTerm(aim);
-    l.addTerm(deadline);
-    return l.toString();
+    if (literal == null) {
+      literal = ASSyntax.createLiteral(getFunctor().lowercase());
+      literal.addTerm(target);
+      literal.addTerm(maintenanceCondition);
+      literal.addTerm(aim);
+      literal.addTerm(deadline);
+    }
+    return literal.toString();
   }
 
   protected RegulationContent(RegulationContentBuilder<?> builder) {
@@ -75,7 +79,6 @@ public abstract class RegulationContent implements IRegulationContent {
   }
 
   protected static abstract class RegulationContentBuilder<T extends RegulationContentBuilder<T>> {
-
     private Term target;
     private LogicalFormula maintenanceCondition;
     private Literal aim;
@@ -132,5 +135,4 @@ public abstract class RegulationContent implements IRegulationContent {
 
     public abstract RegulationContent build();
   }
-
 }
