@@ -40,7 +40,7 @@ import rambos.Contents.Functor;
  * @author igorcadelima
  *
  */
-public class ContentStringParser implements ContentParser<String> {
+class ContentStringParser implements ContentParser<String> {
   @Override
   public IContent parse(String in) {
     Literal literal;
