@@ -37,20 +37,6 @@ public class Fail implements IRegimentationContent {
     this.reason = reason;
   }
 
-  public Fail(Literal literal) {
-    int nTerms = literal.getTerms()
-                        .size();
-    boolean equalFunctors = literal.getFunctor()
-                                   .equals(getFunctor().lowercase());
-
-    if (equalFunctors && nTerms == 1) {
-      this.literal = literal;
-      this.reason = literal.getTerm(0);
-    } else {
-      throw new IllegalArgumentException("Invalid literal");
-    }
-  }
-
   @Override
   public Functor getFunctor() {
     return Functor.FAIL;
