@@ -151,8 +151,8 @@ public class ContentStringParser implements ContentParser<String> {
     Matcher matcher = pattern.matcher(proposition);
 
     if (matcher.matches()) {
-      String resonStr = matcher.group(1);
-      Atom reason = new Atom(resonStr);
+      String reasonStr = matcher.group(1);
+      Atom reason = new Atom(reasonStr);
       return ASSyntax.createLiteral(NormativeProgram.FailFunctor, reason);
     }
     return null;
