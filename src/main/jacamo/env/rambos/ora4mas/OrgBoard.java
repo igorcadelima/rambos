@@ -161,7 +161,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
       removeObsPropertyByTemplate("scheme", new Atom(id), null, null);
 
       execLinkedOp(aid, "destroy");
-      // dispose(aid); // TODO: does not work! (test with auction example)
+      dispose(aid);
     } catch (Exception e) {
       e.printStackTrace();
     }
