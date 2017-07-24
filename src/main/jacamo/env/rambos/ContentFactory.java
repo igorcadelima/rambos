@@ -22,12 +22,16 @@ package rambos;
 
 import jason.asSyntax.Literal;
 import rambos.Obligation.ObligationBuilder;
+import rambos.util.LowercaseEnum;
 
 /**
  * @author igorcadelima
  *
  */
 public class ContentFactory {
+  public enum Functor implements LowercaseEnum<Functor> {
+    FAIL, OBLIGATION
+  }
 
   public static IContent makeContent(Literal literal) {
     switch (literal.getFunctor()) {
