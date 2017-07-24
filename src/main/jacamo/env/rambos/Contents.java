@@ -61,18 +61,6 @@ public final class Contents {
     abstract IContent newContent(Literal literal);
   }
 
-  public static IContent makeContent(Literal literal) {
-    switch (literal.getFunctor()) {
-      case "fail":
-        return new Failure(literal);
-      case "obligation":
-        ObligationBuilder builder = new ObligationBuilder();
-        return builder.setFrom(literal)
-                      .build();
-    }
-    return null;
-  }
-
   /**
    * Return a new {@link IContent} instance whose literal representation is the given
    * {@code literal}.
