@@ -82,17 +82,24 @@ public abstract class RegulationContent implements IRegulationContent {
     private TimeTerm deadline;
 
     /**
-     * Set attributes based on {@code literal}.
+     * Set attributes based on the terms of the given {@code literal}, regardless of the functor.
      * 
-     * @param literal
+     * @param literal literal from which terms should be obtained
      * @return builder with updated state
+     * @throws IllegalArgumentException if number of term is different from 1
      */
     public T setFrom(Literal literal) {
-      target = literal.getTerm(0);
-      maintenanceCondition = (LogicalFormula) literal.getTerm(1);
-      aim = (Literal) literal.getTerm(2);
-      deadline = (TimeTerm) literal.getTerm(3);
-      return getThis();
+      int nTerms = literal.getTerms()
+                          .size();
+
+      if (nTerms == 4) {
+        target = literal.getTerm(0);
+        maintenanceCondition = (LogicalFormula) literal.getTerm(1);
+        aim = (Literal) literal.getTerm(2);
+        deadline = (TimeTerm) literal.getTerm(3);
+        return getThis();
+      }
+      throw new IllegalArgumentException("Invalid literal");
     }
 
     /**
