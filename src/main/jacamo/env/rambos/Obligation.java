@@ -20,19 +20,20 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.ContentFactory.Functor;
+
 /**
  * @author igorcadelima
  *
  */
 public class Obligation extends RegulationContent {
-
   private Obligation(ObligationBuilder builder) {
     super(builder);
   }
 
   @Override
-  public String getFunctor() {
-    return "obligation";
+  public Functor getFunctor() {
+    return Functor.OBLIGATION;
   }
 
   public static final class ObligationBuilder extends RegulationContentBuilder<ObligationBuilder> {

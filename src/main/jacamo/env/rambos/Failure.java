@@ -23,13 +23,13 @@ package rambos;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Term;
+import rambos.ContentFactory.Functor;
 
 /**
  * @author igorcadelima
  *
  */
 public class Failure implements IRegimentationContent {
-
   protected Literal literal;
   protected Term reason;
 
@@ -40,7 +40,8 @@ public class Failure implements IRegimentationContent {
   public Failure(Literal literal) {
     int nTerms = literal.getTerms()
                         .size();
-    boolean equalFunctors = literal.getFunctor() == getFunctor();
+    boolean equalFunctors = literal.getFunctor()
+                                   .equals(getFunctor().lowercase());
 
     if (equalFunctors && nTerms == 1) {
       this.literal = literal;
@@ -51,8 +52,8 @@ public class Failure implements IRegimentationContent {
   }
 
   @Override
-  public String getFunctor() {
-    return "fail";
+  public Functor getFunctor() {
+    return Functor.FAIL;
   }
 
   @Override
@@ -63,7 +64,7 @@ public class Failure implements IRegimentationContent {
   @Override
   public String toString() {
     if (literal == null) {
-      literal = ASSyntax.createLiteral(getFunctor());
+      literal = ASSyntax.createLiteral(getFunctor().lowercase());
       literal.addTerm(reason);
     }
     return literal.toString();

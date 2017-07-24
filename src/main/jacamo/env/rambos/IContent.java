@@ -20,6 +20,8 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.ContentFactory.Functor;
+
 /**
  * @author igorcadelima
  *
@@ -29,5 +31,5 @@ public interface IContent {
   /**
    * @return functor of the content
    */
-  String getFunctor();
+  Functor getFunctor();
 }

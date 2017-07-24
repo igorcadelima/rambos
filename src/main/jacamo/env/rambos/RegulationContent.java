@@ -32,7 +32,6 @@ import rambos.Obligation.ObligationBuilder;
  *
  */
 public abstract class RegulationContent implements IRegulationContent {
-
   protected Term target;
   protected LogicalFormula maintenanceCondition;
   protected Literal aim;
@@ -60,7 +59,7 @@ public abstract class RegulationContent implements IRegulationContent {
 
   @Override
   public String toString() {
-    Literal l = ASSyntax.createLiteral(getFunctor());
+    Literal l = ASSyntax.createLiteral(getFunctor().lowercase());
     l.addTerm(target);
     l.addTerm(maintenanceCondition);
     l.addTerm(aim);
