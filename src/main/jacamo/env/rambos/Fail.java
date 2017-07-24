@@ -29,15 +29,15 @@ import rambos.Contents.Functor;
  * @author igorcadelima
  *
  */
-public class Failure implements IRegimentationContent {
+public class Fail implements IRegimentationContent {
   protected Literal literal;
   protected Term reason;
 
-  public Failure(Term reason) {
+  public Fail(Term reason) {
     this.reason = reason;
   }
 
-  public Failure(Literal literal) {
+  public Fail(Literal literal) {
     int nTerms = literal.getTerms()
                         .size();
     boolean equalFunctors = literal.getFunctor()
