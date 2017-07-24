@@ -25,10 +25,14 @@ import rambos.Obligation.ObligationBuilder;
 import rambos.util.LowercaseEnum;
 
 /**
+ * Static utility methods pertaining to {@link IContent} instances.
+ * 
  * @author igorcadelima
  *
  */
-public class Contents {
+public final class Contents {
+  private Contents() {}
+
   public enum Functor implements LowercaseEnum<Functor> {
     FAIL, OBLIGATION
   }
