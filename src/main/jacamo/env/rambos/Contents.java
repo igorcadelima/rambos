@@ -75,4 +75,17 @@ public final class Contents {
     return Enums.lookup(Functor.class, literal.getFunctor())
                 .newContent(literal);
   }
+
+  /**
+   * Return a new {@link IContent} instance whose string representation is the given {@code in}.
+   * 
+   * @param in string to be parsed
+   * @return content represented by the string argument
+   * @throws IllegalArgumentException if string does not contain a parsable norm
+   * @throws NullPointerException if string is {@code null}
+   */
+  public static IContent parse(String in) {
+    ContentStringParser parser = new ContentStringParser();
+    return parser.parse(in);
+  }
 }
