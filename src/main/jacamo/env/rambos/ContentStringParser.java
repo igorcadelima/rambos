@@ -33,15 +33,14 @@ import jason.asSyntax.Term;
 import jason.asSyntax.VarTerm;
 import jason.asSyntax.ArithExpr.ArithmeticOp;
 import jason.asSyntax.parser.ParseException;
-import npl.NormativeProgram;
 import npl.TimeTerm;
+import rambos.ContentFactory.Functor;
 
 /**
  * @author igorcadelima
  *
  */
 public class ContentStringParser implements ContentParser<String> {
-
   @Override
   public IContent parse(String in) {
     Literal literal;
@@ -71,7 +70,7 @@ public class ContentStringParser implements ContentParser<String> {
       String maintCondition = matcher.group(2);
       String goal = matcher.group(3);
       String deadline = matcher.group(4);
-      Literal literal = ASSyntax.createLiteral(NormativeProgram.OblFunctor);
+      Literal literal = ASSyntax.createLiteral(Functor.OBLIGATION.lowercase());
 
       // Parse and add agent term
       literal.addTerm(parseAgent(agent));
@@ -153,7 +152,7 @@ public class ContentStringParser implements ContentParser<String> {
     if (matcher.matches()) {
       String reasonStr = matcher.group(1);
       Atom reason = new Atom(reasonStr);
-      return ASSyntax.createLiteral(NormativeProgram.FailFunctor, reason);
+      return ASSyntax.createLiteral(Functor.FAIL.lowercase(), reason);
     }
     return null;
   }
