@@ -114,9 +114,9 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
           ArtifactId aid =
               makeArtifact(nbId, NormativeBoard.class.getName(), new ArtifactConfig(orgName));
           execLinkedOp(aid, "load", os2nopl.transform(spec, false));
+          execInternalOp("subscribeDFP", aid);
         }
       }
     }, null);
   }
 }
-
