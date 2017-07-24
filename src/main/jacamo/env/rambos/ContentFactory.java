@@ -31,7 +31,7 @@ public class ContentFactory {
 
   public static IContent makeContent(Literal literal) {
     switch (literal.getFunctor()) {
-      case "failure":
+      case "fail":
         return new Failure(literal);
       case "obligation":
         ObligationBuilder builder = new ObligationBuilder();
