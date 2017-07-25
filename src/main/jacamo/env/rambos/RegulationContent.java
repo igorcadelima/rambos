@@ -39,6 +39,27 @@ public abstract class RegulationContent implements IRegulationContent {
   protected Literal aim;
   protected TimeTerm deadline;
 
+  /**
+   * @param literal literal content
+   * @throws IllegalArgumentException if arity of the literal is not 4
+   */
+  protected RegulationContent(Literal literal) throws IllegalArgumentException {
+    if (literal.getArity() != 4) {
+      throw new IllegalArgumentException("The arity of the literal should be 4");
+    }
+    target = literal.getTerm(0);
+    maintenanceCondition = (LogicalFormula) literal.getTerm(1);
+    aim = (Literal) literal.getTerm(2);
+    deadline = (TimeTerm) literal.getTerm(3);
+  }
+
+  protected RegulationContent(RegulationContentBuilder<?> builder) {
+    target = builder.target;
+    maintenanceCondition = builder.maintenanceCondition;
+    aim = builder.aim;
+    deadline = builder.deadline;
+  }
+
   @Override
   public Term getTarget() {
     return target;
@@ -69,13 +90,6 @@ public abstract class RegulationContent implements IRegulationContent {
       literal.addTerm(deadline);
     }
     return literal.toString();
-  }
-
-  protected RegulationContent(RegulationContentBuilder<?> builder) {
-    target = builder.target;
-    maintenanceCondition = builder.maintenanceCondition;
-    aim = builder.aim;
-    deadline = builder.deadline;
   }
 
   protected static abstract class RegulationContentBuilder<T extends RegulationContentBuilder<T>> {
