@@ -21,9 +21,9 @@
 package rambos;
 
 import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
-import jason.asSyntax.Term;
 import npl.TimeTerm;
 import rambos.Obligation.ObligationBuilder;
 
@@ -34,7 +34,7 @@ import rambos.Obligation.ObligationBuilder;
 public abstract class RegulationContent implements IRegulationContent {
   private Literal literal;
 
-  protected Term target;
+  protected Atom target;
   protected LogicalFormula maintenanceCondition;
   protected Literal aim;
   protected TimeTerm deadline;
@@ -47,7 +47,7 @@ public abstract class RegulationContent implements IRegulationContent {
     if (literal.getArity() != 4) {
       throw new IllegalArgumentException("The arity of the literal should be 4");
     }
-    target = literal.getTerm(0);
+    target = (Atom) literal.getTerm(0);
     maintenanceCondition = (LogicalFormula) literal.getTerm(1);
     aim = (Literal) literal.getTerm(2);
     deadline = (TimeTerm) literal.getTerm(3);
@@ -61,7 +61,7 @@ public abstract class RegulationContent implements IRegulationContent {
   }
 
   @Override
-  public Term getTarget() {
+  public Atom getTarget() {
     return target;
   }
 
@@ -93,7 +93,7 @@ public abstract class RegulationContent implements IRegulationContent {
   }
 
   protected static abstract class RegulationContentBuilder<T extends RegulationContentBuilder<T>> {
-    private Term target;
+    private Atom target;
     private LogicalFormula maintenanceCondition;
     private Literal aim;
     private TimeTerm deadline;
@@ -110,7 +110,7 @@ public abstract class RegulationContent implements IRegulationContent {
                           .size();
 
       if (nTerms == 4) {
-        target = literal.getTerm(0);
+        target = (Atom) literal.getTerm(0);
         maintenanceCondition = (LogicalFormula) literal.getTerm(1);
         aim = (Literal) literal.getTerm(2);
         deadline = (TimeTerm) literal.getTerm(3);
@@ -127,7 +127,7 @@ public abstract class RegulationContent implements IRegulationContent {
      */
     protected abstract T getThis();
 
-    public T setTarget(Term target) {
+    public T setTarget(Atom target) {
       this.target = target;
       return getThis();
     }
