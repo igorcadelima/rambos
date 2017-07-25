@@ -20,6 +20,7 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 
 /**
@@ -37,15 +38,15 @@ public final class Fails {
    * 
    * @param literal literal from which terms should be obtained
    * @return new {@link Fail} instance
-   * @throws IllegalArgumentException if number of term is different from 1
+   * @throws IllegalArgumentException if arity is not 1
    */
   public static Fail of(Literal literal) {
     int nTerms = literal.getTerms()
                         .size();
 
     if (nTerms == 1) {
-      return new Fail(literal.getTerm(0));
+      return new Fail((Atom) literal.getTerm(0));
     }
-    throw new IllegalArgumentException("Invalid literal");
+    throw new IllegalArgumentException("The arity of the literal should be 1");
   }
 }

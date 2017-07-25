@@ -21,8 +21,8 @@
 package rambos;
 
 import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
-import jason.asSyntax.Term;
 import rambos.Contents.Functor;
 
 /**
@@ -31,9 +31,9 @@ import rambos.Contents.Functor;
  */
 public class Fail implements IRegimentationContent {
   private Literal literal;
-  protected Term reason;
+  protected Atom reason;
 
-  public Fail(Term reason) {
+  public Fail(Atom reason) {
     this.reason = reason;
   }
 
@@ -43,7 +43,7 @@ public class Fail implements IRegimentationContent {
   }
 
   @Override
-  public Term getReason() {
+  public Atom getReason() {
     return reason;
   }
 
