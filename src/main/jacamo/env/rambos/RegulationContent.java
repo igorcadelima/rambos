@@ -25,7 +25,6 @@ import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import npl.TimeTerm;
-import rambos.Obligation.ObligationBuilder;
 
 /**
  * @author igorcadelima
@@ -49,13 +48,6 @@ public abstract class RegulationContent implements IRegulationContent {
     maintenanceCondition = (LogicalFormula) literal.getTerm(1);
     aim = (Literal) literal.getTerm(2);
     deadline = (TimeTerm) literal.getTerm(3);
-  }
-
-  protected RegulationContent(RegulationContentBuilder<?> builder) {
-    target = builder.target;
-    maintenanceCondition = builder.maintenanceCondition;
-    aim = builder.aim;
-    deadline = builder.deadline;
   }
 
   @Override
@@ -86,62 +78,5 @@ public abstract class RegulationContent implements IRegulationContent {
     literal.addTerm(aim);
     literal.addTerm(deadline);
     return literal.toString();
-  }
-
-  protected static abstract class RegulationContentBuilder<T extends RegulationContentBuilder<T>> {
-    private Atom target;
-    private LogicalFormula maintenanceCondition;
-    private Literal aim;
-    private TimeTerm deadline;
-
-    /**
-     * Set attributes based on the terms of the given {@code literal}, regardless of the functor.
-     * 
-     * @param literal literal from which terms should be obtained
-     * @return builder with updated state
-     * @throws IllegalArgumentException if number of term is different from 1
-     */
-    public T setFrom(Literal literal) {
-      int nTerms = literal.getTerms().size();
-
-      if (nTerms == 4) {
-        target = (Atom) literal.getTerm(0);
-        maintenanceCondition = (LogicalFormula) literal.getTerm(1);
-        aim = (Literal) literal.getTerm(2);
-        deadline = (TimeTerm) literal.getTerm(3);
-        return getThis();
-      }
-      throw new IllegalArgumentException("Invalid literal");
-    }
-
-    /**
-     * Get current instance of the class and return it.
-     * 
-     * @return current instance of the class
-     * @see ObligationBuilder#getThis()
-     */
-    protected abstract T getThis();
-
-    public T setTarget(Atom target) {
-      this.target = target;
-      return getThis();
-    }
-
-    public T setMaintenanceCondition(LogicalFormula condition) {
-      this.maintenanceCondition = condition;
-      return getThis();
-    }
-
-    public T setAim(Literal aim) {
-      this.aim = aim;
-      return getThis();
-    }
-
-    public T setDeadline(TimeTerm deadline) {
-      this.deadline = deadline;
-      return getThis();
-    }
-
-    public abstract RegulationContent build();
   }
 }

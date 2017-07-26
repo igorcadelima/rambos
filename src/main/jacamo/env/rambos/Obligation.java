@@ -28,10 +28,6 @@ import rambos.Contents.Functor;
  *
  */
 public class Obligation extends RegulationContent {
-  private Obligation(ObligationBuilder builder) {
-    super(builder);
-  }
-
   /**
    * @param literal literal content
    * @throws IllegalArgumentException if functor is not 'obligation'
@@ -47,17 +43,5 @@ public class Obligation extends RegulationContent {
   @Override
   public Functor getFunctor() {
     return Functor.OBLIGATION;
-  }
-
-  public static final class ObligationBuilder extends RegulationContentBuilder<ObligationBuilder> {
-    @Override
-    public Obligation build() {
-      return new Obligation(getThis());
-    }
-
-    @Override
-    protected ObligationBuilder getThis() {
-      return this;
-    }
   }
 }
