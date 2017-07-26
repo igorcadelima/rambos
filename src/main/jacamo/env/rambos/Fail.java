@@ -32,10 +32,6 @@ import rambos.Contents.Functor;
 public class Fail implements IRegimentationContent {
   protected Atom reason;
 
-  public Fail(Atom reason) {
-    this.reason = reason;
-  }
-
   Fail(Literal literal) {
     if (!literal.getFunctor()
                 .equals(getFunctor().lowercase())) {
