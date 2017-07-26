@@ -34,7 +34,7 @@ import rambos.util.LowercaseEnum;
 public final class Contents {
   private Contents() {}
 
-  public enum Functor implements LowercaseEnum<Functor> {
+  enum Functor implements LowercaseEnum<Functor> {
     FAIL {
       @Override
       IContent newContent(Literal literal) {
