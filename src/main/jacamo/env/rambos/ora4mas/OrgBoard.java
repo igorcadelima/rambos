@@ -45,7 +45,6 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   protected ArtifactId deJure;
   protected OS os;
   protected Document ns;
-
   protected Map<String, ArtifactId> aids = new HashMap<String, ArtifactId>();
   protected Logger logger = Logger.getLogger(OrgBoard.class.getName());
 
@@ -122,17 +121,15 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   @Override
   @OPERATION
   public void removeGroup(String id) {
-    try {
-      ArtifactId aid = aids.remove(id);
-      if (aid == null) {
-        failed("there is no group board for " + id);
-        return;
-      }
-      removeObsPropertyByTemplate("group", new Atom(id), null, null);
+    ArtifactId aid = aids.remove(id);
+    if (aid == null) {
+      failed("No group board for " + id);
+    }
+    removeObsPropertyByTemplate("group", new Atom(id), null, null);
 
+    try {
       execLinkedOp(aid, "destroy");
-      dispose(aid);
-    } catch (Exception e) {
+    } catch (OperationException e) {
       e.printStackTrace();
     }
   }
@@ -152,17 +149,15 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   @Override
   @OPERATION
   public void removeScheme(String id) {
-    try {
-      ArtifactId aid = aids.remove(id);
-      if (aid == null) {
-        failed("there is no scheme board for " + id);
-        return;
-      }
-      removeObsPropertyByTemplate("scheme", new Atom(id), null, null);
+    ArtifactId aid = aids.remove(id);
+    if (aid == null) {
+      failed("No scheme board for " + id);
+    }
+    removeObsPropertyByTemplate("scheme", new Atom(id), null, null);
 
+    try {
       execLinkedOp(aid, "destroy");
-      dispose(aid);
-    } catch (Exception e) {
+    } catch (OperationException e) {
       e.printStackTrace();
     }
   }
