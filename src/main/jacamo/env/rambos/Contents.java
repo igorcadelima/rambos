@@ -37,7 +37,7 @@ public final class Contents {
     FAIL {
       @Override
       IContent newContent(Literal literal) {
-        return Fails.of(literal);
+        return new Fail(literal);
       }
     },
 
