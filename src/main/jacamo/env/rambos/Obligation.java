@@ -20,6 +20,7 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.Literal;
 import rambos.Contents.Functor;
 
 /**
@@ -31,13 +32,24 @@ public class Obligation extends RegulationContent {
     super(builder);
   }
 
+  /**
+   * @param literal literal content
+   * @throws IllegalArgumentException if functor is not 'obligation'
+   */
+  Obligation(Literal literal) throws IllegalArgumentException {
+    super(literal);
+    if (!literal.getFunctor()
+                .equals(getFunctor().lowercase())) {
+      throw new IllegalArgumentException("Functor should be 'obligation'");
+    }
+  }
+
   @Override
   public Functor getFunctor() {
     return Functor.OBLIGATION;
   }
 
   public static final class ObligationBuilder extends RegulationContentBuilder<ObligationBuilder> {
-
     @Override
     public Obligation build() {
       return new Obligation(getThis());
@@ -47,7 +59,5 @@ public class Obligation extends RegulationContent {
     protected ObligationBuilder getThis() {
       return this;
     }
-
   }
-
 }
