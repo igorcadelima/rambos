@@ -22,7 +22,6 @@ package rambos;
 
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
-import jason.asSyntax.Literal;
 import rambos.Contents.Functor;
 
 /**
@@ -30,7 +29,6 @@ import rambos.Contents.Functor;
  *
  */
 public class Fail implements IRegimentationContent {
-  private Literal literal;
   protected Atom reason;
 
   public Fail(Atom reason) {
@@ -49,10 +47,6 @@ public class Fail implements IRegimentationContent {
 
   @Override
   public String toString() {
-    if (literal == null) {
-      literal = ASSyntax.createLiteral(getFunctor().lowercase());
-      literal.addTerm(reason);
-    }
-    return literal.toString();
+    return ASSyntax.createLiteral(getFunctor().lowercase(), reason).toString();
   }
 }

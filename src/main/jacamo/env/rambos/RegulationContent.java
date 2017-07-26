@@ -32,8 +32,6 @@ import rambos.Obligation.ObligationBuilder;
  *
  */
 public abstract class RegulationContent implements IRegulationContent {
-  private Literal literal;
-
   protected Atom target;
   protected LogicalFormula maintenanceCondition;
   protected Literal aim;
@@ -82,13 +80,11 @@ public abstract class RegulationContent implements IRegulationContent {
 
   @Override
   public String toString() {
-    if (literal == null) {
-      literal = ASSyntax.createLiteral(getFunctor().lowercase());
-      literal.addTerm(target);
-      literal.addTerm(maintenanceCondition);
-      literal.addTerm(aim);
-      literal.addTerm(deadline);
-    }
+    Literal literal = ASSyntax.createLiteral(getFunctor().lowercase());
+    literal.addTerm(target);
+    literal.addTerm(maintenanceCondition);
+    literal.addTerm(aim);
+    literal.addTerm(deadline);
     return literal.toString();
   }
 
@@ -106,8 +102,7 @@ public abstract class RegulationContent implements IRegulationContent {
      * @throws IllegalArgumentException if number of term is different from 1
      */
     public T setFrom(Literal literal) {
-      int nTerms = literal.getTerms()
-                          .size();
+      int nTerms = literal.getTerms().size();
 
       if (nTerms == 4) {
         target = (Atom) literal.getTerm(0);
