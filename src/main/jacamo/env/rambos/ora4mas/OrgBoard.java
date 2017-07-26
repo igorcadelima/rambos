@@ -119,17 +119,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   @Override
   @OPERATION
   public void removeGroup(String id) {
-    ArtifactId aid = aids.remove(id);
-    if (aid == null) {
-      failed("No group board for " + id);
-    }
-    removeObsPropertyByTemplate("group", new Atom(id), null, null);
-
-    try {
-      execLinkedOp(aid, "destroy");
-    } catch (OperationException e) {
-      e.printStackTrace();
-    }
+    removeArtefact(id, "group");
   }
 
   @Override
@@ -147,17 +137,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   @Override
   @OPERATION
   public void removeScheme(String id) {
-    ArtifactId aid = aids.remove(id);
-    if (aid == null) {
-      failed("No scheme board for " + id);
-    }
-    removeObsPropertyByTemplate("scheme", new Atom(id), null, null);
-
-    try {
-      execLinkedOp(aid, "destroy");
-    } catch (OperationException e) {
-      e.printStackTrace();
-    }
+    removeArtefact(id, "scheme");
   }
 
   /**
