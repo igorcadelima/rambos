@@ -21,7 +21,6 @@
 package rambos;
 
 import jason.asSyntax.Literal;
-import rambos.Obligation.ObligationBuilder;
 import rambos.util.Enums;
 import rambos.util.LowercaseEnum;
 
@@ -45,9 +44,7 @@ public final class Contents {
     OBLIGATION {
       @Override
       IContent newContent(Literal literal) {
-        ObligationBuilder builder = new ObligationBuilder();
-        return builder.setFrom(literal)
-                      .build();
+        return new Obligation(literal);
       }
     };
 
