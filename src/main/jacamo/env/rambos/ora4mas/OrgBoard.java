@@ -161,6 +161,26 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   }
 
   /**
+   * Remove artefact.
+   * 
+   * @param id id of the artefact to be removed
+   * @param kind kind of the artefact, which should be either {@code "group"} or {@code "scheme"}
+   */
+  private void removeArtefact(String id, String kind) {
+    ArtifactId aid = aids.remove(id);
+    if (aid == null) {
+      failed("No " + kind + " board for " + id);
+    }
+    removeObsPropertyByTemplate(kind, ASSyntax.createAtom(id), null, null);
+
+    try {
+      execLinkedOp(aid, "destroy");
+    } catch (OperationException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * Get the id of the organisation's {@link DeJure} and return it through an output parameter.
    * 
    * @param deJureId output parameter which returns {@link DeJure}'s id
