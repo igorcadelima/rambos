@@ -21,7 +21,6 @@
 package rambos.ora4mas;
 
 import java.util.Collection;
-import java.util.logging.Logger;
 
 import cartago.ArtifactConfig;
 import cartago.ArtifactId;
@@ -43,8 +42,6 @@ import rambos.os.OS;
 public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
   protected String orgName;
   protected String djSpecFileUri;
-
-  protected Logger logger = Logger.getLogger(SchemeBoard.class.getName());
 
   /**
    * Initialise the scheme board.

@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -42,11 +41,10 @@ import rambos.ora4mas.util.DJUtil;
 import rambos.os.OS;
 
 public class OrgBoard extends ora4mas.nopl.OrgBoard {
-  protected ArtifactId deJure;
-  protected OS os;
-  protected Document ns;
   protected Map<String, ArtifactId> aids = new HashMap<String, ArtifactId>();
-  protected Logger logger = Logger.getLogger(OrgBoard.class.getName());
+  protected ArtifactId deJure;
+  protected Document ns;
+  protected OS os;
 
   /**
    * Initialise {@link OrgBoard} separating the normative from the organisational specification.

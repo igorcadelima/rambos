@@ -20,8 +20,6 @@
  *******************************************************************************/
 package rambos.ora4mas;
 
-import java.util.logging.Logger;
-
 import jason.util.Config;
 import npl.parser.ParseException;
 import ora4mas.nopl.JasonTermWrapper;
@@ -31,8 +29,6 @@ import ora4mas.nopl.oe.Group;
 import rambos.os.OS;
 
 public class GroupBoard extends ora4mas.nopl.GroupBoard {
-  protected Logger logger = Logger.getLogger(GroupBoard.class.getName());
-
   /**
    * Initialises the group board.
    * 
