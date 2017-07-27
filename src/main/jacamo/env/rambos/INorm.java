@@ -27,7 +27,7 @@ import jason.asSyntax.LogicalFormula;
  * @author igorcadelima
  *
  */
-public interface INorm {
+public interface INorm extends Literable {
 
   /**
    * @return norm's id
