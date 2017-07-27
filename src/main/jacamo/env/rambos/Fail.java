@@ -53,8 +53,7 @@ public class Fail implements IRegimentationContent {
   }
 
   @Override
-  public String toString() {
-    return ASSyntax.createLiteral(getFunctor().lowercase(), reason)
-                   .toString();
+  public Literal toLiteral() {
+    return ASSyntax.createLiteral(getFunctor().lowercase(), reason);
   }
 }

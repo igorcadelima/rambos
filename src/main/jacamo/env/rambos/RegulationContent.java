@@ -71,12 +71,17 @@ public abstract class RegulationContent implements IRegulationContent {
   }
 
   @Override
+  public Literal toLiteral() {
+    Literal l = ASSyntax.createLiteral(getFunctor().lowercase());
+    l.addTerm(target);
+    l.addTerm(maintenanceCondition);
+    l.addTerm(aim);
+    l.addTerm(deadline);
+    return l;
+  }
+
+  @Override
   public String toString() {
-    Literal literal = ASSyntax.createLiteral(getFunctor().lowercase());
-    literal.addTerm(target);
-    literal.addTerm(maintenanceCondition);
-    literal.addTerm(aim);
-    literal.addTerm(deadline);
-    return literal.toString();
+    return toLiteral().toString();
   }
 }

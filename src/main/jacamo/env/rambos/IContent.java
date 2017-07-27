@@ -26,7 +26,7 @@ import rambos.Contents.Functor;
  * @author igorcadelima
  *
  */
-public interface IContent {
+public interface IContent extends Literable {
 
   /**
    * @return functor of the content
