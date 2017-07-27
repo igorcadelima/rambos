@@ -28,7 +28,7 @@ import rambos.util.Builder;
  * @author igorcadelima
  *
  */
-public class SanctionCategory {
+public class SanctionCategory implements Literable {
   protected SanctionPurpose purpose;
   protected SanctionIssuer issuer;
   protected SanctionLocus locus;
@@ -94,15 +94,20 @@ public class SanctionCategory {
   }
 
   @Override
-  public String toString() {
-    Literal l = ASSyntax.createLiteral("category");
+  public Literal toLiteral() {
+    Literal l = ASSyntax.createLiteral(SanctionCategories.FUNCTOR);
     l.addTerm(ASSyntax.createAtom(discernability.lowercase()));
     l.addTerm(ASSyntax.createAtom(issuer.lowercase()));
     l.addTerm(ASSyntax.createAtom(locus.lowercase()));
     l.addTerm(ASSyntax.createAtom(mode.lowercase()));
     l.addTerm(ASSyntax.createAtom(polarity.lowercase()));
     l.addTerm(ASSyntax.createAtom(purpose.lowercase()));
-    return l.toString();
+    return l;
+  }
+
+  @Override
+  public String toString() {
+    return toLiteral().toString();
   }
 
   public static final class SanctionCategoryBuilder implements Builder<SanctionCategory> {
