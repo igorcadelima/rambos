@@ -24,8 +24,8 @@ import java.util.Collection;
 
 import cartago.ArtifactConfig;
 import cartago.ArtifactId;
-import cartago.CartagoException;
 import cartago.LINK;
+import cartago.OperationException;
 import jason.util.Config;
 import moise.common.MoiseException;
 import npl.NormativeFailureException;
@@ -55,65 +55,101 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
   public void init(OS os, String orgName, String schType) throws ParseException, MoiseException {
     spec = os.getFS()
              .findScheme(schType);
-    this.orgName = orgName;
-
-    final String schName = getId().getName();
-    orgState = new Scheme(spec, schName);
 
     if (spec == null)
       throw new MoiseException("scheme " + schType + " does not exist!");
 
+    this.orgName = orgName;
+    orgState = new Scheme(spec, getId().getName());
     oeId = getCreatorId().getWorkspaceId()
                          .getName();
 
-    // load normative program
-    initNormativeEngine(os, "scheme(" + schType + ")");
+    setupNormativeModule();
+    setupObservableProperties();
+    setupBrowserView();
+  }
+
+  /**
+   * Setup normative module.
+   * 
+   * @throws MoiseException
+   * @throws ParseException
+   */
+  private void setupNormativeModule() throws MoiseException, ParseException {
+    moise.os.OS os = spec.getFS()
+                         .getOS();
+    String type = "scheme(" + spec.getId() + ")";
+    initNormativeEngine(os, type);
     installNormativeSignaler();
     initWspRuleEngine();
+  }
 
-    // observable properties
+  /**
+   * Setup observable properties.
+   */
+  private void setupObservableProperties() {
     updateGoalStateObsProp();
     defineObsProperty(obsPropGroups, getSchState().getResponsibleGroupsAsProlog());
     defineObsProperty(obsPropSpec, new JasonTermWrapper(spec.getAsProlog()));
+  }
 
-    if (!"false".equals(Config.get()
+  /**
+   * Setup browser view.
+   */
+  private void setupBrowserView() {
+    if (Boolean.valueOf(Config.get()
                               .getProperty(Config.START_WEB_OI))) {
       WebInterface w = WebInterface.get();
-      try {
-        w.registerOEBrowserView(oeId, "/scheme/", schName, this);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+      w.registerOEBrowserView(oeId, "/scheme/", orgState.getId(), this);
     }
   }
 
   @LINK
   @Override
-  protected void updateRolePlayers(final String grId, final Collection<Player> rp)
-      throws NormativeFailureException, CartagoException {
+  protected void updateRolePlayers(final String grId, final Collection<Player> rp) {
     ora4masOperationTemplate(new Operation() {
-      public void exec() throws NormativeFailureException, Exception {
+      public void exec() throws OperationException, NormativeFailureException {
         Group g = new Group(grId);
-        for (Player p : rp)
-          g.addPlayer(p.getAg(), p.getTarget());
-        g.addResponsibleForScheme(orgState.getId());
+        rp.forEach(p -> g.addPlayer(p.getAg(), p.getTarget()));
 
-        boolean newLink = !getSchState().getGroupsResponsibleFor()
-                                        .contains(g);
-        getSchState().addGroupResponsibleFor(g);
-
-        nengine.verifyNorms();
-
-        getObsProperty(obsPropGroups).updateValue(getSchState().getResponsibleGroupsAsProlog());
-        if (newLink) {
-          // First time the group is linked to this scheme, so create normative board
-          String nbId = grId + "." + orgState.getId();
-          ArtifactId aid =
-              makeArtifact(nbId, NormativeBoard.class.getName(), new ArtifactConfig(orgName));
-          execLinkedOp(aid, "load", os2nopl.transform(spec, false));
-          execInternalOp("subscribeDFP", aid);
+        boolean newResponsible = !getSchState().getGroupsResponsibleFor()
+                                               .contains(g);
+        if (newResponsible) {
+          createLink(g);
+          createNormativeBoardFor(grId);
         }
       }
     }, null);
+  }
+
+  /**
+   * Create link with a given group.
+   * 
+   * @param g group to be linked with
+   * @throws NormativeFailureException
+   */
+  private void createLink(Group g) throws NormativeFailureException {
+    g.addResponsibleForScheme(orgState.getId());
+    getSchState().addGroupResponsibleFor(g);
+    nengine.verifyNorms();
+    getObsProperty(obsPropGroups).updateValue(getSchState().getResponsibleGroupsAsProlog());
+  }
+
+  /**
+   * Create normative board for the responsibility link from a group to a scheme.
+   * <p>
+   * This method names the artefact as {@code group_name.scheme_name}, loads norms from the scheme
+   * into the it, and subscribes it to receive updates about dynamic facts from the scheme board.
+   * </p>
+   * 
+   * @param groupName name of the group responsible for the scheme
+   * @throws OperationException
+   */
+  private void createNormativeBoardFor(String groupName) throws OperationException {
+    String name = groupName + "." + orgState.getId();
+    String template = NormativeBoard.class.getName();
+    ArtifactId aid = makeArtifact(name, template, new ArtifactConfig(orgName));
+    execLinkedOp(aid, "load", os2nopl.transform(spec, false));
+    execInternalOp("subscribeDFP", aid);
   }
 }
