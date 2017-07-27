@@ -26,7 +26,7 @@ import jason.asSyntax.LogicalFormula;
  * @author igorcadelima
  *
  */
-public interface ISanction {
+public interface ISanction extends Literable {
 
   /**
    * @return id
