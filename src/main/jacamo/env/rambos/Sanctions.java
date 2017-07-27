@@ -36,6 +36,8 @@ import rambos.util.Enums;
  *
  */
 public final class Sanctions {
+  public static final String FUNCTOR = "sanction";
+
   private Sanctions() {}
 
   /**
