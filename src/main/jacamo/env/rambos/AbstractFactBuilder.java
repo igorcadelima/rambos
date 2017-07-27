@@ -33,7 +33,7 @@ public abstract class AbstractFactBuilder<T extends AbstractFactBuilder<T>>
   protected String sanctioneeId;
   protected String norm;
   protected String sanction;
-  protected Efficacy efficacy;
+  protected Efficacy efficacy = Efficacy.INDETERMINATE;
 
   /**
    * Get current instance of the class and return it.

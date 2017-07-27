@@ -33,7 +33,7 @@ public abstract class AbstractFact implements IFact {
   protected String sanctionee;
   protected String norm;
   protected String sanction;
-  protected Efficacy efficacy;
+  protected Efficacy efficacy = Efficacy.INDETERMINATE;
 
   @Override
   public long getTime() {
