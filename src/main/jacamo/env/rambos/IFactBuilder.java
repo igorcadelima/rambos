@@ -30,6 +30,19 @@ import rambos.util.Builder;
 public interface IFactBuilder<T extends IFactBuilder<T>> extends Builder<IFact> {
   T setTime(long t);
 
+  /**
+   * Set time using to the given value, rounded to the closest possible representation.
+   * 
+   * This method rounds the argument using {@link Math#round(double)} and passes it to
+   * {@link #setTime(long)}.
+   * 
+   * @param t time
+   * @return builder instance
+   */
+  default T setTime(double t) {
+    return setTime(Math.round(t));
+  }
+
   T setSanctioner(String sId);
 
   T setSanctionee(String sId);
