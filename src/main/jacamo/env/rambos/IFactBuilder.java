@@ -28,7 +28,7 @@ import rambos.util.Builder;
  *
  */
 public interface IFactBuilder<T extends IFactBuilder<T>> extends Builder<IFact> {
-  T setTime(long t);
+  T setTime(long time);
 
   /**
    * Set time using to the given value, rounded to the closest possible representation.
@@ -36,20 +36,20 @@ public interface IFactBuilder<T extends IFactBuilder<T>> extends Builder<IFact> 
    * This method rounds the argument using {@link Math#round(double)} and passes it to
    * {@link #setTime(long)}.
    * 
-   * @param t time
+   * @param time time at which the sanction was applied
    * @return builder instance
    */
-  default T setTime(double t) {
-    return setTime(Math.round(t));
+  default T setTime(double time) {
+    return setTime(Math.round(time));
   }
 
-  T setSanctioner(String sId);
+  T setSanctioner(String sanctioner);
 
-  T setSanctionee(String sId);
+  T setSanctionee(String sanctionee);
 
-  T setNorm(String nId);
+  T setNorm(String norm);
 
-  T setSanction(String sId);
+  T setSanction(String sanction);
 
-  T setEfficacy(Efficacy e);
+  T setEfficacy(Efficacy efficacy);
 }

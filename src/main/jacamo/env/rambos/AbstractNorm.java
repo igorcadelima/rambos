@@ -81,9 +81,9 @@ public abstract class AbstractNorm implements INorm {
 
       // Get norm condition to see whether the event is ruled by it
       LogicalFormula condition = getCondition();
-      Iterator<Unifier> i = condition.logicalConsequence(ag, new Unifier());
+      Iterator<Unifier> it = condition.logicalConsequence(ag, new Unifier());
 
-      return i.hasNext();
+      return it.hasNext();
     } catch (ParseException | RevisionFailedException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

@@ -99,24 +99,24 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
   private void setupBrowserView() {
     if (Boolean.valueOf(Config.get()
                               .getProperty(Config.START_WEB_OI))) {
-      WebInterface w = WebInterface.get();
-      w.registerOEBrowserView(oeId, "/scheme/", orgState.getId(), this);
+      WebInterface webGui = WebInterface.get();
+      webGui.registerOEBrowserView(oeId, "/scheme/", orgState.getId(), this);
     }
   }
 
   @LINK
   @Override
-  protected void updateRolePlayers(final String grId, final Collection<Player> rp) {
+  protected void updateRolePlayers(final String groupName, final Collection<Player> rp) {
     ora4masOperationTemplate(new Operation() {
       public void exec() throws OperationException, NormativeFailureException {
-        Group g = new Group(grId);
-        rp.forEach(p -> g.addPlayer(p.getAg(), p.getTarget()));
+        Group group = new Group(groupName);
+        rp.forEach(p -> group.addPlayer(p.getAg(), p.getTarget()));
 
         boolean newResponsible = !getSchState().getGroupsResponsibleFor()
-                                               .contains(g);
+                                               .contains(group);
         if (newResponsible) {
-          createLink(g);
-          createNormativeBoardFor(grId);
+          createLink(group);
+          createNormativeBoardFor(groupName);
         }
       }
     }, null);
@@ -125,12 +125,12 @@ public class SchemeBoard extends ora4mas.nopl.SchemeBoard {
   /**
    * Create link with a given group.
    * 
-   * @param g group to be linked with
+   * @param group group to be linked with
    * @throws NormativeFailureException
    */
-  private void createLink(Group g) throws NormativeFailureException {
-    g.addResponsibleForScheme(orgState.getId());
-    getSchState().addGroupResponsibleFor(g);
+  private void createLink(Group group) throws NormativeFailureException {
+    group.addResponsibleForScheme(orgState.getId());
+    getSchState().addGroupResponsibleFor(group);
     nengine.verifyNorms();
     getObsProperty(obsPropGroups).updateValue(getSchState().getResponsibleGroupsAsProlog());
   }

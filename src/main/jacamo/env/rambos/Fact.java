@@ -25,13 +25,13 @@ package rambos;
  *
  */
 public class Fact extends AbstractFact {
-  private Fact(FactBuilder b) {
-    time = b.time;
-    sanctioner = b.sanctionerId;
-    sanctionee = b.sanctioneeId;
-    norm = b.norm;
-    sanction = b.sanction;
-    efficacy = b.efficacy;
+  private Fact(FactBuilder builder) {
+    time = builder.time;
+    sanctioner = builder.sanctioner;
+    sanctionee = builder.sanctionee;
+    norm = builder.norm;
+    sanction = builder.sanction;
+    efficacy = builder.efficacy;
   }
 
   public static class FactBuilder extends AbstractFactBuilder<FactBuilder> {

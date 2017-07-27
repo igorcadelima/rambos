@@ -53,24 +53,24 @@ public final class Sanctions {
     builder.setId(el.getAttribute("id"))
            .setState(Enums.lookup(State.class, el.getAttribute("state"), State.ENABLED));
 
-    NodeList properties = el.getChildNodes();
-    for (int i = 0; i < properties.getLength(); i++) {
-      Node p = properties.item(i);
+    NodeList props = el.getChildNodes();
+    for (int i = 0; i < props.getLength(); i++) {
+      Node prop = props.item(i);
 
-      switch (p.getNodeName()) {
+      switch (prop.getNodeName()) {
         case "condition":
           try {
-            builder.setCondition(ASSyntax.parseFormula(p.getTextContent()));
+            builder.setCondition(ASSyntax.parseFormula(prop.getTextContent()));
           } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
           }
           break;
         case "category":
-          builder.setCategory(SanctionCategories.parse((Element) p));
+          builder.setCategory(SanctionCategories.parse((Element) prop));
           break;
         case "content":
-          builder.setContent(new ContentStringParser().parse(p.getTextContent()));
+          builder.setContent(new ContentStringParser().parse(prop.getTextContent()));
       }
     }
     return builder.build();

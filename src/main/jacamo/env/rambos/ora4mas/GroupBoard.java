@@ -60,9 +60,9 @@ public class GroupBoard extends ora4mas.nopl.GroupBoard {
 
     if (!"false".equals(Config.get()
                               .getProperty(Config.START_WEB_OI))) {
-      WebInterface w = WebInterface.get();
+      WebInterface webGui = WebInterface.get();
       try {
-        w.registerOEBrowserView(oeId, "/group/", groupName, this);
+        webGui.registerOEBrowserView(oeId, "/group/", groupName, this);
       } catch (Exception e) {
         e.printStackTrace();
       }

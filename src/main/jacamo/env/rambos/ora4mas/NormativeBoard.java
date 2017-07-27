@@ -130,7 +130,7 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
   protected void testCondition(INorm norm, OpFeedbackParam<Boolean> ruled) {
     LogicalFormula formula = norm.getCondition();
     Agent ag = nengine.getAg();
-    Iterator<Unifier> i = formula.logicalConsequence(ag, new Unifier());
-    ruled.set(i.hasNext());
+    Iterator<Unifier> it = formula.logicalConsequence(ag, new Unifier());
+    ruled.set(it.hasNext());
   }
 }

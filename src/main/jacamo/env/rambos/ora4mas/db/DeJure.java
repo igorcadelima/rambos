@@ -60,10 +60,10 @@ public class DeJure extends Artifact {
    */
   @SuppressWarnings("unused")
   private void init(DeJureBuilder builder) throws ParseException {
-    builder.norms.forEach((__, v) -> addNorm(v));
-    builder.sanctions.forEach((__, v) -> addSanction(v));
-    builder.links.forEach((k, v) -> {
-      v.forEach(s -> addLink(k, s));
+    builder.norms.forEach((name, norm) -> addNorm(norm));
+    builder.sanctions.forEach((name, sanction) -> addSanction(sanction));
+    builder.links.forEach((norm, sanctions) -> {
+      sanctions.forEach(sanction -> addLink(norm, sanction));
     });
   }
 
@@ -75,19 +75,19 @@ public class DeJure extends Artifact {
    * {@link String}, then it will be parsed using {@link Norms#parse(String)} before being added to
    * the norms set.
    * 
-   * @param n norm to be added
+   * @param norm norm to be added
    */
   @LINK
   @OPERATION
-  public <T> void addNorm(T n) {
-    if (n instanceof INorm)
-      addNorms((INorm) n);
-    else if (n instanceof String)
-      addNorms(Norms.parse((String) n));
+  public <T> void addNorm(T norm) {
+    if (norm instanceof INorm)
+      addNorms((INorm) norm);
+    else if (norm instanceof String)
+      addNorms(Norms.parse((String) norm));
     else
       failed("Expected " + String.class.getCanonicalName() + " or " + INorm.class.getCanonicalName()
-          + " but got " + n.getClass()
-                           .getCanonicalName());
+          + " but got " + norm.getClass()
+                              .getCanonicalName());
   }
 
   /**
@@ -99,19 +99,19 @@ public class DeJure extends Artifact {
    * Only norms with different ids from the ones in the set can be added. If an already existing
    * norm is tried to be added, such addition is just ignored.
    * 
-   * @param ns norms to be added
+   * @param norms norms to be added
    */
   @LINK
   @OPERATION
-  public void addNorms(INorm... ns) {
+  public void addNorms(INorm... norms) {
     // TODO: check whether operator agent is a legislator
-    for (INorm n : ns) {
-      if (norms.containsKey(n.getId()))
+    for (INorm norm : norms) {
+      if (this.norms.containsKey(norm.getId()))
         continue;
 
       try {
-        Literal literalNorm = ASSyntax.parseLiteral(n.toString());
-        norms.put(n.getId(), n);
+        Literal literalNorm = ASSyntax.parseLiteral(norm.toString());
+        this.norms.put(norm.getId(), norm);
         defineObsProperty("norm", literalNorm.getTerms()
                                              .toArray());
       } catch (ParseException e) {
@@ -119,23 +119,23 @@ public class DeJure extends Artifact {
       }
 
       // Create empty set and link it to norm
-      links.put(n.getId(), new HashSet<String>());
-      defineObsProperty("link", ASSyntax.createAtom(n.getId()), new String[0]);
+      links.put(norm.getId(), new HashSet<String>());
+      defineObsProperty("link", ASSyntax.createAtom(norm.getId()), new String[0]);
     }
   }
 
   /**
    * Remove norm from norms set.
    * 
-   * @param n
+   * @param norm
    * @return true if norm is removed successfully
    */
   @LINK
   @OPERATION
-  public synchronized boolean removeNorm(INorm n) {
+  public synchronized boolean removeNorm(INorm norm) {
     // TODO: check whether operator agent is a legislator
-    if (norms.remove(n.getId()) == n) {
-      links.remove(n.getId());
+    if (norms.remove(norm.getId()) == norm) {
+      links.remove(norm.getId());
       return true;
     }
     return false;
@@ -150,18 +150,18 @@ public class DeJure extends Artifact {
    * If an already existing sanction is tried to be added, such action is just ignored and nothing
    * happens.
    * 
-   * @param s sanction to be added
+   * @param sanction sanction to be added
    */
   @LINK
   @OPERATION
-  public void addSanction(ISanction s) {
+  public void addSanction(ISanction sanction) {
     // TODO: check whether operator agent is a legislator
-    if (sanctions.containsKey(s.getId()))
+    if (sanctions.containsKey(sanction.getId()))
       return;
 
     try {
-      Literal literalSanction = ASSyntax.parseLiteral(s.toString());
-      sanctions.put(s.getId(), s);
+      Literal literalSanction = ASSyntax.parseLiteral(sanction.toString());
+      sanctions.put(sanction.getId(), sanction);
       defineObsProperty("sanction", literalSanction.getTerms()
                                                    .toArray());
     } catch (ParseException e) {
@@ -172,14 +172,14 @@ public class DeJure extends Artifact {
   /**
    * Remove sanction from sanctions set.
    * 
-   * @param s
+   * @param sanction
    * @return true if sanction is removed successfully
    */
   @LINK
   @OPERATION
-  public synchronized boolean removeSanction(ISanction s) {
+  public synchronized boolean removeSanction(ISanction sanction) {
     // TODO: check whether operator agent is a legislator
-    if (sanctions.remove(s.getId()) == s) {
+    if (sanctions.remove(sanction.getId()) == sanction) {
       return true;
     }
     return false;
@@ -200,13 +200,13 @@ public class DeJure extends Artifact {
   @OPERATION
   public void addLink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
-    INorm n = norms.get(normId);
-    ISanction s = sanctions.get(sanctionId);
+    INorm norm = norms.get(normId);
+    ISanction sanction = sanctions.get(sanctionId);
 
     Set<String> linkedSanctions = links.get(normId);
-    if (linkedSanctions.add(s.getId())) {
+    if (linkedSanctions.add(sanction.getId())) {
       links.put(normId, linkedSanctions);
-      updateObsProperty("link", ASSyntax.createAtom(n.getId()), linkedSanctions.toArray());
+      updateObsProperty("link", ASSyntax.createAtom(norm.getId()), linkedSanctions.toArray());
     }
   }
 
@@ -221,28 +221,28 @@ public class DeJure extends Artifact {
   @OPERATION
   public synchronized boolean removeLink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
-    INorm n = norms.get(normId);
-    ISanction s = sanctions.get(sanctionId);
-    return removeLink(n, s);
+    INorm norm = norms.get(normId);
+    ISanction sanction = sanctions.get(sanctionId);
+    return removeLink(norm, sanction);
   }
 
   /**
    * Remove link from links set.
    * 
-   * @param n the norm
-   * @param s the sanction
+   * @param norm the norm
+   * @param sanction the sanction
    * @return true if link is destroyed successfully
    */
   @LINK
   @OPERATION
-  public synchronized boolean removeLink(INorm n, ISanction s) {
+  public synchronized boolean removeLink(INorm norm, ISanction sanction) {
     // TODO: check whether operator agent is a legislator
-    if (n == null || s == null)
+    if (norm == null || sanction == null)
       return false;
 
-    Set<String> linkedSanctions = links.get(n.getId());
-    if (linkedSanctions.remove(s.getId())) {
-      links.put(n.getId(), linkedSanctions);
+    Set<String> linkedSanctions = links.get(norm.getId());
+    if (linkedSanctions.remove(sanction.getId())) {
+      links.put(norm.getId(), linkedSanctions);
       return true;
     }
 
@@ -252,7 +252,7 @@ public class DeJure extends Artifact {
   /**
    * Return norms set through {@link out}.
    * 
-   * @return norms
+   * @return out output parameter to return norms set
    */
   @LINK
   @OPERATION

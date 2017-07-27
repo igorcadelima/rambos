@@ -47,18 +47,18 @@ public class DeFacto extends Artifact {
    * {@link String}, then it will be parsed using {@link Facts#parse(String)} before being added to
    * the facts set.
    * 
-   * @param f fact to be added
+   * @param fact fact to be added
    */
   @LINK
   @OPERATION
-  public <T> void addFact(T f) {
-    if (f instanceof IFact)
-      addFact((IFact) f);
-    else if (f instanceof String)
-      addFact(Facts.parse((String) f));
+  public <T> void addFact(T fact) {
+    if (fact instanceof IFact)
+      addFact((IFact) fact);
+    else if (fact instanceof String)
+      addFact(Facts.parse((String) fact));
     else
       failed("Expected " + String.class.getCanonicalName() + " or " + IFact.class.getCanonicalName()
-          + " but got " + f.getClass()
+          + " but got " + fact.getClass()
                            .getCanonicalName());
   }
 

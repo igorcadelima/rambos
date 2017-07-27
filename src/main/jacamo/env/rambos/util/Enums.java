@@ -30,33 +30,37 @@ public final class Enums {
   private Enums() {}
 
   /**
-   * Return {@link T} value from string regardless of the case.
+   * Returns the enum constant of the specified enum type with the specified name. Unlike
+   * {@link Enum#valueOf(Class, String)}, the capitalisation of the name does not matter.
    * 
-   * @param e enumerator class
-   * @param s string representation of {@link T}
-   * @return {@link T} value from string
+   * @param <T> the enum type whose constant is to be returned
+   * @param enumType the {@code Class} object of the enum type from which to return a constant
+   * @param name the name of the constant to return
+   * @return the enum type whose constant is to be returned
    */
-  public static <T extends Enum<?>> T lookup(Class<T> e, String s) {
-    for (T ec : e.getEnumConstants())
-      if (ec.name()
-            .equalsIgnoreCase(s))
-        return ec;
+  public static <T extends Enum<?>> T lookup(Class<T> enumType, String name) {
+    for (T constant : enumType.getEnumConstants())
+      if (constant.name()
+                  .equalsIgnoreCase(name))
+        return constant;
     return null;
   }
 
   /**
-   * Return {@link T} value from string regardless of the case, or default value if lookup fails.
+   * Returns the enum constant of the specified enum type with the specified name. Unlike
+   * {@link Enum#valueOf(Class, String)}, the capitalisation of the name does not matter.
    * 
-   * @param e enumerator class
-   * @param s string representation of {@link T}
-   * @param d default value if lookup fails
-   * @return {@link T} value from string
+   * @param <T> the enum type whose constant is to be returned
+   * @param enumType the {@code Class} object of the enum type from which to return a constant
+   * @param name the name of the constant to return
+   * @param defaultValue enum constant to be returned if lookup fails
+   * @return the enum type whose constant is to be returned
    */
-  public static <T extends Enum<?>> T lookup(Class<T> e, String s, T d) {
-    for (T ec : e.getEnumConstants())
-      if (ec.name()
-            .equalsIgnoreCase(s))
-        return ec;
-    return d;
+  public static <T extends Enum<?>> T lookup(Class<T> enumType, String name, T defaultValue) {
+    for (T constant : enumType.getEnumConstants())
+      if (constant.name()
+                  .equalsIgnoreCase(name))
+        return constant;
+    return defaultValue;
   }
 }

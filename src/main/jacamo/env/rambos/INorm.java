@@ -28,7 +28,6 @@ import jason.asSyntax.LogicalFormula;
  *
  */
 public interface INorm extends Literable {
-
   /**
    * @return norm's id
    */
@@ -58,7 +57,6 @@ public interface INorm extends Literable {
   /**
    * Check whether the data content of an event is ruled by the norm.
    * 
-   * @param nEngine
    * @param event
    * @return true if event data is ruled by the norm.
    */

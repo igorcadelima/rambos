@@ -116,10 +116,10 @@ public class DJUtil {
   /**
    * Convert a {@link Node} into a {@link Document} instance.
    * 
-   * @param n node to be transformed
+   * @param node node to be transformed
    * @return {@link Node} as a {@link Document}
    */
-  public static Document nodeToDocument(Node n) {
+  public static Document nodeToDocument(Node node) {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
     DocumentBuilder builder = null;
@@ -130,7 +130,7 @@ public class DJUtil {
       e.printStackTrace();
     }
     Document newDocument = builder.newDocument();
-    Node importedNode = newDocument.importNode(n, true);
+    Node importedNode = newDocument.importNode(node, true);
     newDocument.appendChild(importedNode);
     return newDocument;
   }
