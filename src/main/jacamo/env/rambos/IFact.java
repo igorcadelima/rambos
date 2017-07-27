@@ -20,11 +20,36 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.util.LowercaseEnum;
+
 /**
  * @author igorcadelima
  *
  */
 public interface IFact {
+  /**
+   * Efficacy values that can be used:
+   * <li>{@link #ND}</li>
+   * <li>{@link #EFFECTIVE}</li>
+   * <li>{@link #INEFFECTIVE}</li>
+   */
+  enum Efficacy implements LowercaseEnum<Efficacy> {
+    /**
+     * Efficacy not determined.
+     */
+    ND,
+
+    /**
+     * Effective
+     */
+    EFFECTIVE,
+
+    /**
+     * Ineffective
+     */
+    INEFFECTIVE
+  }
+
   long getTime();
 
   String getSanctioner();
