@@ -29,25 +29,12 @@ import rambos.util.LowercaseEnum;
 public interface IFact {
   /**
    * Efficacy values that can be used:
-   * <li>{@link #ND}</li>
+   * <li>{@link #INDETERMINATE}</li>
    * <li>{@link #EFFECTIVE}</li>
    * <li>{@link #INEFFECTIVE}</li>
    */
   enum Efficacy implements LowercaseEnum<Efficacy> {
-    /**
-     * Efficacy not determined.
-     */
-    ND,
-
-    /**
-     * Effective
-     */
-    EFFECTIVE,
-
-    /**
-     * Ineffective
-     */
-    INEFFECTIVE
+    INDETERMINATE, EFFECTIVE, INEFFECTIVE
   }
 
   long getTime();
