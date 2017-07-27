@@ -29,6 +29,7 @@ import cartago.OPERATION;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.parser.ParseException;
+import rambos.Facts;
 import rambos.IFact;
 
 /**
@@ -39,20 +40,40 @@ public class DeFacto extends Artifact {
   private Set<IFact> facts = new HashSet<IFact>();
 
   /**
-   * Add a new fact to the repository.
+   * Add new fact into facts set.
    * 
-   * @param fact
+   * Only instances of {@link IFact} or {@link String} should be passed as argument. For both cases,
+   * the fact will be added using {@link #addFact(IFact)}. If {@code f} is an instance of
+   * {@link String}, then it will be parsed using {@link Facts#parse(String)} before being added to
+   * the facts set.
+   * 
+   * @param f fact to be added
    */
   @LINK
   @OPERATION
-  public void addFact(IFact fact) {
+  public <T> void addFact(T f) {
+    if (f instanceof IFact)
+      addFact((IFact) f);
+    else if (f instanceof String)
+      addFact(Facts.parse((String) f));
+    else
+      failed("Expected " + String.class.getCanonicalName() + " or " + IFact.class.getCanonicalName()
+          + " but got " + f.getClass()
+                           .getCanonicalName());
+  }
+
+  /**
+   * Add new fact into facts set.
+   * 
+   * @param fact
+   */
+  private void addFact(IFact fact) {
     try {
       Literal literalFact = ASSyntax.parseLiteral(fact.toString());
       facts.add(fact);
       defineObsProperty("fact", literalFact.getTerms()
                                            .toArray());
     } catch (ParseException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
