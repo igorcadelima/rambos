@@ -26,7 +26,7 @@ import rambos.util.LowercaseEnum;
  * @author igorcadelima
  *
  */
-public interface IFact {
+public interface IFact extends Literable {
   /**
    * Efficacy values that can be used:
    * <li>{@link #INDETERMINATE}</li>

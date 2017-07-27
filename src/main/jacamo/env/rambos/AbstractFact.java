@@ -71,14 +71,19 @@ public abstract class AbstractFact implements IFact {
   }
 
   @Override
-  public String toString() {
-    Literal l = ASSyntax.createLiteral("fact");
+  public Literal toLiteral() {
+    Literal l = ASSyntax.createLiteral(Facts.FUNCTOR);
     l.addTerm(ASSyntax.createNumber(time));
     l.addTerm(ASSyntax.createAtom(sanctioner));
     l.addTerm(ASSyntax.createAtom(sanctionee));
     l.addTerm(ASSyntax.createAtom(norm));
     l.addTerm(ASSyntax.createAtom(sanction));
-    l.addTerm(ASSyntax.createAtom(efficacy == null ? "nd" : efficacy.toString()));
-    return l.toString();
+    l.addTerm(ASSyntax.createAtom(efficacy.lowercase()));
+    return l;
+  }
+
+  @Override
+  public String toString() {
+    return toLiteral().toString();
   }
 }
