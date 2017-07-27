@@ -40,7 +40,7 @@ public class DeFacto extends Artifact {
   private Set<IFact> facts = new HashSet<IFact>();
 
   /**
-   * Add new fact into facts set.
+   * Add new fact into the facts set.
    * 
    * Only instances of {@link IFact} or {@link String} should be passed as argument. For both cases,
    * the fact will be added using {@link #addFact(IFact)}. If {@code f} is an instance of
@@ -63,7 +63,7 @@ public class DeFacto extends Artifact {
   }
 
   /**
-   * Add new fact into facts set.
+   * Add new fact into the facts set.
    * 
    * @param fact
    */
@@ -79,9 +79,10 @@ public class DeFacto extends Artifact {
   }
 
   /**
-   * Update an existing fact in the repository by replacing it with a new one.
+   * Update an existing fact from the facts set by replacing it with a new one.
    * 
-   * @param fact
+   * @param oldFact
+   * @param newFact
    */
   @LINK
   @OPERATION
@@ -91,7 +92,7 @@ public class DeFacto extends Artifact {
   }
 
   /**
-   * Remove a fact from the repository.
+   * Remove a fact from the facts set.
    * 
    * @param fact
    */
