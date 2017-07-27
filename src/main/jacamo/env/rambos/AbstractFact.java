@@ -33,7 +33,7 @@ public abstract class AbstractFact implements IFact {
   protected String sanctionee;
   protected String norm;
   protected String sanction;
-  protected Boolean efficacy;
+  protected Efficacy efficacy;
 
   @Override
   public long getTime() {
@@ -61,12 +61,12 @@ public abstract class AbstractFact implements IFact {
   }
 
   @Override
-  public Boolean getEfficacy() {
+  public Efficacy getEfficacy() {
     return efficacy;
   }
 
   @Override
-  public void setEfficacy(Boolean efficacy) {
+  public void setEfficacy(Efficacy efficacy) {
     this.efficacy = efficacy;
   }
 

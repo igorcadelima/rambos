@@ -20,6 +20,7 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.IFact.Efficacy;
 import rambos.util.Builder;
 
 /**
@@ -37,5 +38,5 @@ public interface IFactBuilder<T extends IFactBuilder<T>> extends Builder<IFact> 
 
   T setSanction(String sId);
 
-  T setEfficacy(Boolean e);
+  T setEfficacy(Efficacy e);
 }

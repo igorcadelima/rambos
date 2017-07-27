@@ -60,7 +60,7 @@ public interface IFact {
 
   String getSanction();
 
-  Boolean getEfficacy();
+  Efficacy getEfficacy();
 
-  void setEfficacy(Boolean e);
+  void setEfficacy(Efficacy e);
 }

@@ -20,6 +20,8 @@
  *******************************************************************************/
 package rambos;
 
+import rambos.IFact.Efficacy;
+
 /**
  * @author igorcadelima
  *
@@ -31,7 +33,7 @@ public abstract class AbstractFactBuilder<T extends AbstractFactBuilder<T>>
   protected String sanctioneeId;
   protected String norm;
   protected String sanction;
-  protected Boolean efficacy;
+  protected Efficacy efficacy;
 
   /**
    * Get current instance of the class and return it.
@@ -72,7 +74,7 @@ public abstract class AbstractFactBuilder<T extends AbstractFactBuilder<T>>
   }
 
   @Override
-  public T setEfficacy(Boolean e) {
+  public T setEfficacy(Efficacy e) {
     efficacy = e;
     return getThis();
   }
