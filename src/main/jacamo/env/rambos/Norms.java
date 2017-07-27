@@ -38,6 +38,8 @@ import rambos.util.Enums;
  *
  */
 public final class Norms {
+  public static final String FUNCTOR = "norm";
+
   private Norms() {}
 
   /**
