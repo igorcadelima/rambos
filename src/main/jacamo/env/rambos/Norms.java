@@ -55,15 +55,15 @@ public final class Norms {
       Literal l = ASSyntax.parseLiteral(in);
       String id = l.getTerm(0)
                    .toString();
-      State state = Enums.lookup(State.class, l.getTerm(1)
-                                               .toString());
+      Status status = Enums.lookup(Status.class, l.getTerm(1)
+                                                  .toString());
       LogicalFormula condition = (LogicalFormula) l.getTerm(2);
       String issuer = l.getTerm(3)
                        .toString();
       IContent content = new ContentStringParser().parse(l.getTerm(4)
                                                           .toString());
       return new Norm.NormBuilder().setId(id)
-                                   .setState(state)
+                                   .setStatus(status)
                                    .setCondition(condition)
                                    .setIssuer(issuer)
                                    .setContent(content)
@@ -76,7 +76,7 @@ public final class Norms {
   public static INorm parse(Element el) {
     NormBuilder builder = new NormBuilder();
     builder.setId(el.getAttribute("id"))
-           .setState(Enums.lookup(State.class, el.getAttribute("state"), State.ENABLED));
+           .setStatus(Enums.lookup(Status.class, el.getAttribute("state"), Status.ENABLED));
 
     NodeList properties = el.getChildNodes();
     for (int i = 0; i < properties.getLength(); i++) {

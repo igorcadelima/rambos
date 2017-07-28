@@ -37,12 +37,12 @@ public interface ISanctionBuilder<T extends ISanctionBuilder<T>> extends Builder
   T setId(String id);
 
   /**
-   * Set state for the sanction.
+   * Set status of the sanction.
    * 
-   * @param state sanction's state
+   * @param status sanction's status
    * @return builder builder instance
    */
-  T setState(State state);
+  T setStatus(Status status);
 
   /**
    * Set condition for the sanction.

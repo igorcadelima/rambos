@@ -34,7 +34,7 @@ public class Norm extends AbstractNorm {
     if ((builder.id != null) && (builder.condition != null) && (builder.issuer != null)
         && (builder.content != null)) {
       id = builder.id;
-      state = builder.state;
+      status = builder.status;
       condition = builder.condition;
       issuer = builder.issuer;
       content = builder.content;

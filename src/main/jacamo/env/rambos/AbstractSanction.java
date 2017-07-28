@@ -30,7 +30,7 @@ import jason.asSyntax.LogicalFormula;
  */
 public class AbstractSanction implements ISanction {
   protected String id;
-  protected State state = State.ENABLED;
+  protected Status status = Status.ENABLED;
   protected LogicalFormula condition;
   protected SanctionCategory category;
   protected IContent content;
@@ -41,8 +41,8 @@ public class AbstractSanction implements ISanction {
   }
 
   @Override
-  public State getState() {
-    return state;
+  public Status getStatus() {
+    return status;
   }
 
   @Override
@@ -64,7 +64,7 @@ public class AbstractSanction implements ISanction {
   public Literal toLiteral() {
     Literal l = ASSyntax.createLiteral(Sanctions.FUNCTOR);
     l.addTerm(ASSyntax.createAtom(id));
-    l.addTerm(ASSyntax.createAtom(state.lowercase()));
+    l.addTerm(ASSyntax.createAtom(status.lowercase()));
     l.addTerm(condition);
     l.addTerm(category.toLiteral());
     l.addTerm(content.toLiteral());

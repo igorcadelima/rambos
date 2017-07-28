@@ -51,7 +51,7 @@ public final class Sanctions {
   public static ISanction parse(Element el) {
     SanctionBuilder builder = new SanctionBuilder();
     builder.setId(el.getAttribute("id"))
-           .setState(Enums.lookup(State.class, el.getAttribute("state"), State.ENABLED));
+           .setStatus(Enums.lookup(Status.class, el.getAttribute("status"), Status.ENABLED));
 
     NodeList props = el.getChildNodes();
     for (int i = 0; i < props.getLength(); i++) {

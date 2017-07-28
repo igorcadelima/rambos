@@ -26,6 +26,6 @@ import rambos.util.LowercaseEnum;
  * @author igorcadelima
  *
  */
-public enum State implements LowercaseEnum<State> {
+public enum Status implements LowercaseEnum<Status> {
   ENABLED, DISABLED
 }

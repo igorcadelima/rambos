@@ -37,12 +37,12 @@ public interface INormBuilder<T extends INormBuilder<T>> extends Builder<INorm> 
   T setId(String id);
 
   /**
-   * Set state for the norm.
+   * Set status of the norm.
    * 
-   * @param state norm's state
+   * @param status norm's status
    * @return builder builder instance
    */
-  T setState(State state);
+  T setStatus(Status status);
 
   /**
    * Set condition for the norm.

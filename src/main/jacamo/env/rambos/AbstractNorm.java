@@ -39,7 +39,7 @@ import jason.asSyntax.parser.ParseException;
  */
 public abstract class AbstractNorm implements INorm {
   protected String id;
-  protected State state = State.ENABLED;
+  protected Status status = Status.ENABLED;
   protected LogicalFormula condition;
   protected String issuer;
   protected IContent content;
@@ -50,8 +50,8 @@ public abstract class AbstractNorm implements INorm {
   }
 
   @Override
-  public State getState() {
-    return state;
+  public Status getStatus() {
+    return status;
   }
 
   @Override
@@ -95,7 +95,7 @@ public abstract class AbstractNorm implements INorm {
   public Literal toLiteral() {
     Literal l = ASSyntax.createLiteral(Norms.FUNCTOR);
     l.addTerm(ASSyntax.createAtom(id));
-    l.addTerm(ASSyntax.createAtom(state.lowercase()));
+    l.addTerm(ASSyntax.createAtom(status.lowercase()));
     l.addTerm(condition);
     l.addTerm(ASSyntax.createAtom(issuer));
     l.addTerm(content.toLiteral());

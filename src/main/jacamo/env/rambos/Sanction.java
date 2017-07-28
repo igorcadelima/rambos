@@ -37,7 +37,7 @@ public class Sanction extends AbstractSanction {
     if ((builder.id != null) && (builder.condition != null) && (builder.category != null)
         && (builder.content != null)) {
       this.id = builder.id;
-      this.state = builder.state;
+      this.status = builder.status;
       this.condition = builder.condition;
       this.category = builder.category;
       this.content = builder.content;

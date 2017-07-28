@@ -34,10 +34,10 @@ public interface ISanction extends Literable {
   public String getId();
 
   /**
-   * @return state
-   * @see State
+   * @return status
+   * @see Status
    */
-  State getState();
+  Status getStatus();
 
   /**
    * @return activation condition

@@ -29,7 +29,7 @@ import jason.asSyntax.LogicalFormula;
 public abstract class AbstractSanctionBuilder<T extends AbstractSanctionBuilder<T>>
     implements ISanctionBuilder<T> {
   protected String id;
-  protected State state = State.ENABLED;
+  protected Status status = Status.ENABLED;
   protected LogicalFormula condition;
   protected SanctionCategory category;
   protected IContent content;
@@ -49,8 +49,8 @@ public abstract class AbstractSanctionBuilder<T extends AbstractSanctionBuilder<
   }
 
   @Override
-  public T setState(State state) {
-    this.state = state;
+  public T setStatus(Status status) {
+    this.status = status;
     return getThis();
   }
 

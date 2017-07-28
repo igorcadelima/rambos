@@ -37,7 +37,7 @@ import jason.asSyntax.parser.ParseException;
 import npl.Norm;
 import npl.Scope;
 import rambos.INorm;
-import rambos.State;
+import rambos.Status;
 import rambos.ora4mas.db.DeJure;
 
 /**
@@ -108,7 +108,7 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
         Literal nplNormConsequence = ASSyntax.parseLiteral(n.getContent()
                                                             .toString());
         Norm nplNorm = new Norm(n.getId(), nplNormConsequence, n.getCondition());
-        if (n.getState() == State.ENABLED)
+        if (n.getStatus() == Status.ENABLED)
           scope.addNorm(nplNorm);
       }
       return scope;

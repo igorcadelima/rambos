@@ -47,7 +47,7 @@
 			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:string" use="required" />
-		<xsd:attribute name="state" type="rambos:state"
+		<xsd:attribute name="status" type="rambos:status"
 			default="enabled" />
 	</xsd:complexType>
 	<xsd:simpleType name="contentType">
@@ -56,7 +56,7 @@
 				value="(obligation\s*\(\s*(\w+)\s*,\s*(\w+)\s*,\s*(.+)\s*,\s*(.+)\s*\))|fail\s*\(\s*(.+)\s*\)" />
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="state">
+	<xsd:simpleType name="status">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="enabled" />
 			<xsd:enumeration value="disabled" />
@@ -81,7 +81,7 @@
 			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:string" use="required" />
-		<xsd:attribute name="state" type="rambos:state"
+		<xsd:attribute name="status" type="rambos:status"
 			default="enabled" />
 	</xsd:complexType>
 

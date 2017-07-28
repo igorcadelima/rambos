@@ -29,7 +29,7 @@ import jason.asSyntax.LogicalFormula;
 public abstract class AbstractNormBuilder<T extends AbstractNormBuilder<T>>
     implements INormBuilder<T> {
   protected String id;
-  protected State state = State.ENABLED;
+  protected Status status = Status.ENABLED;
   protected LogicalFormula condition;
   protected String issuer;
   protected IContent content;
@@ -49,8 +49,8 @@ public abstract class AbstractNormBuilder<T extends AbstractNormBuilder<T>>
   }
 
   @Override
-  public T setState(State state) {
-    this.state = state;
+  public T setStatus(Status status) {
+    this.status = status;
     return getThis();
   }
 

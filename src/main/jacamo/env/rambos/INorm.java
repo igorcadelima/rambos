@@ -34,10 +34,10 @@ public interface INorm extends Literable {
   String getId();
 
   /**
-   * @return state
-   * @see State
+   * @return status
+   * @see Status
    */
-  State getState();
+  Status getStatus();
 
   /**
    * @return norm's activation condition
