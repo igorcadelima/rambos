@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
@@ -53,13 +54,11 @@ public final class Norms {
   public static INorm parse(String in) {
     try {
       Literal l = ASSyntax.parseLiteral(in);
-      String id = l.getTerm(0)
-                   .toString();
+      Atom id = (Atom) l.getTerm(0);
       Status status = Enums.lookup(Status.class, l.getTerm(1)
                                                   .toString());
       LogicalFormula condition = (LogicalFormula) l.getTerm(2);
-      String issuer = l.getTerm(3)
-                       .toString();
+      Atom issuer = (Atom) l.getTerm(3);
       IContent content = new ContentStringParser().parse(l.getTerm(4)
                                                           .toString());
       return new Norm.NormBuilder().setId(id)
@@ -75,7 +74,7 @@ public final class Norms {
 
   public static INorm parse(Element el) {
     NormBuilder builder = new NormBuilder();
-    builder.setId(el.getAttribute("id"))
+    builder.setId(ASSyntax.createAtom(el.getAttribute("id")))
            .setStatus(Enums.lookup(Status.class, el.getAttribute("state"), Status.ENABLED));
 
     NodeList properties = el.getChildNodes();
@@ -92,7 +91,7 @@ public final class Norms {
           }
           break;
         case "issuer":
-          builder.setIssuer(propContent);
+          builder.setIssuer(ASSyntax.createAtom(propContent));
           break;
         case "content":
           builder.setContent(new ContentStringParser().parse(propContent));

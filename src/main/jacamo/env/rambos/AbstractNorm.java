@@ -29,6 +29,7 @@ import jason.RevisionFailedException;
 import jason.asSemantics.Agent;
 import jason.asSemantics.Unifier;
 import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.parser.ParseException;
@@ -38,14 +39,14 @@ import jason.asSyntax.parser.ParseException;
  *
  */
 public abstract class AbstractNorm implements INorm {
-  protected String id;
+  protected Atom id;
   protected Status status = Status.ENABLED;
   protected LogicalFormula condition;
-  protected String issuer;
+  protected Atom issuer;
   protected IContent content;
 
   @Override
-  public String getId() {
+  public Atom getId() {
     return id;
   }
 
@@ -60,7 +61,7 @@ public abstract class AbstractNorm implements INorm {
   }
 
   @Override
-  public String getIssuer() {
+  public Atom getIssuer() {
     return issuer;
   }
 
@@ -94,10 +95,10 @@ public abstract class AbstractNorm implements INorm {
   @Override
   public Literal toLiteral() {
     Literal l = ASSyntax.createLiteral(Norms.FUNCTOR);
-    l.addTerm(ASSyntax.createAtom(id));
+    l.addTerm(id);
     l.addTerm(ASSyntax.createAtom(status.lowercase()));
     l.addTerm(condition);
-    l.addTerm(ASSyntax.createAtom(issuer));
+    l.addTerm(issuer);
     l.addTerm(content.toLiteral());
     return l;
   }

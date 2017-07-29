@@ -20,6 +20,7 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.Atom;
 import jason.asSyntax.LogicalFormula;
 import rambos.util.Builder;
 
@@ -34,7 +35,7 @@ public interface ISanctionBuilder<T extends ISanctionBuilder<T>> extends Builder
    * @param id sanction's id
    * @return builder builder instance
    */
-  T setId(String id);
+  T setId(Atom id);
 
   /**
    * Set status of the sanction.

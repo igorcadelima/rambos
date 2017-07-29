@@ -20,6 +20,7 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.Atom;
 import jason.asSyntax.LogicalFormula;
 
 /**
@@ -28,7 +29,7 @@ import jason.asSyntax.LogicalFormula;
  */
 public abstract class AbstractSanctionBuilder<T extends AbstractSanctionBuilder<T>>
     implements ISanctionBuilder<T> {
-  protected String id;
+  protected Atom id;
   protected Status status = Status.ENABLED;
   protected LogicalFormula condition;
   protected SanctionCategory category;
@@ -43,7 +44,7 @@ public abstract class AbstractSanctionBuilder<T extends AbstractSanctionBuilder<
   protected abstract T getThis();
 
   @Override
-  public T setId(String id) {
+  public T setId(Atom id) {
     this.id = id;
     return getThis();
   }

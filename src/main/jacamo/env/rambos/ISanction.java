@@ -20,6 +20,7 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.Atom;
 import jason.asSyntax.LogicalFormula;
 
 /**
@@ -31,7 +32,7 @@ public interface ISanction extends Literable {
   /**
    * @return id
    */
-  public String getId();
+  public Atom getId();
 
   /**
    * @return status

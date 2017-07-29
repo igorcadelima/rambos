@@ -21,6 +21,7 @@
 package rambos;
 
 import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 
@@ -29,14 +30,14 @@ import jason.asSyntax.LogicalFormula;
  *
  */
 public class AbstractSanction implements ISanction {
-  protected String id;
+  protected Atom id;
   protected Status status = Status.ENABLED;
   protected LogicalFormula condition;
   protected SanctionCategory category;
   protected IContent content;
 
   @Override
-  public String getId() {
+  public Atom getId() {
     return id;
   }
 
@@ -63,7 +64,7 @@ public class AbstractSanction implements ISanction {
   @Override
   public Literal toLiteral() {
     Literal l = ASSyntax.createLiteral(Sanctions.FUNCTOR);
-    l.addTerm(ASSyntax.createAtom(id));
+    l.addTerm(id);
     l.addTerm(ASSyntax.createAtom(status.lowercase()));
     l.addTerm(condition);
     l.addTerm(category.toLiteral());

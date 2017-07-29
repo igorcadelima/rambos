@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import cartago.Artifact;
 import cartago.LINK;
 import cartago.OPERATION;
+import jason.asSyntax.Atom;
 import rambos.INorm;
 import rambos.ISanction;
 
@@ -37,11 +38,11 @@ import rambos.ISanction;
 public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureBuilder {
 
   // normId -> norm
-  protected Map<String, INorm> norms = new ConcurrentHashMap<String, INorm>();
+  protected Map<Atom, INorm> norms = new ConcurrentHashMap<Atom, INorm>();
   // sanctionId -> sanction
-  protected Map<String, ISanction> sanctions = new ConcurrentHashMap<String, ISanction>();
+  protected Map<Atom, ISanction> sanctions = new ConcurrentHashMap<Atom, ISanction>();
   // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
-  protected Map<String, Set<String>> links = new ConcurrentHashMap<String, Set<String>>();
+  protected Map<Atom, Set<Atom>> links = new ConcurrentHashMap<Atom, Set<Atom>>();
 
   /**
    * Default artefact initialiser.
@@ -51,7 +52,7 @@ public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureB
   @LINK
   @OPERATION
   @Override
-  public IDeJureBuilder setNorms(Map<String, INorm> norms) {
+  public IDeJureBuilder setNorms(Map<Atom, INorm> norms) {
     this.norms = norms;
     return this;
   }
@@ -59,7 +60,7 @@ public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureB
   @LINK
   @OPERATION
   @Override
-  public IDeJureBuilder setSanctions(Map<String, ISanction> sanctions) {
+  public IDeJureBuilder setSanctions(Map<Atom, ISanction> sanctions) {
     this.sanctions = sanctions;
     return this;
   }
@@ -67,7 +68,7 @@ public abstract class AbstractDeJureBuilder extends Artifact implements IDeJureB
   @LINK
   @OPERATION
   @Override
-  public IDeJureBuilder setLinks(Map<String, Set<String>> links) {
+  public IDeJureBuilder setLinks(Map<Atom, Set<Atom>> links) {
     this.links = links;
     return this;
   }

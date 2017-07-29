@@ -40,6 +40,8 @@ import cartago.LINK;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
+import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Atom;
 import rambos.INorm;
 import rambos.Norms;
 import rambos.ISanction;
@@ -56,19 +58,19 @@ public class DeJureDOMParser extends DeJureParser<Document> {
   protected static final String LINKS_TAG = "links";
 
   // normId -> norm
-  private Map<String, INorm> norms;
+  private Map<Atom, INorm> norms;
   // sanctionId -> sanction
-  private Map<String, ISanction> sanctions;
+  private Map<Atom, ISanction> sanctions;
   // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
-  private Map<String, Set<String>> links;
+  private Map<Atom, Set<Atom>> links;
 
   @LINK
   @OPERATION
   @Override
   public void parse(Document ns, String deJureName, OpFeedbackParam<ArtifactId> deJureOut) {
-    norms = new ConcurrentHashMap<String, INorm>();
-    sanctions = new ConcurrentHashMap<String, ISanction>();
-    links = new ConcurrentHashMap<String, Set<String>>();
+    norms = new ConcurrentHashMap<Atom, INorm>();
+    sanctions = new ConcurrentHashMap<Atom, ISanction>();
+    links = new ConcurrentHashMap<Atom, Set<Atom>>();
 
     try {
       DJUtil.validate(ns, DJUtil.NS_SCHEMA_PATH);
@@ -83,7 +85,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
   }
 
   @Override
-  protected Map<String, INorm> extractNorms(Document ns) {
+  protected Map<Atom, INorm> extractNorms(Document ns) {
     Node normsRootEl = ns.getElementsByTagName(NORMS_TAG)
                          .item(0);
     List<Element> norms = getChildElements(normsRootEl);
@@ -96,19 +98,19 @@ public class DeJureDOMParser extends DeJureParser<Document> {
   }
 
   @Override
-  protected Map<String, ISanction> extractSanctions(Document ns) {
+  protected Map<Atom, ISanction> extractSanctions(Document ns) {
     Node sanctionsRootEl = ns.getElementsByTagName(SANCTIONS_TAG)
                              .item(0);
     List<Element> sanctions = getChildElements(sanctionsRootEl);
 
     for (Element sanctionEl : sanctions)
       addSanction(Sanctions.parse(sanctionEl));
-    
+
     return this.sanctions;
   }
 
   @Override
-  protected Map<String, Set<String>> extractLinks(Document ns) {
+  protected Map<Atom, Set<Atom>> extractLinks(Document ns) {
     Node linksNode = ns.getElementsByTagName(LINKS_TAG)
                        .item(0);
     List<Element> links = getChildElements(linksNode);
@@ -153,7 +155,7 @@ public class DeJureDOMParser extends DeJureParser<Document> {
    */
   private void addNorm(INorm n) {
     if (norms.put(n.getId(), n) == n) {
-      links.put(n.getId(), new HashSet<String>());
+      links.put(n.getId(), new HashSet<Atom>());
     }
   }
 
@@ -173,8 +175,8 @@ public class DeJureDOMParser extends DeJureParser<Document> {
    * @param s the sanction
    */
   private void addLink(INorm n, ISanction s) {
-    Set<String> linkedSanctions = Optional.ofNullable(links.get(n.getId()))
-                                          .orElse(new HashSet<String>());
+    Set<Atom> linkedSanctions = Optional.ofNullable(links.get(n.getId()))
+                                        .orElse(new HashSet<Atom>());
     if (linkedSanctions.add(s.getId()))
       links.put(n.getId(), linkedSanctions);
   }
@@ -186,8 +188,8 @@ public class DeJureDOMParser extends DeJureParser<Document> {
    * @param sanctionId the sanction id
    */
   private void addLink(String normId, String sanctionId) {
-    INorm n = norms.get(normId);
-    ISanction s = sanctions.get(sanctionId);
+    INorm n = norms.get(ASSyntax.createAtom(normId));
+    ISanction s = sanctions.get(ASSyntax.createAtom(sanctionId));
     addLink(n, s);
   }
 }

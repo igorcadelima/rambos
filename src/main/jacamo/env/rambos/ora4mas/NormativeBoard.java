@@ -107,7 +107,7 @@ public class NormativeBoard extends ora4mas.nopl.NormativeBoard {
       for (INorm n : norms) {
         Literal nplNormConsequence = ASSyntax.parseLiteral(n.getContent()
                                                             .toString());
-        Norm nplNorm = new Norm(n.getId(), nplNormConsequence, n.getCondition());
+        Norm nplNorm = new Norm(n.getId().toString(), nplNormConsequence, n.getCondition());
         if (n.getStatus() == Status.ENABLED)
           scope.addNorm(nplNorm);
       }

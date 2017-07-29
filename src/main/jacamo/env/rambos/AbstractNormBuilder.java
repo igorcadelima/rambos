@@ -20,6 +20,7 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.Atom;
 import jason.asSyntax.LogicalFormula;
 
 /**
@@ -28,10 +29,10 @@ import jason.asSyntax.LogicalFormula;
  */
 public abstract class AbstractNormBuilder<T extends AbstractNormBuilder<T>>
     implements INormBuilder<T> {
-  protected String id;
+  protected Atom id;
   protected Status status = Status.ENABLED;
   protected LogicalFormula condition;
-  protected String issuer;
+  protected Atom issuer;
   protected IContent content;
 
   /**
@@ -43,7 +44,7 @@ public abstract class AbstractNormBuilder<T extends AbstractNormBuilder<T>>
   protected abstract T getThis();
 
   @Override
-  public T setId(String id) {
+  public T setId(Atom id) {
     this.id = id;
     return getThis();
   }
@@ -61,7 +62,7 @@ public abstract class AbstractNormBuilder<T extends AbstractNormBuilder<T>>
   }
 
   @Override
-  public T setIssuer(String issuer) {
+  public T setIssuer(Atom issuer) {
     this.issuer = issuer;
     return getThis();
   }

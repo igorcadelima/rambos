@@ -50,7 +50,7 @@ public final class Sanctions {
    */
   public static ISanction parse(Element el) {
     SanctionBuilder builder = new SanctionBuilder();
-    builder.setId(el.getAttribute("id"))
+    builder.setId(ASSyntax.createAtom(el.getAttribute("id")))
            .setStatus(Enums.lookup(Status.class, el.getAttribute("status"), Status.ENABLED));
 
     NodeList props = el.getChildNodes();

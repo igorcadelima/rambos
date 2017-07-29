@@ -20,6 +20,7 @@
  *******************************************************************************/
 package rambos;
 
+import jason.asSyntax.Atom;
 import jason.asSyntax.LogicalFormula;
 import rambos.util.Builder;
 
@@ -34,7 +35,7 @@ public interface INormBuilder<T extends INormBuilder<T>> extends Builder<INorm> 
    * @param id norm's id
    * @return builder builder instance
    */
-  T setId(String id);
+  T setId(Atom id);
 
   /**
    * Set status of the norm.
@@ -58,7 +59,7 @@ public interface INormBuilder<T extends INormBuilder<T>> extends Builder<INorm> 
    * @param issuer norm's issuer
    * @return builder builder instance
    */
-  T setIssuer(String issuer);
+  T setIssuer(Atom issuer);
 
   /**
    * Set content for the norm.

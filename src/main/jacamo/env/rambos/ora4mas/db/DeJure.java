@@ -46,11 +46,11 @@ import rambos.Norms;
  */
 public class DeJure extends Artifact {
   // normId -> norm
-  private Map<String, INorm> norms = new ConcurrentHashMap<String, INorm>();
+  private Map<Atom, INorm> norms = new ConcurrentHashMap<Atom, INorm>();
   // sanctionId -> sanction
-  private Map<String, ISanction> sanctions = new ConcurrentHashMap<String, ISanction>();
+  private Map<Atom, ISanction> sanctions = new ConcurrentHashMap<Atom, ISanction>();
   // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
-  private Map<String, Set<String>> links = new ConcurrentHashMap<String, Set<String>>();
+  private Map<Atom, Set<Atom>> links = new ConcurrentHashMap<Atom, Set<Atom>>();
 
   /**
    * Initialise a {@link DeJure} repository based on data from the {@link DeJureBuilder} passed as
@@ -64,7 +64,7 @@ public class DeJure extends Artifact {
     builder.norms.forEach((name, norm) -> addNorm(norm));
     builder.sanctions.forEach((name, sanction) -> addSanction(sanction));
     builder.links.forEach((norm, sanctions) -> {
-      sanctions.forEach(sanction -> addLink(norm, sanction));
+      sanctions.forEach(sanction -> addLink(norm.toString(), sanction.toString()));
     });
   }
 
@@ -120,8 +120,8 @@ public class DeJure extends Artifact {
       }
 
       // Create empty set and link it to norm
-      links.put(norm.getId(), new HashSet<String>());
-      defineObsProperty("link", ASSyntax.createAtom(norm.getId()), new String[0]);
+      links.put(norm.getId(), new HashSet<Atom>());
+      defineObsProperty("link", norm.getId(), new String[0]);
     }
   }
 
@@ -201,14 +201,12 @@ public class DeJure extends Artifact {
   @OPERATION
   public void addLink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
-    INorm norm = norms.get(normId);
-    ISanction sanction = sanctions.get(sanctionId);
+    INorm norm = norms.get(ASSyntax.createAtom(normId));
+    ISanction sanction = sanctions.get(ASSyntax.createAtom(sanctionId));
 
-    Set<String> linkedSanctions = links.get(normId);
+    Set<Atom> linkedSanctions = links.get(norm.getId());
     if (linkedSanctions.add(sanction.getId())) {
-      Set<Atom> sanctionAtoms = new HashSet<Atom>();
-      linkedSanctions.forEach(sanctionStr -> sanctionAtoms.add(ASSyntax.createAtom(sanctionStr)));
-      updateObsProperty("link", ASSyntax.createAtom(norm.getId()), sanctionAtoms.toArray());
+      updateObsProperty("link", norm.getId(), linkedSanctions.toArray());
     }
   }
 
@@ -223,8 +221,8 @@ public class DeJure extends Artifact {
   @OPERATION
   public synchronized boolean removeLink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
-    INorm norm = norms.get(normId);
-    ISanction sanction = sanctions.get(sanctionId);
+    INorm norm = norms.get(ASSyntax.createAtom(normId));
+    ISanction sanction = sanctions.get(ASSyntax.createAtom(sanctionId));
     return removeLink(norm, sanction);
   }
 
@@ -242,7 +240,7 @@ public class DeJure extends Artifact {
     if (norm == null || sanction == null)
       return false;
 
-    Set<String> linkedSanctions = links.get(norm.getId());
+    Set<Atom> linkedSanctions = links.get(norm.getId());
     if (linkedSanctions.remove(sanction.getId())) {
       links.put(norm.getId(), linkedSanctions);
       return true;
@@ -271,8 +269,8 @@ public class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public Map<String, ISanction> getSanctions() {
-    return new ConcurrentHashMap<String, ISanction>(sanctions);
+  public Map<Atom, ISanction> getSanctions() {
+    return new ConcurrentHashMap<Atom, ISanction>(sanctions);
   }
 
   /**
@@ -283,8 +281,8 @@ public class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public Map<String, Set<String>> getLinks() {
-    return new ConcurrentHashMap<String, Set<String>>(links);
+  public Map<Atom, Set<Atom>> getLinks() {
+    return new ConcurrentHashMap<Atom, Set<Atom>>(links);
   }
 
   public static class DeJureBuilder extends AbstractDeJureBuilder {

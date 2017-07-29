@@ -21,6 +21,7 @@
 package rambos;
 
 import cartago.ArtifactObsProperty;
+import jason.asSyntax.Atom;
 import jason.asSyntax.LogicalFormula;
 
 /**
@@ -31,7 +32,7 @@ public interface INorm extends Literable {
   /**
    * @return norm's id
    */
-  String getId();
+  Atom getId();
 
   /**
    * @return status
@@ -47,7 +48,7 @@ public interface INorm extends Literable {
   /**
    * @return norm issuer's name
    */
-  String getIssuer();
+  Atom getIssuer();
 
   /**
    * @return norm's content
