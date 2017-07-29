@@ -201,12 +201,18 @@ public class DeJure extends Artifact {
   @OPERATION
   public void addLink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
-    INorm norm = norms.get(ASSyntax.createAtom(normId));
-    ISanction sanction = sanctions.get(ASSyntax.createAtom(sanctionId));
+    Atom normIdAtom = ASSyntax.createAtom(normId);
+    Atom sanctionIdAtom = ASSyntax.createAtom(sanctionId);
 
-    Set<Atom> linkedSanctions = links.get(norm.getId());
-    if (linkedSanctions.add(sanction.getId())) {
-      updateObsProperty("link", norm.getId(), linkedSanctions.toArray());
+    if (!norms.containsKey(normIdAtom)) {
+      failed("No norm found with id " + normId);
+    } else if (!sanctions.containsKey(sanctionIdAtom)) {
+      failed("No sanction found with id " + sanctionId);
+    }
+
+    Set<Atom> linkedSanctions = links.get(normIdAtom);
+    if (linkedSanctions.add(sanctionIdAtom)) {
+      updateObsProperty("link", normIdAtom, linkedSanctions.toArray());
     }
   }
 
