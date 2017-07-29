@@ -33,6 +33,7 @@ import cartago.OPERATION;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
 import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.parser.ParseException;
 import rambos.INorm;
@@ -205,8 +206,9 @@ public class DeJure extends Artifact {
 
     Set<String> linkedSanctions = links.get(normId);
     if (linkedSanctions.add(sanction.getId())) {
-      links.put(normId, linkedSanctions);
-      updateObsProperty("link", ASSyntax.createAtom(norm.getId()), linkedSanctions.toArray());
+      Set<Atom> sanctionAtoms = new HashSet<Atom>();
+      linkedSanctions.forEach(sanctionStr -> sanctionAtoms.add(ASSyntax.createAtom(sanctionStr)));
+      updateObsProperty("link", ASSyntax.createAtom(norm.getId()), sanctionAtoms.toArray());
     }
   }
 
