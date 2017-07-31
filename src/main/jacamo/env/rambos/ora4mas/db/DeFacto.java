@@ -26,11 +26,14 @@ import java.util.Set;
 import cartago.Artifact;
 import cartago.LINK;
 import cartago.OPERATION;
+import cartago.ObsProperty;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.parser.ParseException;
 import rambos.Facts;
 import rambos.IFact;
+import rambos.IFact.Efficacy;
+import rambos.util.Enums;
 
 /**
  * @author igorcadelima
@@ -59,7 +62,7 @@ public class DeFacto extends Artifact {
     else
       failed("Expected " + String.class.getCanonicalName() + " or " + IFact.class.getCanonicalName()
           + " but got " + fact.getClass()
-                           .getCanonicalName());
+                              .getCanonicalName());
   }
 
   /**
@@ -71,24 +74,33 @@ public class DeFacto extends Artifact {
     try {
       Literal literalFact = ASSyntax.parseLiteral(fact.toString());
       facts.add(fact);
-      defineObsProperty("fact", literalFact.getTerms()
-                                           .toArray());
+      defineObsProperty(Facts.FUNCTOR, (Object[]) literalFact.getTermsArray());
     } catch (ParseException e) {
       e.printStackTrace();
     }
   }
 
   /**
-   * Update an existing fact from the facts set by replacing it with a new one.
+   * Update the efficacy value of an existing fact.
    * 
-   * @param oldFact
-   * @param newFact
+   * @param fact string with literal format of the fact to be updated
+   * @param efficacy new efficacy value
    */
   @LINK
   @OPERATION
-  public void updateFact(IFact oldFact, IFact newFact) {
-    removeFact(oldFact);
-    addFact(newFact);
+  public void updateFactEfficacy(String fact, String efficacy) {
+    Efficacy efficacyObj = Enums.lookup(Efficacy.class, efficacy);
+    if (efficacyObj == null) {
+      failed(efficacy + " is not a valid efficacy value");
+    }
+
+    IFact factObj = Facts.parse(fact);
+    ObsProperty prop = getObsPropertyByTemplate(Facts.FUNCTOR, (Object[]) factObj.toLiteral()
+                                                                                 .getTermsArray());
+    facts.remove(factObj);
+    factObj.setEfficacy(efficacyObj);
+    facts.add(factObj);
+    prop.updateValue(5, ASSyntax.createAtom(efficacy));
   }
 
   /**
@@ -102,8 +114,8 @@ public class DeFacto extends Artifact {
     try {
       Literal literalFact = ASSyntax.parseLiteral(fact.toString());
       facts.remove(fact);
-      removeObsPropertyByTemplate("fact", literalFact.getTerms()
-                                                     .toArray());
+      removeObsPropertyByTemplate(Facts.FUNCTOR, literalFact.getTerms()
+                                                            .toArray());
     } catch (ParseException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
