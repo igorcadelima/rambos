@@ -185,7 +185,8 @@ class ContentStringParser implements ContentParser<String> {
     TimeTerm term = null;
     String[] timeTerms = time.split(" ");
     if (timeTerms.length == 1) {
-      term = new TimeTerm(-1, timeTerms[0]);
+      // These conditions are necessary due to a bug in TimeTerm
+      term = timeTerms[0].equals("now") ? new TimeTerm(0, null) : new TimeTerm(0, timeTerms[0]);
     } else {
       term = new TimeTerm(Long.parseLong(timeTerms[0]), timeTerms[1]);
     }
