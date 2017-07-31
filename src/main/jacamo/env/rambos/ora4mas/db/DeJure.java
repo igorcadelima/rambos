@@ -30,6 +30,7 @@ import cartago.ArtifactConfig;
 import cartago.ArtifactId;
 import cartago.LINK;
 import cartago.OPERATION;
+import cartago.ObsProperty;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
 import jason.asSyntax.ASSyntax;
@@ -214,8 +215,9 @@ public class DeJure extends Artifact {
 
     ILink link = links.get(normIdAtom);
     if (link.addSanction(sanctionIdAtom)) {
-      updateObsProperty(Links.FUNCTOR, normIdAtom, link.getSanctions()
-                                                       .toArray());
+      ObsProperty prop = getObsPropertyByTemplate(Links.FUNCTOR, normIdAtom, null);
+      prop.updateValue(1, link.getSanctions()
+                              .toArray());
     }
   }
 
