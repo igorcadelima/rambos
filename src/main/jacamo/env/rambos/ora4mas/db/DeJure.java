@@ -36,8 +36,10 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.parser.ParseException;
+import rambos.ILink;
 import rambos.INorm;
 import rambos.ISanction;
+import rambos.Links;
 import rambos.Norms;
 
 /**
@@ -50,7 +52,7 @@ public class DeJure extends Artifact {
   // sanctionId -> sanction
   private Map<Atom, ISanction> sanctions = new ConcurrentHashMap<Atom, ISanction>();
   // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
-  private Map<Atom, Set<Atom>> links = new ConcurrentHashMap<Atom, Set<Atom>>();
+  private Map<Atom, ILink> links = new ConcurrentHashMap<Atom, ILink>();
 
   /**
    * Initialise a {@link DeJure} repository based on data from the {@link DeJureBuilder} passed as
@@ -119,9 +121,9 @@ public class DeJure extends Artifact {
         continue;
       }
 
-      // Create empty set and link it to norm
-      links.put(norm.getId(), new HashSet<Atom>());
-      defineObsProperty("link", norm.getId(), new String[0]);
+      // Create link
+      links.put(norm.getId(), Links.newLink(norm.getId()));
+      defineObsProperty(Links.FUNCTOR, norm.getId(), new Atom[0]);
     }
   }
 
@@ -210,9 +212,10 @@ public class DeJure extends Artifact {
       failed("No sanction found with id " + sanctionId);
     }
 
-    Set<Atom> linkedSanctions = links.get(normIdAtom);
-    if (linkedSanctions.add(sanctionIdAtom)) {
-      updateObsProperty("link", normIdAtom, linkedSanctions.toArray());
+    ILink link = links.get(normIdAtom);
+    if (link.addSanction(sanctionIdAtom)) {
+      updateObsProperty(Links.FUNCTOR, normIdAtom, link.getSanctions()
+                                                       .toArray());
     }
   }
 
@@ -246,9 +249,9 @@ public class DeJure extends Artifact {
     if (norm == null || sanction == null)
       return false;
 
-    Set<Atom> linkedSanctions = links.get(norm.getId());
-    if (linkedSanctions.remove(sanction.getId())) {
-      links.put(norm.getId(), linkedSanctions);
+    ILink link = links.get(norm.getId());
+    if (link.removeSanction(sanction.getId())) {
+      links.put(norm.getId(), link);
       return true;
     }
 
@@ -287,8 +290,8 @@ public class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public Map<Atom, Set<Atom>> getLinks() {
-    return new ConcurrentHashMap<Atom, Set<Atom>>(links);
+  public Map<Atom, ILink> getLinks() {
+    return new ConcurrentHashMap<Atom, ILink>(links);
   }
 
   public static class DeJureBuilder extends AbstractDeJureBuilder {
