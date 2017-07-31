@@ -24,7 +24,7 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
-import npl.TimeTerm;
+import jason.asSyntax.NumberTerm;
 
 /**
  * @author igorcadelima
@@ -34,7 +34,7 @@ public abstract class RegulationContent implements IRegulationContent {
   protected Atom target;
   protected LogicalFormula maintenanceCondition;
   protected Literal aim;
-  protected TimeTerm deadline;
+  protected NumberTerm deadline;
 
   /**
    * @param literal literal content
@@ -47,7 +47,7 @@ public abstract class RegulationContent implements IRegulationContent {
     target = (Atom) literal.getTerm(0);
     maintenanceCondition = (LogicalFormula) literal.getTerm(1);
     aim = (Literal) literal.getTerm(2);
-    deadline = (TimeTerm) literal.getTerm(3);
+    deadline = (NumberTerm) literal.getTerm(3);
   }
 
   @Override
@@ -66,7 +66,7 @@ public abstract class RegulationContent implements IRegulationContent {
   }
 
   @Override
-  public TimeTerm getDeadline() {
+  public NumberTerm getDeadline() {
     return deadline;
   }
 

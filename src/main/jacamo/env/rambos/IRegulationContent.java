@@ -22,8 +22,8 @@ package rambos;
 
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
+import jason.asSyntax.NumberTerm;
 import jason.asSyntax.Term;
-import npl.TimeTerm;
 
 /**
  * @author igorcadelima
@@ -49,5 +49,5 @@ public interface IRegulationContent extends IContent {
   /**
    * @return deadline to fulfill the content
    */
-  TimeTerm getDeadline();
+  NumberTerm getDeadline();
 }

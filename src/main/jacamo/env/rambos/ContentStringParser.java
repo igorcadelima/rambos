@@ -24,14 +24,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jason.asSyntax.ASSyntax;
-import jason.asSyntax.ArithExpr;
 import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.NumberTerm;
+import jason.asSyntax.NumberTermImpl;
 import jason.asSyntax.Term;
 import jason.asSyntax.VarTerm;
-import jason.asSyntax.ArithExpr.ArithmeticOp;
 import jason.asSyntax.parser.ParseException;
 import npl.TimeTerm;
 import rambos.Contents.Functor;
@@ -119,22 +118,40 @@ class ContentStringParser implements ContentParser<String> {
 
   /**
    * Solve a time expression such as {@code `now` + `2 days`} or {@code now + 2 days} and return the
-   * result as {@link TimeTerm}.
+   * result as {@link NumberTerm} in milliseconds.
    * 
    * @param time string with expression to be solved
-   * @return resolved {@link TimeTerm}.
+   * @return time in milliseconds
    */
-  private TimeTerm solveTimeExpression(String time) {
+  private NumberTerm solveTimeExpression(String time) {
     String[] deadlineTerms = time.replace("`", "")
                                  .split("\\+|\\-");
-    NumberTerm t1 = parseTimeTerm(deadlineTerms[0]);
+    double x = parseTimeTerm(deadlineTerms[0]).solve();
 
-    for (int k = 1; k < deadlineTerms.length; k += 2) {
-      ArithmeticOp op = parseArithmeticOp(deadlineTerms[k]);
-      NumberTerm t2 = parseTimeTerm(deadlineTerms[k + 1]);
-      t1 = new ArithExpr(t1, op, t2);
+    for (int i = 1; i < deadlineTerms.length; i += 2) {
+      double y = parseTimeTerm(deadlineTerms[i + 1]).solve();
+      x = solveNumericalExpression(x, deadlineTerms[i], y);
     }
-    return (TimeTerm) t1;
+    return new NumberTermImpl(x);
+  }
+
+  /**
+   * Solve numerical expression given two double terms and an operator as string.
+   * 
+   * @param x first term
+   * @param operator either {@code "+"} or {@code "-"}
+   * @param y second term
+   * @return solved expression
+   */
+  private double solveNumericalExpression(double x, String operator, double y) {
+    switch (operator) {
+      case "+":
+        return x + y;
+      case "-":
+        return x - y;
+      default:
+        throw new IllegalArgumentException("Unknown operator");
+    }
   }
 
   /**
@@ -158,24 +175,6 @@ class ContentStringParser implements ContentParser<String> {
   }
 
   /**
-   * Parse argument to corresponding {@link ArithmeticOp} value.
-   * 
-   * @param operation either {@code "+"} or {@code "-"}
-   * @return corresponding {@link ArithmeticOp} value of {@code operation}, or {@code null} if
-   *         {@code operation} is an invalid sign
-   */
-  private ArithmeticOp parseArithmeticOp(String operation) {
-    switch (operation) {
-      case "+":
-        return ArithmeticOp.plus;
-      case "-":
-        return ArithmeticOp.minus;
-      default:
-        return null;
-    }
-  }
-
-  /**
    * Parse argument to {@link TimeTerm}.
    * 
    * @param time
@@ -184,6 +183,7 @@ class ContentStringParser implements ContentParser<String> {
   private TimeTerm parseTimeTerm(String time) {
     TimeTerm term = null;
     String[] timeTerms = time.split(" ");
+    
     if (timeTerms.length == 1) {
       // These conditions are necessary due to a bug in TimeTerm
       term = timeTerms[0].equals("now") ? new TimeTerm(0, null) : new TimeTerm(0, timeTerms[0]);
@@ -192,5 +192,4 @@ class ContentStringParser implements ContentParser<String> {
     }
     return term;
   }
-
 }
