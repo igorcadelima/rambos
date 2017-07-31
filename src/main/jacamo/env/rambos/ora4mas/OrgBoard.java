@@ -35,6 +35,7 @@ import cartago.*;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
 import moise.os.ns.NS;
+import rambos.ora4mas.db.DeFacto;
 import rambos.ora4mas.db.DeJure;
 import rambos.ora4mas.db.DeJureDOMParser;
 import rambos.ora4mas.util.DJUtil;
@@ -68,6 +69,39 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   }
 
   /**
+   * Create {@link OS} instance which will be shared with every {@link GroupBoard},
+   * {@link SchemeBoard}, and {@link NormativeBoard} that belongs with this {@link OrgBoard}
+   * instance.
+   * 
+   * @param osDoc organisational specification
+   */
+  protected void createOS(Document osDoc) {
+    String mechanismOSFile = "/org/org.xml";
+    InputStream mechanismOSResource = getClass().getResourceAsStream(mechanismOSFile);
+    os = OS.create(mechanismOSResource);
+    os.extend(osDoc);
+  }
+
+  /**
+   * Create {@link DaFacto} repository named "<i>[org_name]</i>.de_facto", where <i>[org_name]</i>
+   * is the name of the organisation.
+   * 
+   * @param aid output parameter which returns the {@link ArtifactId} of the newly created
+   *        {@link DeFacto}
+   * @throws OperationException
+   */
+  @OPERATION
+  public void createDeFacto(OpFeedbackParam<ArtifactId> aid) throws OperationException {
+    String name = getId().getName() + ".de_facto";
+    if (hasObsProperty(name)) {
+      failed("There cannot be more than one De Facto in an organisation");
+    }
+
+    aid.set(makeArtifact(name, DeFacto.class.getName(), ArtifactConfig.DEFAULT_CONFIG));
+    defineObsProperty("de_facto", ASSyntax.createAtom(name), aid);
+  }
+
+  /**
    * Create {@link DeJure} repository named "<i>[org_name]</i>.de_jure", where <i>[org_name]</i> is
    * the name of the organisation.
    * 
@@ -77,7 +111,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
   @OPERATION
   public void createDeJure(OpFeedbackParam<ArtifactId> aid) throws OperationException {
     if (deJure != null) {
-      failed("There cannot be more than one DeJure in an organisation");
+      failed("There cannot be more than one De Jure in an organisation");
     }
 
     String name = getId().getName() + ".de_jure";
@@ -90,20 +124,6 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 
     dispose(djb);
     dispose(djp);
-  }
-
-  /**
-   * Create {@link OS} instance which will be shared with every {@link GroupBoard},
-   * {@link SchemeBoard}, and {@link NormativeBoard} that belongs with this {@link OrgBoard}
-   * instance.
-   * 
-   * @param osDoc organisational specification
-   */
-  protected void createOS(Document osDoc) {
-    String mechanismOSFile = "/org/org.xml";
-    InputStream mechanismOSResource = getClass().getResourceAsStream(mechanismOSFile);
-    os = OS.create(mechanismOSResource);
-    os.extend(osDoc);
   }
 
   @Override
