@@ -125,7 +125,7 @@ class ContentStringParser implements ContentParser<String> {
    */
   private NumberTerm solveTimeExpression(String time) {
     String[] deadlineTerms = time.replace("`", "")
-                                 .split("\\+|\\-");
+                                 .split("((?<=\\+)|(?=\\+)|(?<=\\-)|(?=\\-))");
     double x = parseTimeTerm(deadlineTerms[0]).solve();
 
     for (int i = 1; i < deadlineTerms.length; i += 2) {
@@ -182,8 +182,9 @@ class ContentStringParser implements ContentParser<String> {
    */
   private TimeTerm parseTimeTerm(String time) {
     TimeTerm term = null;
-    String[] timeTerms = time.split(" ");
-    
+    String[] timeTerms = time.trim()
+                             .split(" ");
+
     if (timeTerms.length == 1) {
       // These conditions are necessary due to a bug in TimeTerm
       term = timeTerms[0].equals("now") ? new TimeTerm(0, null) : new TimeTerm(0, timeTerms[0]);
