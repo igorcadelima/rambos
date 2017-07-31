@@ -86,4 +86,53 @@ public abstract class AbstractFact implements IFact {
   public String toString() {
     return toLiteral().toString();
   }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((efficacy == null) ? 0 : efficacy.hashCode());
+    result = prime * result + ((norm == null) ? 0 : norm.hashCode());
+    result = prime * result + ((sanction == null) ? 0 : sanction.hashCode());
+    result = prime * result + ((sanctionee == null) ? 0 : sanctionee.hashCode());
+    result = prime * result + ((sanctioner == null) ? 0 : sanctioner.hashCode());
+    result = prime * result + (int) (time ^ (time >>> 32));
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    AbstractFact other = (AbstractFact) obj;
+    if (efficacy != other.efficacy)
+      return false;
+    if (norm == null) {
+      if (other.norm != null)
+        return false;
+    } else if (!norm.equals(other.norm))
+      return false;
+    if (sanction == null) {
+      if (other.sanction != null)
+        return false;
+    } else if (!sanction.equals(other.sanction))
+      return false;
+    if (sanctionee == null) {
+      if (other.sanctionee != null)
+        return false;
+    } else if (!sanctionee.equals(other.sanctionee))
+      return false;
+    if (sanctioner == null) {
+      if (other.sanctioner != null)
+        return false;
+    } else if (!sanctioner.equals(other.sanctioner))
+      return false;
+    if (time != other.time)
+      return false;
+    return true;
+  }
 }
