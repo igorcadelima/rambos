@@ -75,7 +75,7 @@ public final class Norms {
   public static INorm parse(Element el) {
     NormBuilder builder = new NormBuilder();
     builder.setId(ASSyntax.createAtom(el.getAttribute("id")))
-           .setStatus(Enums.lookup(Status.class, el.getAttribute("state"), Status.ENABLED));
+           .setStatus(Enums.lookup(Status.class, el.getAttribute("status"), Status.ENABLED));
 
     NodeList properties = el.getChildNodes();
     for (int i = 0; i < properties.getLength(); i++) {
