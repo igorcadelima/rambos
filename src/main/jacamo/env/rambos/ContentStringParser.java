@@ -26,9 +26,6 @@ import java.util.regex.Pattern;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
-import jason.asSyntax.LogicalFormula;
-import jason.asSyntax.Term;
-import jason.asSyntax.VarTerm;
 import jason.asSyntax.parser.ParseException;
 import rambos.Contents.Functor;
 
@@ -56,61 +53,14 @@ class ContentStringParser implements ContentParser<String> {
    * @throws ParseException
    */
   private Literal parseObligationProposition(String obl) throws ParseException {
-    String obligationRegex =
-        "obligation\\s*\\(\\s*(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(.+?)\\s*,\\s*(.+?)\\s*\\)";
-    Pattern pattern = Pattern.compile(obligationRegex);
-    Matcher matcher = pattern.matcher(obl);
+    // TODO: to use a proper parser
+    Literal oblLiteral = ASSyntax.parseLiteral(obl);
 
-    if (matcher.matches()) {
-      String agent = matcher.group(1);
-      String maintCondition = matcher.group(2);
-      String goal = matcher.group(3);
-      String deadline = matcher.group(4);
-      Literal literal = ASSyntax.createLiteral(Functor.OBLIGATION.lowercase());
-
-      // Parse and add agent term
-      literal.addTerm(parseAgent(agent));
-
-      // Parse and add condition term
-      literal.addTerm(parseMaintenanceCondition(maintCondition));
-
-      // Parse and add goal term
-      literal.addTerm(ASSyntax.parseFormula(goal));
-
-      // Create and add string term for deadline
-      literal.addTerm(ASSyntax.createString(deadline));
-      return literal;
+    if (oblLiteral.getArity() == 4 && oblLiteral.getFunctor()
+                                                .equals(Functor.OBLIGATION.lowercase())) {
+      return oblLiteral;
     }
     throw new ParseException();
-  }
-
-  /**
-   * Parse maintenance condition using {@link ASSyntax#parseFormula(String)} and return the result
-   * as a {@link Term}. If {@code maintCondition} is equal to the id of the element, then
-   * {@code condition} is returned. Otherwise, the maintenance condition is returned.
-   * 
-   * @param maintCondition maintenance condition of the element
-   * @return parsed condition as a {@link Term}
-   * @throws ParseException
-   */
-  private Term parseMaintenanceCondition(String maintCondition) throws ParseException {
-    LogicalFormula conditionLiteral = ASSyntax.parseFormula(maintCondition);
-    return conditionLiteral;
-  }
-
-  /**
-   * Parse agent name to {@link VarTerm} or {@link Atom} depending on what it really represents.
-   * 
-   * @param agent name of the agent
-   * @return term with given agent name.
-   */
-  private Term parseAgent(String agent) {
-    char agentInitial = agent.charAt(0);
-    if (Character.isUpperCase(agentInitial)) {
-      return new VarTerm(agent);
-    } else {
-      return new Atom(agent);
-    }
   }
 
   /**
