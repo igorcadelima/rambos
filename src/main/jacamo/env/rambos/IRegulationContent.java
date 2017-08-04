@@ -22,7 +22,7 @@ package rambos;
 
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
-import jason.asSyntax.NumberTerm;
+import jason.asSyntax.StringTerm;
 import jason.asSyntax.Term;
 
 /**
@@ -49,5 +49,5 @@ public interface IRegulationContent extends IContent {
   /**
    * @return deadline to fulfill the content
    */
-  NumberTerm getDeadline();
+  StringTerm getDeadline();
 }

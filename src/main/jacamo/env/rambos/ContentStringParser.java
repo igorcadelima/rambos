@@ -27,12 +27,9 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
-import jason.asSyntax.NumberTerm;
-import jason.asSyntax.NumberTermImpl;
 import jason.asSyntax.Term;
 import jason.asSyntax.VarTerm;
 import jason.asSyntax.parser.ParseException;
-import npl.TimeTerm;
 import rambos.Contents.Functor;
 
 /**
@@ -80,8 +77,8 @@ class ContentStringParser implements ContentParser<String> {
       // Parse and add goal term
       literal.addTerm(ASSyntax.parseFormula(goal));
 
-      // Solve and add deadline term
-      literal.addTerm(solveTimeExpression(deadline));
+      // Create and add string term for deadline
+      literal.addTerm(ASSyntax.createString(deadline));
       return literal;
     }
     throw new ParseException();
@@ -117,44 +114,6 @@ class ContentStringParser implements ContentParser<String> {
   }
 
   /**
-   * Solve a time expression such as {@code `now` + `2 days`} or {@code now + 2 days} and return the
-   * result as {@link NumberTerm} in milliseconds.
-   * 
-   * @param time string with expression to be solved
-   * @return time in milliseconds
-   */
-  private NumberTerm solveTimeExpression(String time) {
-    String[] deadlineTerms = time.replace("`", "")
-                                 .split("((?<=\\+)|(?=\\+)|(?<=\\-)|(?=\\-))");
-    double x = parseTimeTerm(deadlineTerms[0]).solve();
-
-    for (int i = 1; i < deadlineTerms.length; i += 2) {
-      double y = parseTimeTerm(deadlineTerms[i + 1]).solve();
-      x = solveNumericalExpression(x, deadlineTerms[i], y);
-    }
-    return new NumberTermImpl(x);
-  }
-
-  /**
-   * Solve numerical expression given two double terms and an operator as string.
-   * 
-   * @param x first term
-   * @param operator either {@code "+"} or {@code "-"}
-   * @param y second term
-   * @return solved expression
-   */
-  private double solveNumericalExpression(double x, String operator, double y) {
-    switch (operator) {
-      case "+":
-        return x + y;
-      case "-":
-        return x - y;
-      default:
-        throw new IllegalArgumentException("Unknown operator");
-    }
-  }
-
-  /**
    * Parse proposition to {@link Literal} whose functor is {@literal "fail"}.
    * 
    * @param proposition deontic proposition
@@ -172,25 +131,5 @@ class ContentStringParser implements ContentParser<String> {
       return ASSyntax.createLiteral(Functor.FAIL.lowercase(), reason);
     }
     return null;
-  }
-
-  /**
-   * Parse argument to {@link TimeTerm}.
-   * 
-   * @param time
-   * @return {@code time} as an instance of {@link TimeTerm}
-   */
-  private TimeTerm parseTimeTerm(String time) {
-    TimeTerm term = null;
-    String[] timeTerms = time.trim()
-                             .split(" ");
-
-    if (timeTerms.length == 1) {
-      // These conditions are necessary due to a bug in TimeTerm
-      term = timeTerms[0].equals("now") ? new TimeTerm(0, null) : new TimeTerm(0, timeTerms[0]);
-    } else {
-      term = new TimeTerm(Long.parseLong(timeTerms[0]), timeTerms[1]);
-    }
-    return term;
   }
 }
