@@ -57,20 +57,21 @@ public final class Sanctions {
     for (int i = 0; i < props.getLength(); i++) {
       Node prop = props.item(i);
 
-      switch (prop.getNodeName()) {
-        case "condition":
-          try {
+      try {
+        switch (prop.getNodeName()) {
+          case "condition":
             builder.setCondition(ASSyntax.parseFormula(prop.getTextContent()));
-          } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
-          break;
-        case "category":
-          builder.setCategory(SanctionCategories.parse((Element) prop));
-          break;
-        case "content":
-          builder.setContent(new ContentStringParser().parse(prop.getTextContent()));
+            break;
+          case "category":
+            builder.setCategory(SanctionCategories.parse((Element) prop));
+            break;
+          case "content":
+            builder.setContent(ASSyntax.parseFormula(prop.getTextContent()));
+          default:
+            // Ignore
+        }
+      } catch (ParseException e) {
+        e.printStackTrace();
       }
     }
     return builder.build();

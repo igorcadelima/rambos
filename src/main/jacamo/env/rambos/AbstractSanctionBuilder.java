@@ -33,7 +33,7 @@ public abstract class AbstractSanctionBuilder<T extends AbstractSanctionBuilder<
   protected Status status = Status.ENABLED;
   protected LogicalFormula condition;
   protected SanctionCategory category;
-  protected IContent content;
+  protected LogicalFormula content;
 
   /**
    * Get current instance of the class and return it.
@@ -68,7 +68,7 @@ public abstract class AbstractSanctionBuilder<T extends AbstractSanctionBuilder<
   }
 
   @Override
-  public T setContent(IContent content) {
+  public T setContent(LogicalFormula content) {
     this.content = content;
     return getThis();
   }

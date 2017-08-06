@@ -62,12 +62,12 @@ public interface ISanctionBuilder<T extends ISanctionBuilder<T>> extends Builder
   T setCategory(SanctionCategory category);
 
   /**
-   * Set content for the norm.
+   * Set content for the sanction.
    * 
-   * @param content norm's content
+   * @param content sanctions's content
    * @return builder builder instance
    */
-  T setContent(IContent content);
+  T setContent(LogicalFormula content);
 
   /**
    * Build sanction based on the data provided using the setter methods.

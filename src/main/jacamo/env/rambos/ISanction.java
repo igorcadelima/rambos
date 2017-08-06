@@ -53,6 +53,6 @@ public interface ISanction extends Literable {
   /**
    * @return content
    */
-  IContent getContent();
+  LogicalFormula getContent();
 
 }

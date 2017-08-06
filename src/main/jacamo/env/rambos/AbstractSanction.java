@@ -34,7 +34,7 @@ public class AbstractSanction implements ISanction {
   protected Status status = Status.ENABLED;
   protected LogicalFormula condition;
   protected SanctionCategory category;
-  protected IContent content;
+  protected LogicalFormula content;
 
   @Override
   public Atom getId() {
@@ -57,7 +57,7 @@ public class AbstractSanction implements ISanction {
   }
 
   @Override
-  public IContent getContent() {
+  public LogicalFormula getContent() {
     return content;
   }
 
@@ -68,7 +68,7 @@ public class AbstractSanction implements ISanction {
     l.addTerm(ASSyntax.createAtom(status.lowercase()));
     l.addTerm(condition);
     l.addTerm(category.toLiteral());
-    l.addTerm(content.toLiteral());
+    l.addTerm(content);
     return l;
   }
 
