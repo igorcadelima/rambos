@@ -33,6 +33,7 @@ public abstract class AbstractFact implements IFact {
   protected String sanctionee;
   protected String norm;
   protected String sanction;
+  protected Motive motive;
   protected Efficacy efficacy = Efficacy.INDETERMINATE;
 
   @Override
@@ -61,6 +62,11 @@ public abstract class AbstractFact implements IFact {
   }
 
   @Override
+  public Motive getMotive() {
+    return motive;
+  }
+
+  @Override
   public Efficacy getEfficacy() {
     return efficacy;
   }
@@ -78,6 +84,7 @@ public abstract class AbstractFact implements IFact {
     l.addTerm(ASSyntax.createAtom(sanctionee));
     l.addTerm(ASSyntax.createAtom(norm));
     l.addTerm(ASSyntax.createAtom(sanction));
+    l.addTerm(ASSyntax.createAtom(motive.lowercase()));
     l.addTerm(ASSyntax.createAtom(efficacy.lowercase()));
     return l;
   }
@@ -92,6 +99,7 @@ public abstract class AbstractFact implements IFact {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((efficacy == null) ? 0 : efficacy.hashCode());
+    result = prime * result + ((motive == null) ? 0 : motive.hashCode());
     result = prime * result + ((norm == null) ? 0 : norm.hashCode());
     result = prime * result + ((sanction == null) ? 0 : sanction.hashCode());
     result = prime * result + ((sanctionee == null) ? 0 : sanctionee.hashCode());
@@ -110,6 +118,8 @@ public abstract class AbstractFact implements IFact {
       return false;
     AbstractFact other = (AbstractFact) obj;
     if (efficacy != other.efficacy)
+      return false;
+    if (motive != other.motive)
       return false;
     if (norm == null) {
       if (other.norm != null)

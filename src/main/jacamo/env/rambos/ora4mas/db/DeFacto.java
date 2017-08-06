@@ -100,7 +100,7 @@ public class DeFacto extends Artifact {
     facts.remove(factObj);
     factObj.setEfficacy(efficacyObj);
     facts.add(factObj);
-    prop.updateValue(5, ASSyntax.createAtom(efficacy));
+    prop.updateValue(6, ASSyntax.createAtom(efficacy));
   }
 
   /**

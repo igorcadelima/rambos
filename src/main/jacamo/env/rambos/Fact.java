@@ -31,6 +31,7 @@ public class Fact extends AbstractFact {
     sanctionee = builder.sanctionee;
     norm = builder.norm;
     sanction = builder.sanction;
+    motive = builder.motive;
     efficacy = builder.efficacy;
   }
 

@@ -25,6 +25,7 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.NumberTerm;
 import rambos.Fact.FactBuilder;
 import rambos.IFact.Efficacy;
+import rambos.IFact.Motive;
 import rambos.util.Enums;
 
 /**
@@ -65,7 +66,9 @@ public final class Facts {
                               .toString())
                     .setSanction(l.getTerm(4)
                                   .toString())
-                    .setEfficacy(Enums.lookup(Efficacy.class, l.getTerm(5)
+                    .setMotive(Enums.lookup(Motive.class, l.getTerm(5)
+                                                           .toString()))
+                    .setEfficacy(Enums.lookup(Efficacy.class, l.getTerm(6)
                                                                .toString()))
                     .build();
 

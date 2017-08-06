@@ -21,6 +21,7 @@
 package rambos;
 
 import rambos.IFact.Efficacy;
+import rambos.IFact.Motive;
 
 /**
  * @author igorcadelima
@@ -33,6 +34,7 @@ public abstract class AbstractFactBuilder<T extends AbstractFactBuilder<T>>
   protected String sanctionee;
   protected String norm;
   protected String sanction;
+  protected Motive motive;
   protected Efficacy efficacy = Efficacy.INDETERMINATE;
 
   /**
@@ -70,6 +72,12 @@ public abstract class AbstractFactBuilder<T extends AbstractFactBuilder<T>>
   @Override
   public T setSanction(String sanction) {
     this.sanction = sanction;
+    return getThis();
+  }
+
+  @Override
+  public T setMotive(Motive motive) {
+    this.motive = motive;
     return getThis();
   }
 

@@ -21,6 +21,7 @@
 package rambos;
 
 import rambos.IFact.Efficacy;
+import rambos.IFact.Motive;
 import rambos.util.Builder;
 
 /**
@@ -50,6 +51,8 @@ public interface IFactBuilder<T extends IFactBuilder<T>> extends Builder<IFact> 
   T setNorm(String norm);
 
   T setSanction(String sanction);
+
+  T setMotive(Motive motive);
 
   T setEfficacy(Efficacy efficacy);
 }

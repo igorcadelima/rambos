@@ -37,6 +37,10 @@ public interface IFact extends Literable {
     INDETERMINATE, EFFECTIVE, INEFFECTIVE
   }
 
+  enum Motive implements LowercaseEnum<Motive> {
+    COMPLIANCE, VIOLATION
+  }
+
   long getTime();
 
   String getSanctioner();
@@ -46,6 +50,8 @@ public interface IFact extends Literable {
   String getNorm();
 
   String getSanction();
+
+  Motive getMotive();
 
   Efficacy getEfficacy();
 
