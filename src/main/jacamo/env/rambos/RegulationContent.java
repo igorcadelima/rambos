@@ -33,7 +33,7 @@ import jason.asSyntax.StringTerm;
 public abstract class RegulationContent implements IRegulationContent {
   protected Atom target;
   protected LogicalFormula maintenanceCondition;
-  protected Literal aim;
+  protected LogicalFormula aim;
   protected StringTerm deadline;
 
   /**
@@ -46,7 +46,7 @@ public abstract class RegulationContent implements IRegulationContent {
     }
     target = (Atom) literal.getTerm(0);
     maintenanceCondition = (LogicalFormula) literal.getTerm(1);
-    aim = (Literal) literal.getTerm(2);
+    aim = (LogicalFormula) literal.getTerm(2);
     deadline = (StringTerm) literal.getTerm(3);
   }
 
@@ -61,7 +61,7 @@ public abstract class RegulationContent implements IRegulationContent {
   }
 
   @Override
-  public Literal getAim() {
+  public LogicalFormula getAim() {
     return aim;
   }
 

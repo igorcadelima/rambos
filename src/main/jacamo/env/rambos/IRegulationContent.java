@@ -20,7 +20,6 @@
  *******************************************************************************/
 package rambos;
 
-import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.StringTerm;
 import jason.asSyntax.Term;
@@ -44,7 +43,7 @@ public interface IRegulationContent extends IContent {
   /**
    * @return state of the world that the target must achieve
    */
-  Literal getAim();
+  LogicalFormula getAim();
 
   /**
    * @return deadline to fulfill the content
