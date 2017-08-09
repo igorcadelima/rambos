@@ -51,7 +51,7 @@ import rambos.core.Sanctions;
  * @author igorcadelima
  *
  */
-public final class DeJureDOMParser extends DeJureParser<Document> {
+public final class DeJureDomParser extends DeJureParser<Document> {
   protected static final String NORMS_TAG = "norms";
   protected static final String SANCTIONS_TAG = "sanctions";
   protected static final String LINKS_TAG = "links";

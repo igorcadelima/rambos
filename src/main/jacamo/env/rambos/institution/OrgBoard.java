@@ -111,7 +111,7 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
 
     String name = getId().getName() + ".de_jure";
     ArtifactId djb = makeArtifact("djb", DeJure.Builder.class.getName(), new ArtifactConfig());
-    ArtifactId djp = makeArtifact("djp", DeJureDOMParser.class.getName(), new ArtifactConfig(djb));
+    ArtifactId djp = makeArtifact("djp", DeJureDomParser.class.getName(), new ArtifactConfig(djb));
     execLinkedOp(djp, "parse", ns, name, aid);
     deJure = aid.get();
     defineObsProperty("de_jure", ASSyntax.createAtom(name), aid);
