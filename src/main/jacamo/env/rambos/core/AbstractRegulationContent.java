@@ -25,6 +25,7 @@ import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.NumberTerm;
+import jason.asSyntax.StringTerm;
 
 /**
  * This class provides a skeletal implementation of the {@link RegulationContent} interface to
@@ -50,7 +51,8 @@ abstract class AbstractRegulationContent implements RegulationContent {
     target = (Atom) literal.getTerm(0);
     maintenanceCondition = (LogicalFormula) literal.getTerm(1);
     aim = (LogicalFormula) literal.getTerm(2);
-    deadline = (NumberTerm) literal.getTerm(3);
+    deadline = TemporalTerm.parse(((StringTerm) literal.getTerm(3)).getString())
+                           .toTerm();
   }
 
   @Override
