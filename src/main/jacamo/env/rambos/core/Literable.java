@@ -26,7 +26,7 @@ import jason.asSyntax.Literal;
  * @author igorcadelima
  *
  */
-public interface Literable {
+interface Literable {
   /**
    * @return functor of the literable
    */
