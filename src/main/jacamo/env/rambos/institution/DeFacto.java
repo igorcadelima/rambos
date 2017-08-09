@@ -28,11 +28,9 @@ import cartago.LINK;
 import cartago.OPERATION;
 import cartago.ObsProperty;
 import jason.asSyntax.ASSyntax;
-import jason.asSyntax.Literal;
-import jason.asSyntax.parser.ParseException;
-import rambos.core.Fact;
-import rambos.core.Facts;
-import rambos.core.Fact.Efficacy;
+import rambos.core.Registry;
+import rambos.core.Registries;
+import rambos.core.Registry.Efficacy;
 import rambos.core.util.Enums;
 
 /**
@@ -40,81 +38,68 @@ import rambos.core.util.Enums;
  *
  */
 public final class DeFacto extends Artifact {
-  private Set<Fact> facts = new HashSet<Fact>();
+  private Set<Registry> registries = new HashSet<Registry>();
 
   /**
-   * Add new fact into the facts set.
+   * Add new registry into the registries set.
    * 
-   * Only instances of {@link Fact} or {@link String} should be passed as argument. For both cases,
-   * the fact will be added using {@link #addFact(Fact)}. If {@code f} is an instance of
-   * {@link String}, then it will be parsed using {@link Facts#parse(String)} before being added to
-   * the facts set.
+   * Only instances of {@link Registry} or {@link String} should be passed as argument. For both
+   * cases, the registry will be added using {@link #addRegistry(Registry)}. If {@code f} is an
+   * instance of {@link String}, then it will be parsed using {@link Registries#parse(String)}
+   * before being added to the registries set.
    * 
-   * @param fact fact to be added
+   * @param registry registry to be added
    */
   @LINK
   @OPERATION
-  public <T> void addFact(T fact) {
-    if (fact instanceof Fact)
-      addFact((Fact) fact);
-    else if (fact instanceof String)
-      addFact(Facts.parse((String) fact));
+  public <T> void addRegistry(T registry) {
+    if (registry instanceof Registry)
+      addRegistry((Registry) registry);
+    else if (registry instanceof String)
+      addRegistry(Registries.parse((String) registry));
     else
-      failed("Expected " + String.class.getCanonicalName() + " or " + Fact.class.getCanonicalName()
-          + " but got " + fact.getClass()
-                              .getCanonicalName());
+      failed("Expected " + String.class.getCanonicalName() + " or "
+          + Registry.class.getCanonicalName() + " but got " + registry.getClass()
+                                                                      .getCanonicalName());
+  }
+
+  /** Add new {@code registry} into the registries set. */
+  private void addRegistry(Registry registry) {
+    registries.add(registry);
+    defineObsProperty(registry.getFunctor(), (Object[]) registry.toLiteral()
+                                                                .getTermsArray());
   }
 
   /**
-   * Add new fact into the facts set.
+   * Update the efficacy value of an existing registry.
    * 
-   * @param fact
-   */
-  private void addFact(Fact fact) {
-    facts.add(fact);
-    defineObsProperty(fact.getFunctor(), (Object[]) fact.toLiteral()
-                                                        .getTermsArray());
-  }
-
-  /**
-   * Update the efficacy value of an existing fact.
-   * 
-   * @param fact string with literal format of the fact to be updated
+   * @param registry string with literal format of the registry to be updated
    * @param efficacy new efficacy value
    */
   @LINK
   @OPERATION
-  public void updateFactEfficacy(String fact, String efficacy) {
+  public void updateEfficacy(String registry, String efficacy) {
     Efficacy efficacyObj = Enums.lookup(Efficacy.class, efficacy);
     if (efficacyObj == null) {
       failed(efficacy + " is not a valid efficacy value");
     }
 
-    Fact factObj = Facts.parse(fact);
-    ObsProperty prop = getObsPropertyByTemplate(factObj.getFunctor(), (Object[]) factObj.toLiteral()
-                                                                                        .getTermsArray());
-    facts.remove(factObj);
-    factObj.setEfficacy(efficacyObj);
-    facts.add(factObj);
+    Registry registryObj = Registries.parse(registry);
+    ObsProperty prop =
+        getObsPropertyByTemplate(registryObj.getFunctor(), (Object[]) registryObj.toLiteral()
+                                                                                 .getTermsArray());
+    registries.remove(registryObj);
+    registryObj.setEfficacy(efficacyObj);
+    registries.add(registryObj);
     prop.updateValue(6, ASSyntax.createAtom(efficacy));
   }
 
-  /**
-   * Remove a fact from the facts set.
-   * 
-   * @param fact
-   */
+  /** Remove a registry from the registries set. */
   @LINK
   @OPERATION
-  public void removeFact(Fact fact) {
-    try {
-      Literal literalFact = ASSyntax.parseLiteral(fact.toString());
-      facts.remove(fact);
-      removeObsPropertyByTemplate(fact.getFunctor(), literalFact.getTerms()
-                                                                .toArray());
-    } catch (ParseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+  public void removeRegistry(Registry registry) {
+    registries.remove(registry);
+    removeObsPropertyByTemplate(registry.getFunctor(), (Object[]) registry.toLiteral()
+                                                                          .getTermsArray());
   }
 }

@@ -24,13 +24,13 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 
 /**
- * This class provides a basic implementation of the {@link Fact} interface.
+ * This class provides a basic implementation of the {@link Registry} interface.
  * 
  * @author igorcadelima
  *
  */
-final class BasicFact implements Fact {
-  static final String FUNCTOR = "fact";
+final class BasicRegistry implements Registry {
+  static final String FUNCTOR = "registry";
 
   private long time;
   private String sanctioner;
@@ -40,8 +40,8 @@ final class BasicFact implements Fact {
   private Motive motive;
   private Efficacy efficacy = Efficacy.INDETERMINATE;
 
-  /** Constructs a {@link BasicFact} with the properties specified in {@code builder}. */
-  private BasicFact(Builder builder) {
+  /** Constructs a {@link BasicRegistry} with the properties specified in {@code builder}. */
+  private BasicRegistry(Builder builder) {
     time = builder.time;
     sanctioner = builder.sanctioner;
     sanctionee = builder.sanctionee;
@@ -109,12 +109,12 @@ final class BasicFact implements Fact {
     }
 
     /**
-     * Return a new {@link Fact} with the specified implementation.
+     * Return a new {@link Registry} with the specified implementation.
      * 
-     * @return new {@code Fact}
+     * @return new {@link Registry} instance
      */
-    BasicFact build() {
-      return new BasicFact(this);
+    BasicRegistry build() {
+      return new BasicRegistry(this);
     }
   }
 
@@ -203,7 +203,7 @@ final class BasicFact implements Fact {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    BasicFact other = (BasicFact) obj;
+    BasicRegistry other = (BasicRegistry) obj;
     if (efficacy != other.efficacy)
       return false;
     if (motive != other.motive)

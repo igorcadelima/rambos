@@ -24,7 +24,7 @@ package rambos.core;
  * @author igorcadelima
  *
  */
-public interface Fact extends Literable {
+public interface Registry extends Literable {
   /**
    * Efficacy values that can be used:
    * <li>{@link #INDETERMINATE}</li>

@@ -23,34 +23,35 @@ package rambos.core;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.NumberTerm;
-import rambos.core.BasicFact.Builder;
-import rambos.core.Fact.Efficacy;
-import rambos.core.Fact.Motive;
+import rambos.core.BasicRegistry.Builder;
+import rambos.core.Registry.Efficacy;
+import rambos.core.Registry.Motive;
 import rambos.core.util.Enums;
 
 /**
- * Static utility methods pertaining to {@link Fact} instances.
+ * Static utility methods pertaining to {@link Registry} instances.
  * 
  * @author igorcadelima
  *
  */
-public final class Facts {
-  private Facts() {}
+public final class Registries {
+  private Registries() {}
 
   /**
-   * Return a new fact initialised to the value represented by the specified {@code String}.
+   * Return a new sanction registry initialised to the value represented by the specified
+   * {@code String}.
    * 
-   * @param fact string to be parsed
-   * @return fact represented by the string argument
-   * @throws IllegalArgumentException if string does not contain a parsable fact
+   * @param registry string to be parsed
+   * @return registry represented by the string argument
+   * @throws IllegalArgumentException if string does not contain a parsable sanction registry
    * @throws NullPointerException if string is {@code null}
    */
-  public static Fact parse(String fact) {
+  public static Registry parse(String registry) {
     try {
-      Literal l = ASSyntax.parseLiteral(fact);
+      Literal l = ASSyntax.parseLiteral(registry);
 
       if (!l.getFunctor()
-            .equals(BasicFact.FUNCTOR)) {
+            .equals(BasicRegistry.FUNCTOR)) {
         throw new IllegalArgumentException();
       }
 
@@ -70,7 +71,7 @@ public final class Facts {
                           .build();
 
     } catch (Exception e) {
-      throw new IllegalArgumentException("String does not contain a parsable fact");
+      throw new IllegalArgumentException("String does not contain a parsable registry");
     }
   }
 }
