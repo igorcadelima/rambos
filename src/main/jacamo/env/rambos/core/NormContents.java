@@ -34,7 +34,7 @@ import rambos.core.util.Enums;
 public final class NormContents {
   private NormContents() {}
 
-  private enum Functor implements LowercaseEnum {
+  private enum Mode implements LowercaseEnum {
     FAIL {
       @Override
       NormContent newContent(Literal literal) {
@@ -70,7 +70,7 @@ public final class NormContents {
    * @return new content
    */
   public static NormContent of(Literal literal) {
-    return Enums.lookup(Functor.class, literal.getFunctor())
+    return Enums.lookup(Mode.class, literal.getFunctor())
                 .newContent(literal);
   }
 
