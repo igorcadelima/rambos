@@ -52,16 +52,13 @@ public final class Norms {
   public static Norm parse(String norm) {
     try {
       Literal l = ASSyntax.parseLiteral(norm);
-      Atom id = (Atom) l.getTerm(0);
       Status status = Enums.lookup(Status.class, l.getTerm(1)
                                                   .toString());
-      LogicalFormula condition = (LogicalFormula) l.getTerm(2);
-      Atom issuer = (Atom) l.getTerm(3);
       NormContent content = NormContents.of((Literal) l.getTerm(4));
-      return new Builder().id(id)
+      return new Builder().id((Atom) l.getTerm(0))
                           .status(status)
-                          .condition(condition)
-                          .issuer(issuer)
+                          .condition((LogicalFormula) l.getTerm(2))
+                          .issuer((Atom) l.getTerm(3))
                           .content(content)
                           .build();
     } catch (ParseException e) {
