@@ -21,7 +21,7 @@
 package rambos.core;
 
 import jason.asSyntax.LogicalFormula;
-import jason.asSyntax.StringTerm;
+import jason.asSyntax.NumberTerm;
 import jason.asSyntax.Term;
 
 /**
@@ -45,7 +45,8 @@ public interface RegulationContent extends NormContent {
   LogicalFormula getAim();
 
   /**
-   * @return deadline to fulfill the content
+   * @return time (in milliseconds) to fulfill the norm since the moment the norm instance becomes
+   *         active
    */
-  StringTerm getDeadline();
+  NumberTerm getDeadline();
 }
