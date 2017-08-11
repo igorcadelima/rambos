@@ -120,6 +120,27 @@ public class OrgBoard extends ora4mas.nopl.OrgBoard {
     dispose(djp);
   }
 
+  /**
+   * Create {@link CapabilityBoard} named "<i>[org_name]</i>.capability_board", where
+   * <i>[org_name]</i> is the name of the organisation.
+   * 
+   * @param aid output parameter which returns the {@link ArtifactId} of {@link CapabilityBoard}
+   * @throws OperationException
+   */
+  @OPERATION
+  public void createCapabilityBoard(OpFeedbackParam<ArtifactId> aid) throws OperationException {
+    String name = getId().getName() + ".capability_board";
+
+    if (aids.containsKey(name)) {
+      failed("There cannot be more than one capability board in an organisation");
+    }
+
+    ArtifactId artId = makeArtifact(name, CapabilityBoard.class.getName(), new ArtifactConfig());
+    aids.put(name, artId);
+    defineObsProperty("capability_board", ASSyntax.createAtom(name), artId);
+    aid.set(artId);
+  }
+
   @Override
   @OPERATION
   public void createGroup(String id, String type, OpFeedbackParam<ArtifactId> gaid)
