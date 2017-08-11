@@ -37,7 +37,7 @@ final class BasicRegistry implements Registry {
   private String sanctionee;
   private String norm;
   private String sanction;
-  private Motive motive;
+  private Cause cause;
   private Efficacy efficacy = Efficacy.INDETERMINATE;
 
   /** Constructs a {@link BasicRegistry} with the properties specified in {@code builder}. */
@@ -47,7 +47,7 @@ final class BasicRegistry implements Registry {
     sanctionee = builder.sanctionee;
     norm = builder.norm;
     sanction = builder.sanction;
-    motive = builder.motive;
+    cause = builder.cause;
     efficacy = builder.efficacy;
   }
 
@@ -57,7 +57,7 @@ final class BasicRegistry implements Registry {
     private String sanctionee;
     private String norm;
     private String sanction;
-    private Motive motive;
+    private Cause cause;
     private Efficacy efficacy = Efficacy.INDETERMINATE;
 
     /**
@@ -98,8 +98,8 @@ final class BasicRegistry implements Registry {
       return this;
     }
 
-    Builder motive(Motive motive) {
-      this.motive = motive;
+    Builder cause(Cause cause) {
+      this.cause = cause;
       return this;
     }
 
@@ -144,8 +144,8 @@ final class BasicRegistry implements Registry {
   }
 
   @Override
-  public Motive getMotive() {
-    return motive;
+  public Cause getCause() {
+    return cause;
   }
 
   @Override
@@ -171,7 +171,7 @@ final class BasicRegistry implements Registry {
     l.addTerm(ASSyntax.createAtom(sanctionee));
     l.addTerm(ASSyntax.createAtom(norm));
     l.addTerm(ASSyntax.createAtom(sanction));
-    l.addTerm(ASSyntax.createAtom(motive.lowercase()));
+    l.addTerm(ASSyntax.createAtom(cause.lowercase()));
     l.addTerm(ASSyntax.createAtom(efficacy.lowercase()));
     return l;
   }
@@ -186,7 +186,7 @@ final class BasicRegistry implements Registry {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((efficacy == null) ? 0 : efficacy.hashCode());
-    result = prime * result + ((motive == null) ? 0 : motive.hashCode());
+    result = prime * result + ((cause == null) ? 0 : cause.hashCode());
     result = prime * result + ((norm == null) ? 0 : norm.hashCode());
     result = prime * result + ((sanction == null) ? 0 : sanction.hashCode());
     result = prime * result + ((sanctionee == null) ? 0 : sanctionee.hashCode());
@@ -206,7 +206,7 @@ final class BasicRegistry implements Registry {
     BasicRegistry other = (BasicRegistry) obj;
     if (efficacy != other.efficacy)
       return false;
-    if (motive != other.motive)
+    if (cause != other.cause)
       return false;
     if (norm == null) {
       if (other.norm != null)

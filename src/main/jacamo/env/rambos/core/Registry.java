@@ -35,7 +35,7 @@ public interface Registry extends Literable {
     INDETERMINATE, EFFECTIVE, INEFFECTIVE
   }
 
-  enum Motive implements LowercaseEnum {
+  enum Cause implements LowercaseEnum {
     COMPLIANCE, VIOLATION
   }
 
@@ -49,7 +49,7 @@ public interface Registry extends Literable {
 
   String getSanction();
 
-  Motive getMotive();
+  Cause getCause();
 
   Efficacy getEfficacy();
 

@@ -25,7 +25,7 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.NumberTerm;
 import rambos.core.BasicRegistry.Builder;
 import rambos.core.Registry.Efficacy;
-import rambos.core.Registry.Motive;
+import rambos.core.Registry.Cause;
 import rambos.core.util.Enums;
 
 /**
@@ -64,8 +64,8 @@ public final class Registries {
                                  .toString())
                           .sanction(l.getTerm(4)
                                      .toString())
-                          .motive(Enums.lookup(Motive.class, l.getTerm(5)
-                                                              .toString()))
+                          .cause(Enums.lookup(Cause.class, l.getTerm(5)
+                                                            .toString()))
                           .efficacy(Enums.lookup(Efficacy.class, l.getTerm(6)
                                                                   .toString()))
                           .build();
