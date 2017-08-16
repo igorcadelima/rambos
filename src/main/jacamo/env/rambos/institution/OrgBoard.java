@@ -36,7 +36,7 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
 import moise.os.ns.NS;
 
-public class OrgBoard extends ora4mas.nopl.OrgBoard {
+public final class OrgBoard extends ora4mas.nopl.OrgBoard {
   private Map<String, ArtifactId> aids = new HashMap<String, ArtifactId>();
   private ArtifactId deJure;
   private Document ns;
