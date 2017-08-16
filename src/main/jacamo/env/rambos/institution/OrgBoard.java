@@ -65,7 +65,7 @@ public final class OrgBoard extends ora4mas.nopl.OrgBoard {
 
   /**
    * Create {@link OrgSpec} instance which will be shared with every {@link GroupBoard},
-   * {@link SchemeBoard}, and {@link NormativeBoard} that belongs with this {@link OrgBoard}
+   * {@link SchemeBoard}, and {@link RegimentationBoard} that belongs with this {@link OrgBoard}
    * instance.
    * 
    * @param osDoc organisational specification

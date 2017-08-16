@@ -153,7 +153,7 @@ public final class SchemeBoard extends ora4mas.nopl.SchemeBoard {
    */
   private void createNormativeBoardFor(String groupName) throws OperationException {
     String name = groupName + "." + orgState.getId();
-    String template = NormativeBoard.class.getName();
+    String template = RegimentationBoard.class.getName();
     ArtifactId aid = makeArtifact(name, template, new ArtifactConfig(orgName));
     execLinkedOp(aid, "load", os2nopl.transform(spec, false));
     execInternalOp("subscribeDFP", aid);

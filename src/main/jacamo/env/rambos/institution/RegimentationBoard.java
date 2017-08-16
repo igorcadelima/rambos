@@ -30,6 +30,7 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.parser.ParseException;
 import npl.Scope;
+import ora4mas.nopl.NormativeBoard;
 import rambos.core.Norm;
 import rambos.core.Status;
 
@@ -41,11 +42,11 @@ import rambos.core.Status;
  * @author igorcadelima
  *
  */
-public final class NormativeBoard extends ora4mas.nopl.NormativeBoard {
+public final class RegimentationBoard extends NormativeBoard {
   private ArtifactId deJure;
 
   /**
-   * Initialise a {@link NormativeBoard} retrieving {@link DeJure} from the organisation and
+   * Initialise a {@link RegimentationBoard} retrieving {@link DeJure} from the organisation and
    * deploying its norms to the normative engine.
    * 
    * @param orgName name of the organisation
