@@ -105,9 +105,7 @@ public final class DeJure extends Artifact {
    * 
    * @param norms norms to be added
    */
-  @LINK
-  @OPERATION
-  public void addNorms(Norm... norms) {
+  private void addNorms(Norm... norms) {
     // TODO: check whether operator agent is a legislator
     for (Norm norm : norms) {
       if (this.norms.containsKey(norm.getId()))
