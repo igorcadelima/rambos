@@ -47,7 +47,7 @@ public interface Sanction extends Literable {
   /**
    * @return category
    */
-  BasicSanctionCategory getCategory();
+  SanctionCategory getCategory();
 
   /**
    * @return content

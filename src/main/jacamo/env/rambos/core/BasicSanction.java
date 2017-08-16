@@ -37,7 +37,7 @@ final class BasicSanction implements Sanction {
   private Atom id;
   private Status status = Status.ENABLED;
   private LogicalFormula condition;
-  private BasicSanctionCategory category;
+  private SanctionCategory category;
   private LogicalFormula content;
 
   /**
@@ -148,7 +148,7 @@ final class BasicSanction implements Sanction {
   }
 
   @Override
-  public BasicSanctionCategory getCategory() {
+  public SanctionCategory getCategory() {
     return category;
   }
 
