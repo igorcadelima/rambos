@@ -23,6 +23,7 @@ package rambos.institution;
 import cartago.Artifact;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
+import rambos.institution.Capability.AgentType;
 
 /**
  * Board where capabilities may be stored so that agents may acquire them through operations.
@@ -42,6 +43,7 @@ public final class CapabilityBoard extends Artifact {
   @OPERATION
   public void acquire(String capability, String agentType, OpFeedbackParam<Object> plans) {
     Capability capab = Capability.valueOf(capability.toUpperCase());
-    capab.getPlansForAgentType(agentType, plans);
+    AgentType type = AgentType.valueOf(agentType.toUpperCase());
+    capab.getPlansForAgentType(type, plans);
   }
 }

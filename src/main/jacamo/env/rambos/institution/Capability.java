@@ -34,33 +34,47 @@ import jason.asSyntax.parser.ParseException;
 enum Capability {
   DETECTOR {
     @Override
-    void getPlansForAgentType(String agentType, OpFeedbackParam<Object> plans) {
-      AgentType type = AgentType.valueOf(agentType.toUpperCase());
+    void getPlansForAgentType(AgentType type, OpFeedbackParam<Object> plans) {
       type.getPlansForDetector(plans);
+    }
+  },
 
+  EVALUATOR {
+    @Override
+    void getPlansForAgentType(AgentType type, OpFeedbackParam<Object> plans) {
+      type.getPlansForEvaluator(plans);
     }
   };
 
-  abstract void getPlansForAgentType(String type, OpFeedbackParam<Object> plans);
+  abstract void getPlansForAgentType(AgentType type, OpFeedbackParam<Object> plans);
 
   /**
    * An enum that contains the types of agents which are supported.
    */
   enum AgentType {
     JASON {
-      @Override
-      void getPlansForDetector(OpFeedbackParam<Object> plans) {
+      Object[] getPlansOf(String file) {
+        Agent agent = new Agent();
         try {
-          Agent agent = new Agent();
           agent.initAg();
-          agent.parseAS(Capability.class.getResourceAsStream("/agt/detector.asl"));
-          plans.set(agent.getPL()
-                         .getPlans()
-                         .toArray());
+          agent.parseAS(AgentType.class.getResourceAsStream(file));
         } catch (ParseException | JasonException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
+        return agent.getPL()
+                    .getPlans()
+                    .toArray();
+      }
+
+      @Override
+      void getPlansForDetector(OpFeedbackParam<Object> plans) {
+        plans.set(getPlansOf("/agt/detector.asl"));
+      }
+
+      @Override
+      void getPlansForEvaluator(OpFeedbackParam<Object> plans) {
+        plans.set(getPlansOf("/agt/evaluator.asl"));
       }
     };
 
@@ -70,5 +84,12 @@ enum Capability {
      * @param plans output parameter used to return the plans
      */
     abstract void getPlansForDetector(OpFeedbackParam<Object> plans);
+
+    /**
+     * Get Jason plans for evaluator.
+     * 
+     * @param plans output parameter used to return the plans
+     */
+    abstract void getPlansForEvaluator(OpFeedbackParam<Object> plans);
   }
 }
