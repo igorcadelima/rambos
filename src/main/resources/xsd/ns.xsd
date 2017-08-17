@@ -53,7 +53,7 @@
 	<xsd:simpleType name="contentType">
 		<xsd:restriction base="xsd:string">
 			<xsd:pattern
-				value="((obligation|prohibition)\s*\(\s*(\w+)\s*,\s*(.+)\s*,\s*(.+)\s*,\s*(.+)\s*\))|fail\s*\(\s*(.+)\s*\)" />
+				value="((obligation|permission|prohibition)\s*\(\s*(\w+)\s*,\s*(.+)\s*,\s*(.+)\s*,\s*(.+)\s*\))|fail\s*\(\s*(.+)\s*\)" />
 		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:simpleType name="status">

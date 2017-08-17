@@ -49,6 +49,13 @@ public final class NormContents {
       }
     },
 
+    PERMISSION {
+      @Override
+      NormContent newContent(Literal literal) {
+        return new Permission(literal);
+      }
+    },
+
     PROHIBITION {
       @Override
       NormContent newContent(Literal literal) {
