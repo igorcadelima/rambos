@@ -33,7 +33,7 @@ import rambos.core.util.Enums;
  * @author igorcadelima
  *
  */
-public final class SanctionCategories {
+final class SanctionCategories {
   private SanctionCategories() {}
 
   /**
