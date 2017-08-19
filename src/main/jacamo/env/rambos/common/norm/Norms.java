@@ -42,6 +42,21 @@ public final class Norms {
   private Norms() {}
 
   /**
+   * Return a copy of the given norm.
+   * 
+   * @param norm norm to be copied
+   * @return copy of {@code norm}
+   */
+  public static Norm newInstance(Norm norm) {
+    return new BasicNorm.Builder().id(norm.getId())
+                                  .status(norm.getStatus())
+                                  .issuer(norm.getIssuer())
+                                  .condition(norm.getCondition())
+                                  .content(norm.getContent())
+                                  .build();
+  }
+
+  /**
    * Return a new norm initialised to the value represented by the specified {@code String}.
    * 
    * @param norm string to be parsed
