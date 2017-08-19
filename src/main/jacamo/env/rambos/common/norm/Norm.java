@@ -54,4 +54,14 @@ public interface Norm extends Literable {
    * @return norm's content
    */
   NormContent getContent();
+
+  /**
+   * Enable the norm changing its status to {@link Status#ENABLED}.
+   */
+  void enable();
+
+  /**
+   * Disable the norm changing its status to {@link Status#DISABLED}.
+   */
+  void disable();
 }
