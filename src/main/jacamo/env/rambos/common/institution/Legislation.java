@@ -20,6 +20,9 @@
  *******************************************************************************/
 package rambos.common.institution;
 
+import java.util.Map;
+import java.util.Set;
+
 import jason.asSyntax.Atom;
 import rambos.common.norm.Norm;
 import rambos.common.sanction.Sanction;
@@ -31,6 +34,15 @@ import rambos.common.sanction.Sanction;
  *
  */
 public interface Legislation {
+  /** Return norms. */
+  Set<Norm> getNorms();
+  
+  /** Return sanctions. */
+  Set<Sanction> getSanctions();
+  
+  /** Return links. */
+  Map<Atom, Set<Atom>> getLinks();
+  
   /**
    * Add copy of {@code norm} if it is not already in the legislation.
    * 

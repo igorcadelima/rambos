@@ -20,6 +20,7 @@
  *******************************************************************************/
 package rambos.common.institution;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +39,21 @@ final class BasicLegislation implements Legislation {
   private Map<Atom, Sanction> sanctions = new ConcurrentHashMap<Atom, Sanction>();
   // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
   private Map<Atom, Set<Atom>> links = new ConcurrentHashMap<>();
+
+  @Override
+  public Set<Norm> getNorms() {
+    return new HashSet<>(norms.values());
+  }
+
+  @Override
+  public Set<Sanction> getSanctions() {
+    return new HashSet<>(sanctions.values());
+  }
+
+  @Override
+  public Map<Atom, Set<Atom>> getLinks() {
+    return new HashMap<>(links);
+  }
 
   @Override
   public boolean addNorm(Norm norm) {
