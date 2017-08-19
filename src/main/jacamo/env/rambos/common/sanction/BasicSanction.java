@@ -159,6 +159,16 @@ final class BasicSanction implements Sanction {
   }
 
   @Override
+  public void enable() {
+    status = Status.ENABLED;
+  }
+
+  @Override
+  public void disable() {
+    status = Status.DISABLED;
+  }
+
+  @Override
   public String getFunctor() {
     return FUNCTOR;
   }

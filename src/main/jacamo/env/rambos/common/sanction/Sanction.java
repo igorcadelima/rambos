@@ -56,4 +56,13 @@ public interface Sanction extends Literable {
    */
   LogicalFormula getContent();
 
+  /**
+   * Enable the sanction changing its status to {@link Status#ENABLED}.
+   */
+  void enable();
+
+  /**
+   * Disable the sanction changing its status to {@link Status#DISABLED}.
+   */
+  void disable();
 }
