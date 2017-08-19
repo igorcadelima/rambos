@@ -40,6 +40,21 @@ public final class Sanctions {
   private Sanctions() {}
 
   /**
+   * Return a copy of the given sanction.
+   * 
+   * @param sanction sanction to be copied
+   * @return copy of {@code sanction}
+   */
+  public static Sanction newInstance(Sanction sanction) {
+    return new BasicSanction.Builder().id(sanction.getId())
+                                      .status(sanction.getStatus())
+                                      .condition(sanction.getCondition())
+                                      .category(sanction.getCategory())
+                                      .content(sanction.getContent())
+                                      .build();
+  }
+
+  /**
    * Return a new {@link Sanction} instance initialised to the value represented by the specified
    * {@code Element}.
    * 
