@@ -122,7 +122,7 @@ public final class DeJure extends Artifact {
 
       // Create link
       Link link = Links.of(norm.getId());
-      links.put(norm.getId(), Links.of(norm.getId()));
+      links.put(norm.getId(), link);
       defineObsProperty(link.getFunctor(), norm.getId(), new Atom[0]);
     }
   }
