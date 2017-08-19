@@ -65,7 +65,7 @@ final class BasicSanction implements Sanction {
     private Atom id;
     private Status status = Status.ENABLED;
     private LogicalFormula condition;
-    private BasicSanctionCategory category;
+    private SanctionCategory category;
     private LogicalFormula content;
 
     /**
@@ -107,7 +107,7 @@ final class BasicSanction implements Sanction {
      * @param category sanction category
      * @return builder builder instance
      */
-    public Builder category(BasicSanctionCategory category) {
+    public Builder category(SanctionCategory category) {
       this.category = category;
       return this;
     }
