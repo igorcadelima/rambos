@@ -127,6 +127,8 @@ final class BasicLegislation implements Legislation {
 
   @Override
   public Sanction removeSanction(Atom sanctionId) {
+    links.values()
+         .forEach(set -> set.removeIf(id -> id.equals(sanctionId)));
     return sanctions.remove(sanctionId);
   }
 
