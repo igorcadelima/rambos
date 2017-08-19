@@ -121,6 +121,7 @@ final class BasicLegislation implements Legislation {
 
   @Override
   public Norm removeNorm(Atom normId) {
+    links.remove(normId);
     return norms.remove(normId);
   }
 
