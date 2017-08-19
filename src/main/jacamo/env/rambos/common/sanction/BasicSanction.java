@@ -159,13 +159,21 @@ final class BasicSanction implements Sanction {
   }
 
   @Override
-  public void enable() {
-    status = Status.ENABLED;
+  public boolean enable() {
+    if (status == Status.DISABLED) {
+      status = Status.ENABLED;
+      return true;
+    }
+    return false;
   }
 
   @Override
-  public void disable() {
-    status = Status.DISABLED;
+  public boolean disable() {
+    if (status == Status.ENABLED) {
+      status = Status.DISABLED;
+      return true;
+    }
+    return false;
   }
 
   @Override

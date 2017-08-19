@@ -57,11 +57,15 @@ public interface Norm extends Literable {
 
   /**
    * Enable the norm changing its status to {@link Status#ENABLED}.
+   * 
+   * @return {@code true} is status was previously {@link Status#DISABLED}.
    */
-  void enable();
+  boolean enable();
 
   /**
    * Disable the norm changing its status to {@link Status#DISABLED}.
+   * 
+   * @return {@code true} is status was previously {@link Status#ENABLED}.
    */
-  void disable();
+  boolean disable();
 }
