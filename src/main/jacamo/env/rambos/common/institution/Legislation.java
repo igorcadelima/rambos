@@ -20,10 +20,10 @@
  *******************************************************************************/
 package rambos.common.institution;
 
-import java.util.Map;
 import java.util.Set;
 
 import jason.asSyntax.Atom;
+import rambos.common.link.Link;
 import rambos.common.norm.Norm;
 import rambos.common.sanction.Sanction;
 
@@ -36,13 +36,13 @@ import rambos.common.sanction.Sanction;
 public interface Legislation {
   /** Return norms. */
   Set<Norm> getNorms();
-  
+
   /** Return sanctions. */
   Set<Sanction> getSanctions();
-  
+
   /** Return links. */
-  Map<Atom, Set<Atom>> getLinks();
-  
+  Set<Link> getLinks();
+
   /**
    * Add copy of {@code norm} if it is not already in the legislation.
    * 
@@ -122,10 +122,6 @@ public interface Legislation {
   /**
    * Remove an existing link between norm and sanction with given ids.
    * 
-   * @param normId id of the norm
-   * @param sanctionId id of the sanction
-   */
-  /**
    * @param normId
    * @param sanctionId
    * @return {@code true} if there was a link between the norm and sanction with the given ids
