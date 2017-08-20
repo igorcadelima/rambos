@@ -10,11 +10,8 @@
   !sublist(B,0,N2,D);
   S=[A|D].
 
-+!evaluate(norm(NormId,_,_,_,_))
++!evaluate(norm(NormId,_,_,_,_,linked_sanctions(Sanctions)))
   <-
-  // Lets first try to get the linked sanctions
-  ?link(NormId,Sanctions);
-  
   //Shuffle list with linked sanctions
   .shuffle(Sanctions,ShuffledSanctions);
   
