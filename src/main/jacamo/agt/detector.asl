@@ -1,6 +1,6 @@
 +!detect
   <-
-  EnabledNormAnnot = norm(Id,enabled,Condition,Issuer,Content)[H|T];
+  EnabledNormAnnot = norm(Id,enabled,Condition,Issuer,Content,Sanctions)[H|T];
   // get norms whose activation and maintenance condition are believed to be true and ignore norm instances
   .setof(EnabledNormAnnot, 
   	  EnabledNormAnnot
@@ -15,7 +15,7 @@
   	.setof(Condition, Condition, ValidConditions);
   	// get active norm instances with the same id and condition
     .setof(Condition, 
-        norm(Id,_,Condition,_,_)[activation(_)|Annots] 
+        norm(Id,_,Condition,_,_,_)[activation(_)|Annots] 
 	      & not .member(deactivation(_),Annots) 
 	      & not .member(fulfillment(_),Annots) 
 	      & not .member(unfulfillment(_),Annots), 
@@ -30,12 +30,12 @@
     }
   }.
 
-+!watch_norm_instance(norm(Id,enabled,Condition,Issuer,Content)[activation(T)|Annots])
++!watch_norm_instance(norm(Id,enabled,Condition,Issuer,Content,Sanctions)[activation(T)|Annots])
   : Content =.. [_,obligation,[_,MaintCond,Aim,Deadline],_]
   <-
   .wait(not MaintCond | Aim, Deadline);
   cartago.invoke_obj("java.lang.System",currentTimeMillis,Time);
-  Instance = norm(Id,enabled,Condition,Issuer,Content)[activation(T)|Annots];
+  Instance = norm(Id,enabled,Condition,Issuer,Content,Sanctions)[activation(T)|Annots];
   
   if (not MaintCond) {
     .add_annot(Instance,deactivation(Time), FinishedInstance);
