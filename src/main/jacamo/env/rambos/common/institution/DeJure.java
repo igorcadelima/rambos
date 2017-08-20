@@ -36,7 +36,6 @@ import cartago.OPERATION;
 import cartago.ObsProperty;
 import cartago.OpFeedbackParam;
 import jason.asSyntax.Atom;
-import rambos.common.link.Links;
 import rambos.common.norm.Norm;
 import rambos.common.norm.Norms;
 import rambos.common.sanction.Sanction;
@@ -127,7 +126,6 @@ public final class DeJure extends Artifact {
   private void addNorm(Norm norm) {
     if (legislation.addNorm(norm)) {
       defineObsProperty(norm);
-      defineObsProperty(Links.of(norm.getId()));
     }
   }
 
