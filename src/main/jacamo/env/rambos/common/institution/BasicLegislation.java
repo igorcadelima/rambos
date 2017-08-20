@@ -26,8 +26,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jason.asSyntax.Atom;
-import rambos.common.link.Link;
-import rambos.common.link.Links;
 import rambos.common.norm.Norm;
 import rambos.common.norm.Norms;
 import rambos.common.sanction.Sanction;
@@ -38,8 +36,6 @@ final class BasicLegislation implements Legislation {
   private Map<Atom, Norm> norms = new ConcurrentHashMap<Atom, Norm>();
   // sanctionId -> sanction
   private Map<Atom, Sanction> sanctions = new ConcurrentHashMap<Atom, Sanction>();
-  // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
-  private Map<Atom, Link> links = new ConcurrentHashMap<>();
 
   @Override
   public Set<Norm> getNorms() {
@@ -52,16 +48,10 @@ final class BasicLegislation implements Legislation {
   }
 
   @Override
-  public Set<Link> getLinks() {
-    return new HashSet<>(links.values());
-  }
-
-  @Override
   public boolean addNorm(Norm norm) {
     if (!norms.containsKey(norm.getId())) {
       Atom normId = norm.getId();
       norms.put(normId, Norms.newInstance(norm));
-      links.put(normId, Links.of(normId));
       return true;
     }
     return false;
@@ -78,12 +68,9 @@ final class BasicLegislation implements Legislation {
 
   @Override
   public boolean addLink(Atom normId, Atom sanctionId) {
-    Set<Atom> sanctions = links.get(normId)
-                               .getSanctions();
-    if (sanctions != null) {
-      return sanctions.add(sanctionId);
-    }
-    return false;
+    Sanction sanction = sanctions.get(sanctionId);
+    return norms.get(normId)
+                .link(sanction);
   }
 
   @Override
@@ -124,20 +111,19 @@ final class BasicLegislation implements Legislation {
 
   @Override
   public Norm removeNorm(Atom normId) {
-    links.remove(normId);
     return norms.remove(normId);
   }
 
   @Override
   public Sanction removeSanction(Atom sanctionId) {
-    links.values()
-         .forEach(link -> link.removeSanction(sanctionId));
+    norms.values()
+         .forEach(norm -> norm.unlink(sanctionId));
     return sanctions.remove(sanctionId);
   }
 
   @Override
   public boolean removeLink(Atom normId, Atom sanctionId) {
-    return links.get(normId)
-                .removeSanction(sanctionId);
+    return norms.get(normId)
+                .unlink(sanctionId);
   }
 }

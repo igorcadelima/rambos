@@ -81,7 +81,7 @@ public final class Norms {
     }
   }
 
-  public static Norm parse(Element el) {
+  public static Norm of(Element el) {
     Builder builder = new Builder();
     builder.id(ASSyntax.createAtom(el.getAttribute("id")))
            .status(Enums.lookup(Status.class, el.getAttribute("status"), Status.ENABLED));
@@ -105,6 +105,7 @@ public final class Norms {
         case "content":
           builder.content(NormContents.parse(propContent));
           break;
+        default: // Unknown node name
       }
     }
     return builder.build();

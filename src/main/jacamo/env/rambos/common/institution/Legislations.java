@@ -71,7 +71,7 @@ public final class Legislations {
     Node normsRootEl = spec.getElementsByTagName(NORMS_TAG)
                            .item(0);
     List<Element> norms = getChildElements(normsRootEl);
-    norms.forEach(normEl -> legislation.addNorm(Norms.parse(normEl)));
+    norms.forEach(normEl -> legislation.addNorm(Norms.of(normEl)));
   }
 
   /** Extract sanctions from {@code spec} and add them to {@code legislation}. */

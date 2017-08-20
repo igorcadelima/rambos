@@ -90,7 +90,7 @@ public final class DeJureDomParser extends DeJureParser<Document> {
     List<Element> norms = getChildElements(normsRootEl);
 
     for (Element normEl : norms) {
-      Norm norm = Norms.parse(normEl);
+      Norm norm = Norms.of(normEl);
       addNorm(norm);
     }
     return this.norms;
