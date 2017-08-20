@@ -20,8 +20,11 @@
  *******************************************************************************/
 package rambos.common.norm;
 
+import java.util.Set;
+
 import jason.asSyntax.Atom;
 import jason.asSyntax.LogicalFormula;
+import rambos.common.sanction.Sanction;
 import rambos.common.util.Literable;
 
 /**
@@ -54,6 +57,17 @@ public interface Norm extends Literable {
    * @return norm's content
    */
   NormContent getContent();
+
+  /**
+   * @return sanctions linked to the norm
+   */
+  Set<Sanction> getLinkedSanctions();
+
+  /**
+   * @param sanction sanction to be linked with the norm
+   * @return {@code true} if the sanction was successfully added
+   */
+  boolean linkSanction(Sanction sanction);
 
   /**
    * Enable the norm changing its status to {@link Status#ENABLED}.

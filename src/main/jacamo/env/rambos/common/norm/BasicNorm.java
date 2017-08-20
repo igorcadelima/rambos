@@ -20,10 +20,16 @@
  *******************************************************************************/
 package rambos.common.norm;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
+import jason.asSyntax.ListTerm;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
+import rambos.common.sanction.Sanction;
 
 final class BasicNorm implements Norm {
   static final String FUNCTOR = "norm";
@@ -33,6 +39,7 @@ final class BasicNorm implements Norm {
   private LogicalFormula condition;
   private Atom issuer;
   private NormContent content;
+  private Map<Atom, Sanction> sanctions;
 
   /** Constructs an {@link AbstractNorm} with the properties specified in {@code builder}. */
   private BasicNorm(Builder builder) {
@@ -43,6 +50,7 @@ final class BasicNorm implements Norm {
       condition = builder.condition;
       issuer = builder.issuer;
       content = builder.content;
+      sanctions = builder.sanctions;
     } else {
       throw new NullPointerException(
           "The following properties should not be null: id, condition, issuer, content.");
@@ -55,12 +63,13 @@ final class BasicNorm implements Norm {
     private LogicalFormula condition;
     private Atom issuer;
     private NormContent content;
+    private Map<Atom, Sanction> sanctions = new HashMap<>();
 
     /**
      * Set id for the norm.
      * 
      * @param id norm's id
-     * @return builder builder instance
+     * @return builder instance
      */
     Builder id(Atom id) {
       this.id = id;
@@ -71,7 +80,7 @@ final class BasicNorm implements Norm {
      * Set status of the norm.
      * 
      * @param status norm's status
-     * @return builder builder instance
+     * @return builder instance
      */
     Builder status(Status status) {
       this.status = status;
@@ -82,7 +91,7 @@ final class BasicNorm implements Norm {
      * Set condition for the norm.
      * 
      * @param condition norm's activation condition
-     * @return builder builder instance
+     * @return builder instance
      */
     Builder condition(LogicalFormula condition) {
       this.condition = condition;
@@ -93,7 +102,7 @@ final class BasicNorm implements Norm {
      * Set issuer for the norm.
      * 
      * @param issuer norm's issuer
-     * @return builder builder instance
+     * @return builder instance
      */
     Builder issuer(Atom issuer) {
       this.issuer = issuer;
@@ -104,10 +113,21 @@ final class BasicNorm implements Norm {
      * Set content for the norm.
      * 
      * @param content norm's content
-     * @return builder builder instance
+     * @return builder instance
      */
     Builder content(NormContent content) {
       this.content = content;
+      return this;
+    }
+
+    /**
+     * Link a sanction to the norm.
+     * 
+     * @param sanction sanction to be linked
+     * @return builder instance
+     */
+    Builder linkSanction(Sanction sanction) {
+      sanctions.put(sanction.getId(), sanction);
       return this;
     }
 
@@ -147,6 +167,16 @@ final class BasicNorm implements Norm {
   }
 
   @Override
+  public Set<Sanction> getLinkedSanctions() {
+    return (Set<Sanction>) sanctions.values();
+  }
+
+  @Override
+  public boolean linkSanction(Sanction sanction) {
+    return sanctions.putIfAbsent(sanction.getId(), sanction) != null;
+  }
+
+  @Override
   public boolean enable() {
     if (status == Status.DISABLED) {
       status = Status.ENABLED;
@@ -177,6 +207,10 @@ final class BasicNorm implements Norm {
     l.addTerm(condition);
     l.addTerm(issuer);
     l.addTerm(content.toLiteral());
+    ListTerm linkedSanctions = ASSyntax.createList();
+    sanctions.values()
+             .forEach(sanction -> linkedSanctions.add(sanction.toLiteral()));
+    l.addTerm(ASSyntax.createStructure("linked_sanctions", linkedSanctions));
     return l;
   }
 
