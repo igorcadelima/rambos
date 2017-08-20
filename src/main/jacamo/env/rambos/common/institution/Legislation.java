@@ -33,6 +33,12 @@ import rambos.common.sanction.Sanction;
  *
  */
 public interface Legislation {
+  /** Return norm with given {@code id}, or {@code null} if non-existing. */
+  Norm getNorm(Atom id);
+
+  /** Return sanction with given {@code id}, or {@code null} if non-existing */
+  Sanction getSanction(Atom id);
+
   /** Return norms. */
   Set<Norm> getNorms();
 

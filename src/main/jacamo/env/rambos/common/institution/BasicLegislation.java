@@ -38,6 +38,22 @@ final class BasicLegislation implements Legislation {
   private Map<Atom, Sanction> sanctions = new ConcurrentHashMap<Atom, Sanction>();
 
   @Override
+  public Norm getNorm(Atom id) {
+    if (norms.containsKey(id)) {
+      return Norms.newInstance(norms.get(id));
+    }
+    return null;
+  }
+
+  @Override
+  public Sanction getSanction(Atom id) {
+    if (sanctions.containsKey(id)) {
+      return Sanctions.newInstance(sanctions.get(id));
+    }
+    return null;
+  }
+
+  @Override
   public Set<Norm> getNorms() {
     return new HashSet<>(norms.values());
   }
