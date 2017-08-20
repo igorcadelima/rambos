@@ -23,7 +23,6 @@ package rambos.common.institution;
 import java.util.Set;
 
 import jason.asSyntax.Atom;
-import rambos.common.link.Link;
 import rambos.common.norm.Norm;
 import rambos.common.sanction.Sanction;
 
@@ -39,9 +38,6 @@ public interface Legislation {
 
   /** Return sanctions. */
   Set<Sanction> getSanctions();
-
-  /** Return links. */
-  Set<Link> getLinks();
 
   /**
    * Add copy of {@code norm} if it is not already in the legislation.
