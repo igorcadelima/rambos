@@ -126,7 +126,7 @@ final class BasicNorm implements Norm {
      * @param sanction sanction to be linked
      * @return builder instance
      */
-    Builder linkSanction(Sanction sanction) {
+    Builder link(Sanction sanction) {
       sanctions.put(sanction.getId(), sanction);
       return this;
     }
@@ -172,12 +172,12 @@ final class BasicNorm implements Norm {
   }
 
   @Override
-  public boolean linkSanction(Sanction sanction) {
+  public boolean link(Sanction sanction) {
     return sanctions.putIfAbsent(sanction.getId(), sanction) != null;
   }
 
   @Override
-  public boolean unlinkSanction(Atom sanctionId) {
+  public boolean unlink(Atom sanctionId) {
     return sanctions.remove(sanctionId) != null;
   }
 
