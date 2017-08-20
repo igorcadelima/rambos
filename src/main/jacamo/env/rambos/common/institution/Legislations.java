@@ -45,15 +45,14 @@ public final class Legislations {
   private static final String SCHEMA_PATH = "/xsd/legislation.xsd";
   private static final String NORMS_TAG = "norms";
   private static final String SANCTIONS_TAG = "sanctions";
-  private static final String LINKS_TAG = "links";
-  private static final String NORM_ID_TAG = "norm-id";
-  private static final String SANCTION_IDS_TAG = "sanction-ids";
+  private static final String LINKED_SANCTIONS_TAG = "linked-sanctions";
 
   private Legislations() {}
 
   /** Return a legislation instance based on {@code spec}. */
   public static Legislation of(Document spec) {
     try {
+      spec.normalize();
       NormSpecUtil.validate(spec, SCHEMA_PATH);
       Legislation legislation = new BasicLegislation();
       extractNorms(spec, legislation);
@@ -84,19 +83,16 @@ public final class Legislations {
 
   /** Extract links from {@code spec} and add them to {@code legislation}. */
   private static void extractLinks(Document spec, Legislation legislation) {
-    Node linksNode = spec.getElementsByTagName(LINKS_TAG)
-                         .item(0);
-    List<Element> links = getChildElements(linksNode);
-    links.forEach(l -> {
-      String normId = l.getElementsByTagName(NORM_ID_TAG)
-                       .item(0)
-                       .getTextContent();
-      Node sanctionIdsNode = l.getElementsByTagName(SANCTION_IDS_TAG)
-                              .item(0);
-      List<Element> sanctionIds = getChildElements(sanctionIdsNode);
-      sanctionIds.forEach(sanctionEl -> legislation.addLink(createAtom(normId),
-          createAtom(sanctionEl.getTextContent())));
-    });
+    NodeList linkedSanctionsNodes = spec.getElementsByTagName(LINKED_SANCTIONS_TAG);
+    for (int i = 0; i < linkedSanctionsNodes.getLength(); i++) {
+      Node linkedSanctionsNode = linkedSanctionsNodes.item(i);
+      List<Element> sanctionIdEls = getChildElements(linkedSanctionsNode);
+      sanctionIdEls.forEach(sanctionIdEl -> {
+        String sanctionId = sanctionIdEl.getTextContent();
+        String normId = ((Element) linkedSanctionsNode.getParentNode()).getAttribute("id");
+        legislation.addLink(createAtom(normId), createAtom(sanctionId));
+      });
+    }
   }
 
   /**
