@@ -214,7 +214,7 @@ final class BasicNorm implements Norm {
     l.addTerm(content.toLiteral());
     ListTerm linkedSanctions = ASSyntax.createList();
     sanctions.values()
-             .forEach(sanction -> linkedSanctions.add(sanction.toLiteral()));
+             .forEach(sanction -> linkedSanctions.add(sanction.getId()));
     l.addTerm(ASSyntax.createStructure("linked_sanctions", linkedSanctions));
     return l;
   }
