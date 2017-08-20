@@ -70,6 +70,12 @@ public interface Norm extends Literable {
   boolean linkSanction(Sanction sanction);
 
   /**
+   * @param sanctionId id of the sanction to be unlinked
+   * @return {@code true} if the sanction was successfully unlinked
+   */
+  boolean unlinkSanction(Atom sanctionId);
+
+  /**
    * Enable the norm changing its status to {@link Status#ENABLED}.
    * 
    * @return {@code true} is status was previously {@link Status#DISABLED}.

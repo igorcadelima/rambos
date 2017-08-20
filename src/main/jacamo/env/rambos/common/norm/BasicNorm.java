@@ -177,6 +177,11 @@ final class BasicNorm implements Norm {
   }
 
   @Override
+  public boolean unlinkSanction(Atom sanctionId) {
+    return sanctions.remove(sanctionId) != null;
+  }
+
+  @Override
   public boolean enable() {
     if (status == Status.DISABLED) {
       status = Status.ENABLED;
