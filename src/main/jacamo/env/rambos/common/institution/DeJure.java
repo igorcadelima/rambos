@@ -189,7 +189,7 @@ public final class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public void addLink(String normId, String sanctionId) {
+  public void link(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
     Atom normIdAtom = createAtom(normId);
     Atom sanctionIdAtom = createAtom(sanctionId);
@@ -210,12 +210,12 @@ public final class DeJure extends Artifact {
    */
   @LINK
   @OPERATION
-  public void removeLink(String normId, String sanctionId) {
+  public void unlink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
     Atom normIdAtom = createAtom(normId);
     Norm norm = legislation.getNorm(normIdAtom);
 
-    if (legislation.removeLink(normIdAtom, createAtom(sanctionId))) {
+    if (legislation.unlink(normIdAtom, createAtom(sanctionId))) {
       updateObsProperty(norm, normIdAtom);
     }
   }

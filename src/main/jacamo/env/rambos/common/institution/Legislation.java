@@ -62,7 +62,7 @@ public interface Legislation {
   boolean addSanction(Sanction sanction);
 
   /**
-   * Add new link between an existing norm and sanction.
+   * Link existing norm and sanction with given ids.
    * 
    * @param normId id of the norm to be linked
    * @param sanctionId id of the sanction to be linked
@@ -122,11 +122,11 @@ public interface Legislation {
   Sanction removeSanction(Atom sanctionId);
 
   /**
-   * Remove an existing link between norm and sanction with given ids.
+   * Unlink existing norm and sanction with given ids.
    * 
    * @param normId id of the norm
    * @param sanctionId id of the sanction
    * @return {@code true} if there was a link between the norm and sanction with the given ids
    */
-  boolean removeLink(Atom normId, Atom sanctionId);
+  boolean unlink(Atom normId, Atom sanctionId);
 }

@@ -138,7 +138,7 @@ final class BasicLegislation implements Legislation {
   }
 
   @Override
-  public boolean removeLink(Atom normId, Atom sanctionId) {
+  public boolean unlink(Atom normId, Atom sanctionId) {
     return norms.get(normId)
                 .unlink(sanctionId);
   }
