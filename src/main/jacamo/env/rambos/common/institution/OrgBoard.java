@@ -20,6 +20,8 @@
  *******************************************************************************/
 package rambos.common.institution;
 
+import static jason.asSyntax.ASSyntax.createAtom;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -28,34 +30,35 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import cartago.*;
-import jason.asSyntax.ASSyntax;
+import cartago.ArtifactConfig;
+import cartago.ArtifactId;
+import cartago.LINK;
+import cartago.OPERATION;
+import cartago.OpFeedbackParam;
+import cartago.OperationException;
 import jason.asSyntax.Atom;
-import moise.os.ns.NS;
 
+/**
+ * This artefact should be used to create any other organisational artefact.
+ * 
+ * @author igorcadelima
+ *
+ */
 public final class OrgBoard extends ora4mas.nopl.OrgBoard {
   private Map<String, ArtifactId> aids = new HashMap<String, ArtifactId>();
   private ArtifactId deJure;
-  private Document ns;
   private OrgSpec os;
 
   /**
-   * Initialise {@link OrgBoard} separating the normative from the organisational specification.
+   * Initialise {@link OrgBoard}.
    * 
    * @param osFile path to organisation specification
    */
   public void init(final String osFile) {
     try {
       Document doc = NormSpecUtil.parseDocument(osFile);
-      Node nsNode = doc.getElementsByTagName(NS.getXMLTag())
-                       .item(0);
-      doc.getDocumentElement()
-         .removeChild(nsNode);
-
-      ns = NormSpecUtil.nodeToDocument(nsNode);
       createOS(doc);
     } catch (ParserConfigurationException | SAXException | IOException e) {
       // TODO Auto-generated catch block
@@ -93,31 +96,28 @@ public final class OrgBoard extends ora4mas.nopl.OrgBoard {
     }
 
     aid.set(makeArtifact(name, DeFacto.class.getName(), ArtifactConfig.DEFAULT_CONFIG));
-    defineObsProperty("de_facto", ASSyntax.createAtom(name), aid);
+    defineObsProperty("de_facto", createAtom(name), aid);
   }
 
   /**
    * Create {@link DeJure} repository named "<i>[org_name]</i>.de_jure", where <i>[org_name]</i> is
    * the name of the organisation.
    * 
+   * @param legislativeSpec path to file with the legislative specification
    * @param aid output parameter which returns the {@link ArtifactId} of {@link DeJure}
    * @throws OperationException
    */
   @OPERATION
-  public void createDeJure(OpFeedbackParam<ArtifactId> aid) throws OperationException {
+  public void createDeJure(String legislativeSpec, OpFeedbackParam<ArtifactId> aid)
+      throws OperationException {
     if (deJure != null) {
       failed("There cannot be more than one De Jure in an organisation");
     }
 
     String name = getId().getName() + ".de_jure";
-    ArtifactId djb = makeArtifact("djb", DeJure.Builder.class.getName(), new ArtifactConfig());
-    ArtifactId djp = makeArtifact("djp", DeJureDomParser.class.getName(), new ArtifactConfig(djb));
-    execLinkedOp(djp, "parse", ns, name, aid);
-    deJure = aid.get();
-    defineObsProperty("de_jure", ASSyntax.createAtom(name), aid);
-
-    dispose(djb);
-    dispose(djp);
+    deJure = makeArtifact(name, DeJure.class.getName(), new ArtifactConfig(legislativeSpec));
+    aid.set(deJure);
+    defineObsProperty("de_jure", createAtom(name), aid);
   }
 
   /**
@@ -135,9 +135,10 @@ public final class OrgBoard extends ora4mas.nopl.OrgBoard {
       failed("There cannot be more than one capability board in an organisation");
     }
 
-    ArtifactId artId = makeArtifact(name, CapabilityBoard.class.getName(), new ArtifactConfig());
+    ArtifactId artId =
+        makeArtifact(name, CapabilityBoard.class.getName(), ArtifactConfig.DEFAULT_CONFIG);
     aids.put(name, artId);
-    defineObsProperty("capability_board", ASSyntax.createAtom(name), artId);
+    defineObsProperty("capability_board", createAtom(name), artId);
     aid.set(artId);
   }
 
@@ -186,7 +187,7 @@ public final class OrgBoard extends ora4mas.nopl.OrgBoard {
     if (aid == null) {
       failed("No " + kind + " board for " + id);
     }
-    removeObsPropertyByTemplate(kind, ASSyntax.createAtom(id), null, null);
+    removeObsPropertyByTemplate(kind, createAtom(id), null, null);
 
     try {
       execLinkedOp(aid, "destroy");

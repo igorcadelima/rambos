@@ -124,8 +124,8 @@ public interface Legislation {
   /**
    * Remove an existing link between norm and sanction with given ids.
    * 
-   * @param normId
-   * @param sanctionId
+   * @param normId id of the norm
+   * @param sanctionId id of the sanction
    * @return {@code true} if there was a link between the norm and sanction with the given ids
    */
   boolean removeLink(Atom normId, Atom sanctionId);

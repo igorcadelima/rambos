@@ -20,64 +20,85 @@
  *******************************************************************************/
 package rambos.common.institution;
 
-import java.util.HashSet;
-import java.util.Map;
+import static jason.asSyntax.ASSyntax.createAtom;
+
+import java.io.IOException;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import cartago.Artifact;
-import cartago.ArtifactConfig;
-import cartago.ArtifactId;
 import cartago.LINK;
 import cartago.OPERATION;
 import cartago.ObsProperty;
 import cartago.OpFeedbackParam;
-import cartago.OperationException;
-import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
-import jason.asSyntax.Literal;
-import jason.asSyntax.parser.ParseException;
-import rambos.common.link.Link;
 import rambos.common.link.Links;
 import rambos.common.norm.Norm;
 import rambos.common.norm.Norms;
 import rambos.common.sanction.Sanction;
+import rambos.common.util.Literable;
 
 /**
+ * This artefact stores a legislation, which is composed of norms, sanctions, and norm-sanction
+ * links. It provides operations to consult and make changes to the legislation, as well as
+ * observable properties which reflect the current state of the legislation.
+ * 
  * @author igorcadelima
  *
  */
 public final class DeJure extends Artifact {
-  // normId -> norm
-  private Map<Atom, Norm> norms = new ConcurrentHashMap<Atom, Norm>();
-  // sanctionId -> sanction
-  private Map<Atom, Sanction> sanctions = new ConcurrentHashMap<Atom, Sanction>();
-  // normId -> [sanctionId0, sanctionId1, ..., sanctionIdn]
-  private Map<Atom, Link> links = new ConcurrentHashMap<Atom, Link>();
+  Legislation legislation;
 
   /**
-   * Initialise a {@link DeJure} repository based on data from the {@link Builder} passed as
-   * argument.
+   * Initialise {@link DeJure} repository based on data from the given legislative specification.
    * 
-   * @param builder builder from which data should be obtained
-   * @throws ParseException
+   * @param legislativeSpec path to file with the legislative specification
+   * @throws IOException
+   * @throws SAXException
+   * @throws ParserConfigurationException
    */
-  @SuppressWarnings("unused")
-  private void init(Builder builder) throws ParseException {
-    builder.norms.forEach((name, norm) -> addNorm(norm));
-    builder.sanctions.forEach((name, sanction) -> addSanction(sanction));
-    builder.links.forEach((norm, sanctions) -> {
-      sanctions.forEach(sanction -> addLink(norm.toString(), sanction.toString()));
-    });
+  public void init(String legislativeSpec)
+      throws ParserConfigurationException, SAXException, IOException {
+    Document spec = NormSpecUtil.parseDocument(legislativeSpec);
+    legislation = Legislations.of(spec);
+    legislation.getNorms()
+               .forEach(norm -> defineObsProperty(norm));
+    legislation.getSanctions()
+               .forEach(sanction -> defineObsProperty(sanction));
+  }
+
+  /** Handy method to define observable properties of a {@code literable}. */
+  private void defineObsProperty(Literable literable) {
+    defineObsProperty(literable.getFunctor(), literable.toLiteral()
+                                                       .getTerms()
+                                                       .toArray());
+  }
+
+  /** Handy method to update observable properties of a {@code literable}. */
+  private void updateObsProperty(Literable literable, Atom id) {
+    ObsProperty property = getObsPropertyByTemplate(literable.getFunctor(), id, null);
+    property.updateValue(literable.toLiteral()
+                                  .getTerms()
+                                  .toArray());
+  }
+
+  /** Handy method to remove observable properties of a {@code literable}. */
+  private void removeObsProperty(Literable literable) {
+    removeObsPropertyByTemplate(literable.getFunctor(), literable.toLiteral()
+                                                                 .getTerms()
+                                                                 .toArray());
   }
 
   /**
-   * Add new norm into norms set.
+   * Add new norm to legislation and define observable property for it.
    * 
-   * Only instances of {@link Norm} or {@link String} should be passed as argument. For both cases,
-   * the norm will be added using {@link #addNorms(Norm...)}. If {@code n} is an instance of
-   * {@link String}, then it will be parsed using {@link Norms#parse(String)} before being added to
-   * the norms set.
+   * Only instances of {@link Norm} or {@link String} should be passed as argument. If {@code norm}
+   * is an instance of {@link String}, then it will be parsed using {@link Norms#parse(String)}
+   * before being added to the legislation.
    * 
    * @param norm norm to be added
    */
@@ -85,9 +106,9 @@ public final class DeJure extends Artifact {
   @OPERATION
   public <T> void addNorm(T norm) {
     if (norm instanceof Norm)
-      addNorms((Norm) norm);
+      addNorm((Norm) norm);
     else if (norm instanceof String)
-      addNorms(Norms.parse((String) norm));
+      addNorm(Norms.parse((String) norm));
     else
       failed("Expected " + String.class.getCanonicalName() + " or " + Norm.class.getCanonicalName()
           + " but got " + norm.getClass()
@@ -95,63 +116,41 @@ public final class DeJure extends Artifact {
   }
 
   /**
-   * Add new norms into norms set.
+   * Add new norm to legislation and define observable property for it.
    * 
-   * For each added norm, an empty set is created and linked to it in the links set. Additionally,
-   * observable properties are created for the norm and the link created.
+   * Note that only norms with different ids from the ones present in the legislation can be added,
+   * even if disabled. If an already existing norm is tried to be added, such addition attempt is
+   * just ignored.
    * 
-   * Only norms with different ids from the ones in the set can be added. If an already existing
-   * norm is tried to be added, such addition is just ignored.
-   * 
-   * @param norms norms to be added
+   * @param norm norm to be added
    */
-  private void addNorms(Norm... norms) {
-    // TODO: check whether operator agent is a legislator
-    for (Norm norm : norms) {
-      if (this.norms.containsKey(norm.getId()))
-        continue;
-
-      try {
-        Literal literalNorm = ASSyntax.parseLiteral(norm.toString());
-        this.norms.put(norm.getId(), norm);
-        defineObsProperty("norm", literalNorm.getTerms()
-                                             .toArray());
-      } catch (ParseException e) {
-        continue;
-      }
-
-      // Create link
-      Link link = Links.of(norm.getId());
-      links.put(norm.getId(), link);
-      defineObsProperty(link.getFunctor(), norm.getId(), new Atom[0]);
+  private void addNorm(Norm norm) {
+    if (legislation.addNorm(norm)) {
+      defineObsProperty(norm);
+      defineObsProperty(Links.of(norm.getId()));
     }
   }
 
   /**
-   * Remove norm from norms set.
+   * Remove norm from legislation and observable property with it.
    * 
-   * @param norm
-   * @return true if norm is removed successfully
+   * @param norm norm to be removed
    */
   @LINK
   @OPERATION
-  public synchronized boolean removeNorm(Norm norm) {
+  public void removeNorm(Norm norm) {
     // TODO: check whether operator agent is a legislator
-    if (norms.remove(norm.getId()) == norm) {
-      links.remove(norm.getId());
-      return true;
+    if (legislation.removeNorm(norm.getId()) != null) {
+      removeObsProperty(norm);
     }
-    return false;
   }
 
   /**
-   * Add new sanction into sanctions set.
+   * Add new sanction to legislation and define observable property for it.
    * 
-   * Only new sanctions can be added into the set. If this happens successfully, a observable
-   * property is created to inform such addition.
-   * 
-   * If an already existing sanction is tried to be added, such action is just ignored and nothing
-   * happens.
+   * Note that only sanction with different ids from the ones present in the legislation can be
+   * added, even if disabled. If an already existing sanction is tried to be added, such addition
+   * attempt is just ignored.
    * 
    * @param sanction sanction to be added
    */
@@ -159,147 +158,79 @@ public final class DeJure extends Artifact {
   @OPERATION
   public void addSanction(Sanction sanction) {
     // TODO: check whether operator agent is a legislator
-    if (sanctions.containsKey(sanction.getId()))
-      return;
-
-    try {
-      Literal literalSanction = ASSyntax.parseLiteral(sanction.toString());
-      sanctions.put(sanction.getId(), sanction);
-      defineObsProperty("sanction", literalSanction.getTerms()
-                                                   .toArray());
-    } catch (ParseException e) {
-      return;
+    if (legislation.addSanction(sanction)) {
+      defineObsProperty(sanction);
     }
   }
 
   /**
-   * Remove sanction from sanctions set.
+   * Remove sanction from legislation and observable property with it.
    * 
    * @param sanction
-   * @return true if sanction is removed successfully
+   * @return {@code true} if sanction was removed successfully
    */
   @LINK
   @OPERATION
-  public synchronized boolean removeSanction(Sanction sanction) {
+  public void removeSanction(Sanction sanction) {
     // TODO: check whether operator agent is a legislator
-    if (sanctions.remove(sanction.getId()) == sanction) {
-      return true;
+    if (legislation.removeSanction(sanction.getId()) != null) {
+      removeObsProperty(sanction);
     }
-    return false;
   }
 
   /**
-   * Add link between norm and sanction to links set.
+   * Link existing norm and sanction with given ids.
    * 
-   * The observable property containing the link is also updated to reflect the changes in the links
-   * set. However, if there is already a link between the norm and the sanction, no changes at all
-   * are performed.
+   * The observable property of the norm is also updated upon successful linking.
    * 
-   * @param normId norm id
-   * @param sanctionId sanction id
+   * @param normId id of the norm to be linked
+   * @param sanctionId id of the sanction to be linked
    * @throws NullPointerException if any of the arguments are {@code null}
    */
   @LINK
   @OPERATION
   public void addLink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
-    Atom normIdAtom = ASSyntax.createAtom(normId);
-    Atom sanctionIdAtom = ASSyntax.createAtom(sanctionId);
+    Atom normIdAtom = createAtom(normId);
+    Atom sanctionIdAtom = createAtom(sanctionId);
 
-    if (!norms.containsKey(normIdAtom)) {
-      failed("No norm found with id " + normId);
-    } else if (!sanctions.containsKey(sanctionIdAtom)) {
-      failed("No sanction found with id " + sanctionId);
-    }
-
-    Link link = links.get(normIdAtom);
-    if (link.addSanction(sanctionIdAtom)) {
-      ObsProperty prop = getObsPropertyByTemplate(link.getFunctor(), normIdAtom, null);
-      prop.updateValue(1, link.getSanctions()
-                              .toArray());
+    if (legislation.addLink(normIdAtom, sanctionIdAtom)) {
+      Norm norm = legislation.getNorm(normIdAtom);
+      updateObsProperty(norm, normIdAtom);
     }
   }
 
   /**
-   * Remove link from links set.
+   * Unlink existing norm and sanction with given ids.
    * 
-   * @param normId the norm id
-   * @param sanctionId the sanction id
-   * @return true if link is destroyed successfully
+   * The observable property of the norm is also updated upon successful unlinking.
+   * 
+   * @param normId id of the norm
+   * @param sanctionId id of the sanction
    */
   @LINK
   @OPERATION
-  public synchronized boolean removeLink(String normId, String sanctionId) {
+  public void removeLink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
-    Norm norm = norms.get(ASSyntax.createAtom(normId));
-    Sanction sanction = sanctions.get(ASSyntax.createAtom(sanctionId));
-    return removeLink(norm, sanction);
-  }
+    Atom normIdAtom = createAtom(normId);
+    Norm norm = legislation.getNorm(normIdAtom);
 
-  /**
-   * Remove link from links set.
-   * 
-   * @param norm the norm
-   * @param sanction the sanction
-   * @return true if link is destroyed successfully
-   */
-  @LINK
-  @OPERATION
-  public synchronized boolean removeLink(Norm norm, Sanction sanction) {
-    // TODO: check whether operator agent is a legislator
-    if (norm == null || sanction == null)
-      return false;
-
-    Link link = links.get(norm.getId());
-    if (link.removeSanction(sanction.getId())) {
-      links.put(norm.getId(), link);
-      return true;
+    if (legislation.removeLink(normIdAtom, createAtom(sanctionId))) {
+      updateObsProperty(norm, normIdAtom);
     }
-
-    return false;
   }
 
-  /**
-   * Return norms set through {@link out}.
-   * 
-   * @return out output parameter to return norms set
-   */
+  /** Return norms through {@link out}. */
   @LINK
   @OPERATION
   public void getNorms(OpFeedbackParam<Set<Norm>> out) {
-    Set<Norm> set = new HashSet<Norm>(norms.values());
-    out.set(set);
+    out.set(legislation.getNorms());
   }
 
-  /**
-   * Get sanction set as a {@code {@link Map}<{@link String}, {@link ISanction}>}, whose keys are
-   * sanctions ids.
-   * 
-   * @return copy of the sanctions
-   */
+  /** Return sanctions through {@link out}. */
   @LINK
   @OPERATION
-  public Map<Atom, Sanction> getSanctions() {
-    return new ConcurrentHashMap<Atom, Sanction>(sanctions);
-  }
-
-  /**
-   * Get links set as a {@code {@link Map}<{@link String}, {@link Set}<{@link String}>>}, whose keys
-   * are norms ids.
-   * 
-   * @return copy of the links
-   */
-  @LINK
-  @OPERATION
-  public Map<Atom, Link> getLinks() {
-    return new ConcurrentHashMap<Atom, Link>(links);
-  }
-
-  public static final class Builder extends AbstractDeJureBuilder {
-    @Override
-    @LINK
-    void build(String name, OpFeedbackParam<ArtifactId> out) throws OperationException {
-      out.set(makeArtifact(name, DeJure.class.getName(), new ArtifactConfig(this)));
-    }
+  public void getSanctions(OpFeedbackParam<Set<Sanction>> out) {
+    out.set(legislation.getSanctions());
   }
 }
