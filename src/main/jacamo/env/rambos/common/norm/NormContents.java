@@ -78,8 +78,7 @@ public final class NormContents {
    * Return a new {@link NormContent} instance whose literal representation is the given
    * {@code literal}.
    * 
-   * Unlike, {@link RegulationContentBuilder#setFrom(Literal)} and {@link Fails#of(Literal)}, this
-   * method considers not only number of terms, but also the functor.
+   * This method considers not only number of terms, but also the functor.
    * 
    * @param literal literal representation of the content
    * @return new content
