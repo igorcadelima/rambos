@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -49,16 +51,16 @@ public final class Legislations {
 
   private Legislations() {}
 
-  /** Return a legislation instance based on {@code spec}. */
-  public static Legislation of(Document spec) {
+  /** Return a legislation instance based on the {@code legislativeSpec} file. */
+  public static Legislation fromFile(String legislativeSpec) {
     try {
-      NormSpecUtil.validate(spec, SCHEMA_PATH);
+      Document spec = NormSpecUtil.parseDocument(legislativeSpec, SCHEMA_PATH);
       Legislation legislation = new BasicLegislation();
       extractNorms(spec, legislation);
       extractSanctions(spec, legislation);
       extractLinks(spec, legislation);
       return legislation;
-    } catch (SAXException | IOException e) {
+    } catch (ParserConfigurationException | SAXException | IOException e) {
       e.printStackTrace();
     }
     return null;

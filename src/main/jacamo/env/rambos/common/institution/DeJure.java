@@ -22,13 +22,7 @@ package rambos.common.institution;
 
 import static jason.asSyntax.ASSyntax.createAtom;
 
-import java.io.IOException;
 import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 import cartago.Artifact;
 import cartago.LINK;
@@ -56,14 +50,9 @@ public final class DeJure extends Artifact {
    * Initialise {@link DeJure} repository based on data from the given legislative specification.
    * 
    * @param legislativeSpec path to file with the legislative specification
-   * @throws IOException
-   * @throws SAXException
-   * @throws ParserConfigurationException
    */
-  public void init(String legislativeSpec)
-      throws ParserConfigurationException, SAXException, IOException {
-    Document spec = NormSpecUtil.parseDocument(legislativeSpec);
-    legislation = Legislations.of(spec);
+  public void init(String legislativeSpec) {
+    legislation = Legislations.fromFile(legislativeSpec);
     legislation.getNorms()
                .forEach(norm -> defineObsProperty(norm));
     legislation.getSanctions()
