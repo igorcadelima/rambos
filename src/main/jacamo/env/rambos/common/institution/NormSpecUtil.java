@@ -43,11 +43,6 @@ import org.xml.sax.SAXException;
  *
  */
 final class NormSpecUtil {
-  static final String OS_SCHEMA_PATH = "/xsd/os.xsd";
-  static final String SS_SCHEMA_PATH = "/xsd/ss.xsd";
-  static final String FS_SCHEMA_PATH = "/xsd/fs.xsd";
-  static final String NS_SCHEMA_PATH = "/xsd/ns.xsd";
-
   /**
    * Try to parse, validate using schema passed as argument, and return {@link Document}.
    * 

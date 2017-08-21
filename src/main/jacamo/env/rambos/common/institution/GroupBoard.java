@@ -24,6 +24,7 @@ import jason.util.Config;
 import npl.parser.ParseException;
 import ora4mas.nopl.JasonTermWrapper;
 import moise.common.MoiseException;
+import moise.os.OS;
 import ora4mas.nopl.WebInterface;
 import ora4mas.nopl.oe.Group;
 
@@ -44,7 +45,7 @@ public final class GroupBoard extends ora4mas.nopl.GroupBoard {
    * @throws MoiseException if group type is not specified in OS
    * @throws ParseException if group scope cannot be found in OS
    */
-  void init(OrgSpec os, final String type) throws MoiseException, ParseException {
+  void init(OS os, final String type) throws MoiseException, ParseException {
     spec = os.getSS()
              .getRootGrSpec()
              .findSubGroup(type);

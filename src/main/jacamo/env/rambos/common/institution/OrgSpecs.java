@@ -21,60 +21,42 @@
 package rambos.common.institution;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.dom.DOMSource;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import moise.common.MoiseException;
+import moise.os.OS;
 import moise.os.fs.FS;
 import moise.os.ns.NS;
 import moise.os.ss.SS;
 import moise.xml.DOMUtils;
 
 /**
+ * Static utility methods pertaining to {@link OS} instances.
+ * 
  * @author igorcadelima
  *
  */
-final class OrgSpec extends moise.os.OS {
-  private static final long serialVersionUID = 1L;
+final class OrgSpecs {
+  private OrgSpecs() {}
 
   /**
-   * Create an {@link OrgSpec} instance from an {@link InputStream} source.
-   * 
-   * @param is {@link InputStream} instance which contains the organisational specification
-   * @return new {@link OrgSpec} instance or {@code null} if an error occurs
-   */
-  static OrgSpec create(InputStream is) {
-    try {
-      Document doc = DOMUtils.getParser()
-                             .parse(is);
-      NormSpecUtil.validate(doc, NormSpecUtil.OS_SCHEMA_PATH);
-
-      OrgSpec os = new OrgSpec();
-      os.setFromDOM(doc);
-      return os;
-    } catch (IOException | MoiseException | SAXException | ParserConfigurationException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  /**
-   * Extend specification by adding all of the data contained in the passed organisational
+   * Extend {@code os} by adding all of the data contained in the passed organisational
    * specification file. In other words, this method will incorporate the given specification into
-   * the current one as if they were originally one.
+   * {@code os} as if they were originally one.
    * 
-   * @param osFilePath path to organisational specification file
+   * @param os organisational specification to be extended
+   * @param osFile organisational specification file
    */
-  void extend(String osFilePath) {
+  static void extend(OS os, String osFile) {
     try {
-      Document doc = NormSpecUtil.parseDocument(osFilePath);
-      extend(doc);
+      Document osDoc = NormSpecUtil.parseDocument(osFile);
+      extend(os, osDoc);
     } catch (SAXException | IOException | ParserConfigurationException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -82,35 +64,40 @@ final class OrgSpec extends moise.os.OS {
   }
 
   /**
-   * Extend specification by adding all of the data contained in the passed organisational
-   * specification. In other words, this method will incorporate the given specification into the
-   * current one as if they were originally one.
+   * Extend {@code os} by adding all of the data contained in the passed organisational
+   * specification document. In other words, this method will incorporate the given specification
+   * into {@code os} as if they were originally one.
    * 
-   * @param os organisational specification
+   * @param os organisational specification to be extended
+   * @param osDoc organisational specification
    */
-  void extend(Document os) {
+  static void extend(OS os, Document osDoc) {
     try {
-      NormSpecUtil.validate(os, NormSpecUtil.OS_SCHEMA_PATH);
+      DOMUtils.getOSSchemaValidator()
+              .validate(new DOMSource(osDoc));
 
-      Element osElement = (Element) os.getElementsByTagName(OrgSpec.getXMLTag())
-                                      .item(0);
-      this.setId(osElement.getAttribute("id"));
-      this.setPropertiesFromDOM(osElement);
+      Element osElement = (Element) osDoc.getElementsByTagName(OS.getXMLTag())
+                                         .item(0);
+      os.setId(osElement.getAttribute("id"));
+      os.setPropertiesFromDOM(osElement);
 
       Element specElement;
 
       // Extend structural specification
       specElement = DOMUtils.getDOMDirectChild(osElement, SS.getXMLTag());
-      ss.setFromDOM(specElement);
+      os.getSS()
+        .setFromDOM(specElement);
 
       // Extend functional specification
       specElement = DOMUtils.getDOMDirectChild(osElement, FS.getXMLTag());
-      fs.setFromDOM(specElement);
+      os.getFS()
+        .setFromDOM(specElement);
 
       // Extend normative specification
       specElement = DOMUtils.getDOMDirectChild(osElement, NS.getXMLTag());
       if (specElement != null) {
-        ns.setFromDOM(specElement);
+        os.getNS()
+          .setFromDOM(specElement);
       }
 
     } catch (SAXException | IOException | MoiseException e) {

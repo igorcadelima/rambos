@@ -28,6 +28,7 @@ import cartago.LINK;
 import cartago.OperationException;
 import jason.util.Config;
 import moise.common.MoiseException;
+import moise.os.OS;
 import npl.NormativeFailureException;
 import npl.parser.ParseException;
 import ora4mas.nopl.JasonTermWrapper;
@@ -58,7 +59,7 @@ public final class SchemeBoard extends ora4mas.nopl.SchemeBoard {
    * @throws ParseException if the OS file is not correct
    * @throws MoiseException if schType was not specified
    */
-  void init(OrgSpec os, String orgName, String schType) throws ParseException, MoiseException {
+  void init(OS os, String orgName, String schType) throws ParseException, MoiseException {
     spec = os.getFS()
              .findScheme(schType);
 

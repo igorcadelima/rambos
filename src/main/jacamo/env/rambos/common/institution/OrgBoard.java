@@ -22,15 +22,8 @@ package rambos.common.institution;
 
 import static jason.asSyntax.ASSyntax.createAtom;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 import cartago.ArtifactConfig;
 import cartago.ArtifactId;
@@ -38,7 +31,7 @@ import cartago.LINK;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
 import cartago.OperationException;
-import jason.asSyntax.Atom;
+import moise.os.OS;
 
 /**
  * This artefact should be used to create any other organisational artefact.
@@ -47,9 +40,11 @@ import jason.asSyntax.Atom;
  *
  */
 public final class OrgBoard extends ora4mas.nopl.OrgBoard {
+  private static final String MECHANISM_OS = "ClassResource:/org/org.xml";
+
   private Map<String, ArtifactId> aids = new HashMap<String, ArtifactId>();
   private ArtifactId deJure;
-  private OrgSpec os;
+  private OS os;
 
   /**
    * Initialise {@link OrgBoard}.
@@ -57,27 +52,8 @@ public final class OrgBoard extends ora4mas.nopl.OrgBoard {
    * @param osFile path to organisation specification
    */
   public void init(final String osFile) {
-    try {
-      Document doc = NormSpecUtil.parseDocument(osFile);
-      createOS(doc);
-    } catch (ParserConfigurationException | SAXException | IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Create {@link OrgSpec} instance which will be shared with every {@link GroupBoard},
-   * {@link SchemeBoard}, and {@link RegimentationBoard} that belongs with this {@link OrgBoard}
-   * instance.
-   * 
-   * @param osDoc organisational specification
-   */
-  private void createOS(Document osDoc) {
-    String mechanismOSFile = "/org/org.xml";
-    InputStream mechanismOSResource = getClass().getResourceAsStream(mechanismOSFile);
-    os = OrgSpec.create(mechanismOSResource);
-    os.extend(osDoc);
+    os = OS.loadOSFromURI(MECHANISM_OS);
+    OrgSpecs.extend(os, osFile);
   }
 
   /**
@@ -148,7 +124,7 @@ public final class OrgBoard extends ora4mas.nopl.OrgBoard {
       throws OperationException {
     ArtifactId aid = makeArtifact(id, GroupBoard.class.getName(), new ArtifactConfig(os, type));
     aids.put(id, aid);
-    defineObsProperty("group", new Atom(id), new Atom(type), aid);
+    defineObsProperty("group", createAtom(id), createAtom(type), aid);
     gaid.set(aid);
   }
 
@@ -166,7 +142,7 @@ public final class OrgBoard extends ora4mas.nopl.OrgBoard {
     ArtifactId aid =
         makeArtifact(id, SchemeBoard.class.getName(), new ArtifactConfig(os, name, type));
     aids.put(id, aid);
-    defineObsProperty("scheme", new Atom(id), new Atom(type), aid);
+    defineObsProperty("scheme", createAtom(id), createAtom(type), aid);
     said.set(aid);
   }
 
