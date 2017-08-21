@@ -29,13 +29,11 @@
   <-
   RoleSpec = role(Role,_,SuperRoles,_,_,_,_);
   for (.member(S,SSne)) {
-	.setof(Role,specification(group_specification(_,RolesSpecs,[],properties(_))) & .member(RoleSpec,RolesSpecs) & .member(executor,SuperRoles),ExecutorRoles);
-	.setof(Agent,play(Agent,R,_) & .member(R,ExecutorRoles),ExecutorAgents);
+    .setof(Role,specification(group_specification(_,RolesSpecs,[],properties(_))) & .member(RoleSpec,RolesSpecs) & .member(executor,SuperRoles),ExecutorRoles);
+    .setof(Agent,play(Agent,R,_) & .member(R,ExecutorRoles),ExecutorAgents);
 
-	.shuffle(ExecutorAgents,[Agent|_]);
+    .shuffle(ExecutorAgents,[Executor|_]);
 
-	.puts("Ordering execution of #{S} to #{Agent}");
-	.send(Agent, achieve, execute(S));
+    .puts("Ordering execution of #{S} to #{Executor}");
+    .send(Executor, achieve, execute(S));
   }.
-
-  
