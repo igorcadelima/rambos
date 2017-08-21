@@ -52,7 +52,6 @@ public final class Legislations {
   /** Return a legislation instance based on {@code spec}. */
   public static Legislation of(Document spec) {
     try {
-      spec.normalize();
       NormSpecUtil.validate(spec, SCHEMA_PATH);
       Legislation legislation = new BasicLegislation();
       extractNorms(spec, legislation);

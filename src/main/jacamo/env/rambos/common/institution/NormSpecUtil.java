@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  */
 final class NormSpecUtil {
   /**
-   * Try to parse, validate using schema passed as argument, and return {@link Document}.
+   * Try to parse, validate using schema passed as argument, normalize, and return {@link Document}.
    * 
    * @param filePath path to file to be validated
    * @param schemaPath path to schema which should be used for validation
@@ -61,7 +61,7 @@ final class NormSpecUtil {
   }
 
   /**
-   * Try to parse and return {@link Document}.
+   * Try to parse, normalize, and return {@link Document}.
    * 
    * @param filePath path to file to be validated
    * @return Document resulting document after parsing
@@ -77,6 +77,7 @@ final class NormSpecUtil {
     DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
     File file = new File(filePath);
     Document doc = documentBuilder.parse(file);
+    doc.normalize();
     return doc;
   }
 
