@@ -103,7 +103,7 @@ public final class Legislations {
    * @return list of child elements
    */
   private static List<Element> getChildElements(Node parent) {
-    List<Element> nodes = new ArrayList<Element>();
+    List<Element> nodes = new ArrayList<>();
     NodeList childNodes = parent.getChildNodes();
 
     for (int i = 0; i < childNodes.getLength(); i++) {

@@ -33,9 +33,9 @@ import rambos.common.sanction.Sanctions;
 
 final class BasicLegislation implements Legislation {
   // normId -> norm
-  private Map<Atom, Norm> norms = new ConcurrentHashMap<Atom, Norm>();
+  private Map<Atom, Norm> norms = new ConcurrentHashMap<>();
   // sanctionId -> sanction
-  private Map<Atom, Sanction> sanctions = new ConcurrentHashMap<Atom, Sanction>();
+  private Map<Atom, Sanction> sanctions = new ConcurrentHashMap<>();
 
   @Override
   public Norm getNorm(Atom id) {

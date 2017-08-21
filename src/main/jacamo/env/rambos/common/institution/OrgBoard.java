@@ -42,7 +42,7 @@ import moise.os.OS;
 public final class OrgBoard extends ora4mas.nopl.OrgBoard {
   private static final String MECHANISM_OS = "ClassResource:/org/org.xml";
 
-  private Map<String, ArtifactId> aids = new HashMap<String, ArtifactId>();
+  private Map<String, ArtifactId> aids = new HashMap<>();
   private ArtifactId deJure;
   private OS os;
 

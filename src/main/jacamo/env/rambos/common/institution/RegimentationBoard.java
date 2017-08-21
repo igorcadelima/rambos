@@ -73,7 +73,7 @@ public final class RegimentationBoard extends NormativeBoard {
    */
   private ArtifactId getDeJure(String orgName) throws OperationException {
     ArtifactId orgBoardId = lookupArtifact(orgName);
-    OpFeedbackParam<ArtifactId> out = new OpFeedbackParam<ArtifactId>();
+    OpFeedbackParam<ArtifactId> out = new OpFeedbackParam<>();
     execLinkedOp(orgBoardId, "getDeJureId", out);
     return out.get();
   }
@@ -85,7 +85,7 @@ public final class RegimentationBoard extends NormativeBoard {
    */
   private void deployNorms() throws OperationException {
     assert deJure != null;
-    OpFeedbackParam<Set<Norm>> norms = new OpFeedbackParam<Set<Norm>>();
+    OpFeedbackParam<Set<Norm>> norms = new OpFeedbackParam<>();
     execLinkedOp(deJure, "getNorms", norms);
     Scope scope = createNPLScope(norms.get());
     nengine.loadNP(scope);

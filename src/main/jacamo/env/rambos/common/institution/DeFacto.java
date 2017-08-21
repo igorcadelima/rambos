@@ -38,7 +38,7 @@ import rambos.common.util.Enums;
  *
  */
 public final class DeFacto extends Artifact {
-  private Set<Registry> registries = new HashSet<Registry>();
+  private Set<Registry> registries = new HashSet<>();
 
   /**
    * Add new registry into the registries set.
