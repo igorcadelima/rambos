@@ -73,7 +73,8 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.jacamo:jacamo:latest.integration'
+	compile fileTree(dir: '../../jacamo/jacamo/build/libs', include: ['*.jar'])
+//	implementation 'org.jacamo:jacamo:latest.integration'
 }
 
 sourceSets {
