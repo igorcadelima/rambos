@@ -24,13 +24,13 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 
 /**
- * This class provides a basic implementation of the {@link Registry} interface.
+ * This class provides a basic implementation of the {@link SanctionDecision} interface.
  * 
  * @author igorcadelima
  *
  */
-final class BasicRegistry implements Registry {
-  static final String FUNCTOR = "registry";
+final class BasicSanctionDecision implements SanctionDecision {
+  static final String FUNCTOR = "sanction_decision";
 
   private long time;
   private String sanctioner;
@@ -40,8 +40,10 @@ final class BasicRegistry implements Registry {
   private Cause cause;
   private Efficacy efficacy = Efficacy.INDETERMINATE;
 
-  /** Constructs a {@link BasicRegistry} with the properties specified in {@code builder}. */
-  private BasicRegistry(Builder builder) {
+  /**
+   * Constructs a {@link BasicSanctionDecision} with the properties specified in {@code builder}.
+   */
+  private BasicSanctionDecision(Builder builder) {
     time = builder.time;
     sanctioner = builder.sanctioner;
     sanctionee = builder.sanctionee;
@@ -109,12 +111,12 @@ final class BasicRegistry implements Registry {
     }
 
     /**
-     * Return a new {@link Registry} with the specified implementation.
+     * Return a new {@link SanctionDecision} with the specified implementation.
      * 
-     * @return new {@link Registry} instance
+     * @return new {@link SanctionDecision} instance
      */
-    BasicRegistry build() {
-      return new BasicRegistry(this);
+    BasicSanctionDecision build() {
+      return new BasicSanctionDecision(this);
     }
   }
 
@@ -203,7 +205,7 @@ final class BasicRegistry implements Registry {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    BasicRegistry other = (BasicRegistry) obj;
+    BasicSanctionDecision other = (BasicSanctionDecision) obj;
     if (efficacy != other.efficacy)
       return false;
     if (cause != other.cause)

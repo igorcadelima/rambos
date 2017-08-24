@@ -27,7 +27,7 @@ import rambos.common.LowercaseEnum;
  * @author igorcadelima
  *
  */
-public interface Registry extends Literable {
+public interface SanctionDecision extends Literable {
   /**
    * Efficacy values that can be used:
    * <li>{@link #INDETERMINATE}</li>

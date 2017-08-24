@@ -24,34 +24,34 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.NumberTerm;
 import rambos.common.Enums;
-import rambos.registry.BasicRegistry.Builder;
-import rambos.registry.Registry.Cause;
-import rambos.registry.Registry.Efficacy;
+import rambos.registry.BasicSanctionDecision.Builder;
+import rambos.registry.SanctionDecision.Cause;
+import rambos.registry.SanctionDecision.Efficacy;
 
 /**
- * Static utility methods pertaining to {@link Registry} instances.
+ * Static utility methods pertaining to {@link SanctionDecision} instances.
  * 
  * @author igorcadelima
  *
  */
-public final class Registries {
-  private Registries() {}
+public final class SanctionDecisions {
+  private SanctionDecisions() {}
 
   /**
-   * Return a new sanction registry initialised to the value represented by the specified
+   * Return a new sanction decision initialised to the value represented by the specified
    * {@code String}.
    * 
-   * @param registry string to be parsed
-   * @return registry represented by the string argument
-   * @throws IllegalArgumentException if string does not contain a parsable sanction registry
+   * @param decision string to be parsed
+   * @return sanction decision represented by the string argument
+   * @throws IllegalArgumentException if string does not contain a parsable sanction decision
    * @throws NullPointerException if string is {@code null}
    */
-  public static Registry parse(String registry) {
+  public static SanctionDecision parse(String decision) {
     try {
-      Literal l = ASSyntax.parseLiteral(registry);
+      Literal l = ASSyntax.parseLiteral(decision);
 
       if (!l.getFunctor()
-            .equals(BasicRegistry.FUNCTOR)) {
+            .equals(BasicSanctionDecision.FUNCTOR)) {
         throw new IllegalArgumentException();
       }
 
@@ -71,7 +71,7 @@ public final class Registries {
                           .build();
 
     } catch (Exception e) {
-      throw new IllegalArgumentException("String does not contain a parsable registry");
+      throw new IllegalArgumentException("String does not contain a parsable sanction decision");
     }
   }
 }

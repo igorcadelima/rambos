@@ -29,77 +29,77 @@ import cartago.OPERATION;
 import cartago.ObsProperty;
 import jason.asSyntax.ASSyntax;
 import rambos.common.Enums;
-import rambos.registry.Registries;
-import rambos.registry.Registry;
-import rambos.registry.Registry.Efficacy;
+import rambos.registry.SanctionDecisions;
+import rambos.registry.SanctionDecision;
+import rambos.registry.SanctionDecision.Efficacy;
 
 /**
  * @author igorcadelima
  *
  */
 public final class DeFacto extends Artifact {
-  private Set<Registry> registries = new HashSet<>();
+  private Set<SanctionDecision> sanctionDecisions = new HashSet<>();
 
   /**
-   * Add new registry into the registries set.
+   * Add new decision into the sanction decisions set.
    * 
-   * Only instances of {@link Registry} or {@link String} should be passed as argument. For both
-   * cases, the registry will be added using {@link #addRegistry(Registry)}. If {@code f} is an
-   * instance of {@link String}, then it will be parsed using {@link Registries#parse(String)}
-   * before being added to the registries set.
+   * Only instances of {@link SanctionDecision} or {@link String} should be passed as argument. For
+   * both cases, the registry will be added using {@link #addDecision(SanctionDecision)}. If
+   * {@code decision} is an instance of {@link String}, then it will be parsed using
+   * {@link SanctionDecisions#parse(String)} before being added to the sanction decisions set.
    * 
-   * @param registry registry to be added
+   * @param decision sanction decision to be added
    */
   @LINK
   @OPERATION
-  public <T> void addRegistry(T registry) {
-    if (registry instanceof Registry)
-      addRegistry((Registry) registry);
-    else if (registry instanceof String)
-      addRegistry(Registries.parse((String) registry));
+  public <T> void addDecision(T decision) {
+    if (decision instanceof SanctionDecision)
+      addDecision((SanctionDecision) decision);
+    else if (decision instanceof String)
+      addDecision(SanctionDecisions.parse((String) decision));
     else
       failed("Expected " + String.class.getCanonicalName() + " or "
-          + Registry.class.getCanonicalName() + " but got " + registry.getClass()
-                                                                      .getCanonicalName());
+          + SanctionDecision.class.getCanonicalName() + " but got " + decision.getClass()
+                                                                              .getCanonicalName());
   }
 
-  /** Add new {@code registry} into the registries set. */
-  private void addRegistry(Registry registry) {
-    registries.add(registry);
-    defineObsProperty(registry.getFunctor(), (Object[]) registry.toLiteral()
+  /** Add new {@code decision} into the sanction decisions set. */
+  private void addDecision(SanctionDecision decision) {
+    sanctionDecisions.add(decision);
+    defineObsProperty(decision.getFunctor(), (Object[]) decision.toLiteral()
                                                                 .getTermsArray());
   }
 
   /**
-   * Update the efficacy value of an existing registry.
+   * Update the efficacy value of an existing sanction decision.
    * 
-   * @param registry string with literal format of the registry to be updated
+   * @param decision string with literal format of the sanction decision to be updated
    * @param efficacy new efficacy value
    */
   @LINK
   @OPERATION
-  public void updateEfficacy(String registry, String efficacy) {
+  public void updateEfficacy(String decision, String efficacy) {
     Efficacy efficacyObj = Enums.lookup(Efficacy.class, efficacy);
     if (efficacyObj == null) {
       failed(efficacy + " is not a valid efficacy value");
     }
 
-    Registry registryObj = Registries.parse(registry);
+    SanctionDecision decisionObj = SanctionDecisions.parse(decision);
     ObsProperty prop =
-        getObsPropertyByTemplate(registryObj.getFunctor(), (Object[]) registryObj.toLiteral()
+        getObsPropertyByTemplate(decisionObj.getFunctor(), (Object[]) decisionObj.toLiteral()
                                                                                  .getTermsArray());
-    registries.remove(registryObj);
-    registryObj.setEfficacy(efficacyObj);
-    registries.add(registryObj);
+    sanctionDecisions.remove(decisionObj);
+    decisionObj.setEfficacy(efficacyObj);
+    sanctionDecisions.add(decisionObj);
     prop.updateValue(6, ASSyntax.createAtom(efficacy));
   }
 
-  /** Remove a registry from the registries set. */
+  /** Remove a decision from the sanction decisions set. */
   @LINK
   @OPERATION
-  public void removeRegistry(Registry registry) {
-    registries.remove(registry);
-    removeObsPropertyByTemplate(registry.getFunctor(), (Object[]) registry.toLiteral()
+  public void removeDecision(SanctionDecision decision) {
+    sanctionDecisions.remove(decision);
+    removeObsPropertyByTemplate(decision.getFunctor(), (Object[]) decision.toLiteral()
                                                                           .getTermsArray());
   }
 }
