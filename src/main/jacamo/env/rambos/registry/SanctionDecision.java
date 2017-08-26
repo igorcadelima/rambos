@@ -22,6 +22,7 @@ package rambos.registry;
 
 import rambos.common.Literable;
 import rambos.common.LowercaseEnum;
+import rambos.common.id.Id;
 
 /**
  * @author igorcadelima
@@ -41,6 +42,8 @@ public interface SanctionDecision extends Literable {
   enum Cause implements LowercaseEnum {
     COMPLIANCE, VIOLATION
   }
+
+  Id getId();
 
   long getTime();
 

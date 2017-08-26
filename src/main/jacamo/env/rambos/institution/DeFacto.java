@@ -91,7 +91,7 @@ public final class DeFacto extends Artifact {
     sanctionDecisions.remove(decisionObj);
     decisionObj.setEfficacy(efficacyObj);
     sanctionDecisions.add(decisionObj);
-    prop.updateValue(6, ASSyntax.createAtom(efficacy));
+    prop.updateValue(7, ASSyntax.createAtom(efficacy));
   }
 
   /** Remove a decision from the sanction decisions set. */

@@ -22,6 +22,8 @@ package rambos.registry;
 
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
+import rambos.common.id.Id;
+import rambos.common.id.Uuid;
 
 /**
  * This class provides a basic implementation of the {@link SanctionDecision} interface.
@@ -32,6 +34,7 @@ import jason.asSyntax.Literal;
 final class BasicSanctionDecision implements SanctionDecision {
   static final String FUNCTOR = "sanction_decision";
 
+  private final Id id = Uuid.newInstance();
   private long time;
   private String sanctioner;
   private String sanctionee;
@@ -121,6 +124,11 @@ final class BasicSanctionDecision implements SanctionDecision {
   }
 
   @Override
+  public Id getId() {
+    return id;
+  }
+
+  @Override
   public long getTime() {
     return time;
   }
@@ -168,6 +176,7 @@ final class BasicSanctionDecision implements SanctionDecision {
   @Override
   public Literal toLiteral() {
     Literal l = ASSyntax.createLiteral(getFunctor());
+    l.addTerm(id.toLiteral());
     l.addTerm(ASSyntax.createNumber(time));
     l.addTerm(ASSyntax.createAtom(sanctioner));
     l.addTerm(ASSyntax.createAtom(sanctionee));

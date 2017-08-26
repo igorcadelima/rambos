@@ -55,18 +55,18 @@ public final class SanctionDecisions {
         throw new IllegalArgumentException();
       }
 
-      return new Builder().time(((NumberTerm) l.getTerm(0)).solve())
-                          .sanctioner(l.getTerm(1)
+      return new Builder().time(((NumberTerm) l.getTerm(1)).solve())
+                          .sanctioner(l.getTerm(2)
                                        .toString())
-                          .sanctionee(l.getTerm(2)
+                          .sanctionee(l.getTerm(3)
                                        .toString())
-                          .norm(l.getTerm(3)
+                          .norm(l.getTerm(4)
                                  .toString())
-                          .sanction(l.getTerm(4)
+                          .sanction(l.getTerm(5)
                                      .toString())
-                          .cause(Enums.lookup(Cause.class, l.getTerm(5)
+                          .cause(Enums.lookup(Cause.class, l.getTerm(6)
                                                             .toString()))
-                          .efficacy(Enums.lookup(Efficacy.class, l.getTerm(6)
+                          .efficacy(Enums.lookup(Efficacy.class, l.getTerm(7)
                                                                   .toString()))
                           .build();
 
