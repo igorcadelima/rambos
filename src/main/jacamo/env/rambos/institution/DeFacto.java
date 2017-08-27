@@ -42,6 +42,19 @@ import rambos.registry.SanctionDecision.Efficacy;
 public final class DeFacto extends Artifact {
   private Map<Id, SanctionDecision> sanctionDecisions = new HashMap<>();
 
+  private Uuid decisionIdFrom(Object obj) {
+    if (obj instanceof Uuid)
+      return (Uuid) obj;
+    else if (obj instanceof String)
+      return Uuid.parse((String) obj);
+    else
+      failed("Expected " + String.class.getCanonicalName() + " or "
+          + SanctionDecision.class.getCanonicalName() + " but got " + obj.getClass()
+                                                                         .getCanonicalName());
+    assert false; // Execution should never reach this point!
+    return null;
+  }
+
   /**
    * Add new decision into the sanction decisions set.
    * 
@@ -54,7 +67,7 @@ public final class DeFacto extends Artifact {
    */
   @LINK
   @OPERATION
-  public <T> void addDecision(T decision) {
+  public void addDecision(Object decision) {
     if (decision instanceof SanctionDecision)
       addDecision((SanctionDecision) decision);
     else if (decision instanceof String)
@@ -75,24 +88,26 @@ public final class DeFacto extends Artifact {
   /**
    * Update the efficacy value of an existing sanction decision.
    * 
-   * @param decision string with literal format of the sanction decision to be updated
+   * Note that {@code decisionId} should be an instance of {@link Uuid} or {@link String} and
+   * {@code efficacy} should be an instance of {@link Efficacy} or {@link String}.
+   * 
+   * @param decisionId id of the sanction decision to be updated
    * @param efficacy new efficacy value
    */
   @LINK
   @OPERATION
-  public void updateEfficacy(String decision, String efficacy) {
-    Efficacy efficacyObj = Enums.lookup(Efficacy.class, efficacy);
+  public void updateEfficacy(Object decisionId, Object efficacy) {
+    Efficacy efficacyObj = Enums.lookup(Efficacy.class, efficacy.toString());
     if (efficacyObj == null) {
       failed(efficacy + " is not a valid efficacy value");
     }
 
-    SanctionDecision decisionObj = SanctionDecisions.parse(decision);
+    SanctionDecision decision = sanctionDecisions.get(decisionIdFrom(decisionId));
     ObsProperty prop =
-        getObsPropertyByTemplate(decisionObj.getFunctor(), (Object[]) decisionObj.toLiteral()
-                                                                                 .getTermsArray());
-    decisionObj.setEfficacy(efficacyObj);
-    sanctionDecisions.put(decisionObj.getId(), decisionObj);
-    prop.updateValue(7, ASSyntax.createAtom(efficacy));
+        getObsPropertyByTemplate(decision.getFunctor(), (Object[]) decision.toLiteral()
+                                                                           .getTermsArray());
+    decision.setEfficacy(efficacyObj);
+    prop.updateValue(7, ASSyntax.createAtom(efficacy.toString()));
   }
 
   /**
@@ -102,25 +117,13 @@ public final class DeFacto extends Artifact {
    * {@code decisionId} is an instance of {@link String}, then it will be parsed using
    * {@link Uuid#parse(String)} before being removed.
    * 
-   * @param decisionId id of the decision to be removed
+   * @param id id of the decision to be removed
    */
   @LINK
   @OPERATION
-  public <T> void removeDecision(T decisionId) {
-    if (decisionId instanceof Uuid)
-      removeDecision((Uuid) decisionId);
-    else if (decisionId instanceof String)
-      removeDecision(Uuid.parse((String) decisionId));
-    else
-      failed("Expected "
-          + String.class.getCanonicalName() + " or " + SanctionDecision.class.getCanonicalName()
-          + " but got " + decisionId.getClass()
-                                    .getCanonicalName());
-  }
-
-  /** Remove sanction decision with the given {@code id}. */
-  private void removeDecision(Uuid id) {
-    SanctionDecision decision = sanctionDecisions.remove(id);
+  public void removeDecision(Object id) {
+    Id idObj = decisionIdFrom(id);
+    SanctionDecision decision = sanctionDecisions.remove(idObj);
     removeObsPropertyByTemplate(decision.getFunctor(), (Object[]) decision.toLiteral()
                                                                           .getTermsArray());
   }
