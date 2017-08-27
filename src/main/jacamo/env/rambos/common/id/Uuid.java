@@ -32,13 +32,19 @@ import jason.asSyntax.Literal;
  *
  */
 public final class Uuid implements Id {
-  private final UUID id = UUID.randomUUID();
+  private final UUID id;
 
-  private Uuid() {}
+  private Uuid(UUID id) {
+    this.id = id;
+  }
 
   /** Return a new instance of {@code Uuid}. */
   public static Uuid newInstance() {
-    return new Uuid();
+    return new Uuid(UUID.randomUUID());
+  }
+
+  public static Uuid parse(String name) {
+    return new Uuid(UUID.fromString(name));
   }
 
   public String toString() {
