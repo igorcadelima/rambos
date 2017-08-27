@@ -20,8 +20,8 @@
  *******************************************************************************/
 package rambos.institution;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import cartago.Artifact;
 import cartago.LINK;
@@ -29,6 +29,8 @@ import cartago.OPERATION;
 import cartago.ObsProperty;
 import jason.asSyntax.ASSyntax;
 import rambos.common.Enums;
+import rambos.common.id.Id;
+import rambos.common.id.Uuid;
 import rambos.registry.SanctionDecisions;
 import rambos.registry.SanctionDecision;
 import rambos.registry.SanctionDecision.Efficacy;
@@ -38,7 +40,7 @@ import rambos.registry.SanctionDecision.Efficacy;
  *
  */
 public final class DeFacto extends Artifact {
-  private Set<SanctionDecision> sanctionDecisions = new HashSet<>();
+  private Map<Id, SanctionDecision> sanctionDecisions = new HashMap<>();
 
   /**
    * Add new decision into the sanction decisions set.
@@ -65,7 +67,7 @@ public final class DeFacto extends Artifact {
 
   /** Add new {@code decision} into the sanction decisions set. */
   private void addDecision(SanctionDecision decision) {
-    sanctionDecisions.add(decision);
+    sanctionDecisions.put(decision.getId(), decision);
     defineObsProperty(decision.getFunctor(), (Object[]) decision.toLiteral()
                                                                 .getTermsArray());
   }
@@ -88,17 +90,37 @@ public final class DeFacto extends Artifact {
     ObsProperty prop =
         getObsPropertyByTemplate(decisionObj.getFunctor(), (Object[]) decisionObj.toLiteral()
                                                                                  .getTermsArray());
-    sanctionDecisions.remove(decisionObj);
     decisionObj.setEfficacy(efficacyObj);
-    sanctionDecisions.add(decisionObj);
+    sanctionDecisions.put(decisionObj.getId(), decisionObj);
     prop.updateValue(7, ASSyntax.createAtom(efficacy));
   }
 
-  /** Remove a decision from the sanction decisions set. */
+  /**
+   * Remove sanction decision with the given {@code id}.
+   * 
+   * Only instances of {@link Uuid} or {@link String} should be passed as argument. If
+   * {@code decisionId} is an instance of {@link String}, then it will be parsed using
+   * {@link Uuid#parse(String)} before being removed.
+   * 
+   * @param decisionId id of the decision to be removed
+   */
   @LINK
   @OPERATION
-  public void removeDecision(SanctionDecision decision) {
-    sanctionDecisions.remove(decision);
+  public <T> void removeDecision(T decisionId) {
+    if (decisionId instanceof Uuid)
+      removeDecision((Uuid) decisionId);
+    else if (decisionId instanceof String)
+      removeDecision(Uuid.parse((String) decisionId));
+    else
+      failed("Expected "
+          + String.class.getCanonicalName() + " or " + SanctionDecision.class.getCanonicalName()
+          + " but got " + decisionId.getClass()
+                                    .getCanonicalName());
+  }
+
+  /** Remove sanction decision with the given {@code id}. */
+  private void removeDecision(Uuid id) {
+    SanctionDecision decision = sanctionDecisions.remove(id);
     removeObsPropertyByTemplate(decision.getFunctor(), (Object[]) decision.toLiteral()
                                                                           .getTermsArray());
   }
