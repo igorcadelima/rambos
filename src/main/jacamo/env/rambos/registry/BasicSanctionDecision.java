@@ -35,12 +35,12 @@ final class BasicSanctionDecision implements SanctionDecision {
   static final String FUNCTOR = "sanction_decision";
 
   private final Id id = Uuid.newInstance();
-  private long time;
-  private String sanctioner;
-  private String sanctionee;
-  private String norm;
-  private String sanction;
-  private Cause cause;
+  private final long time;
+  private final String sanctioner;
+  private final String sanctionee;
+  private final String norm;
+  private final String sanction;
+  private final Cause cause;
   private Efficacy efficacy = Efficacy.INDETERMINATE;
 
   /**
