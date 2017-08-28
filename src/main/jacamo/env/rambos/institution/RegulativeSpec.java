@@ -32,7 +32,7 @@ import rambos.sanction.Sanction;
  * @author igorcadelima
  *
  */
-public interface Legislation {
+public interface RegulativeSpec {
   /** Return norm with given {@code id}, or {@code null} if non-existing. */
   Norm getNorm(Atom id);
 
@@ -46,7 +46,7 @@ public interface Legislation {
   Set<Sanction> getSanctions();
 
   /**
-   * Add copy of {@code norm} if it is not already in the legislation.
+   * Add copy of {@code norm} if it is not already in the regulative specification.
    * 
    * @param norm norm to be added
    * @return {@code true} if the norm was successfully added
@@ -54,7 +54,7 @@ public interface Legislation {
   boolean addNorm(Norm norm);
 
   /**
-   * Add copy of {@code sanction} if it is not already in the legislation.
+   * Add copy of {@code sanction} if it is not already in the regulative specification.
    * 
    * @param sanction sanction to be added
    * @return {@code true} if the sanction was successfully added
@@ -66,8 +66,8 @@ public interface Legislation {
    * 
    * @param normId id of the norm to be linked
    * @param sanctionId id of the sanction to be linked
-   * @return {@code true} if the norm and sanction with the given ids were in the legislation and
-   *         there was no link between them
+   * @return {@code true} if the norm and sanction with the given ids were in the regulative
+   *         specification and there was no link between them
    */
   boolean addLink(Atom normId, Atom sanctionId);
 

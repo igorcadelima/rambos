@@ -31,7 +31,7 @@ import rambos.norm.Norms;
 import rambos.sanction.Sanction;
 import rambos.sanction.Sanctions;
 
-final class BasicLegislation implements Legislation {
+final class BasicRegulativeSpec implements RegulativeSpec {
   // normId -> norm
   private Map<Atom, Norm> norms = new ConcurrentHashMap<>();
   // sanctionId -> sanction

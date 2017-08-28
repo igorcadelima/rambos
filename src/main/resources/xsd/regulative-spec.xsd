@@ -6,8 +6,8 @@
 	targetNamespace="https://github.com/igorcadelima/rambos"
 	elementFormDefault="qualified">
 
-	<xsd:element name="legislation" type="rambos:legislation" />
-	<xsd:complexType name="legislation">
+	<xsd:element name="regulative-spec" type="rambos:regulative-spec" />
+	<xsd:complexType name="regulative-spec">
 		<xsd:sequence>
 			<xsd:element name="norms" minOccurs="0" maxOccurs="1"
 				type="rambos:norms" />

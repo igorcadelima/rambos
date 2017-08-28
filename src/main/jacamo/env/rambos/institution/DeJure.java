@@ -36,27 +36,27 @@ import rambos.norm.Norms;
 import rambos.sanction.Sanction;
 
 /**
- * This artefact stores a legislation, which is composed of norms, sanctions, and norm-sanction
- * links. It provides operations to consult and make changes to the legislation, as well as
- * observable properties which reflect the current state of the legislation.
+ * This artefact stores a regulative specification, which is composed of norms, sanctions, and
+ * norm-sanction links. It provides operations to consult and make changes, as well as observable
+ * properties which reflect the current state of the regulative specification.
  * 
  * @author igorcadelima
  *
  */
 public final class DeJure extends Artifact {
-  Legislation legislation;
+  RegulativeSpec regulativeSpec;
 
   /**
-   * Initialise {@link DeJure} repository based on data from the given legislative specification.
+   * Initialise {@link DeJure} repository based on data from the given regulative specification.
    * 
-   * @param legislativeSpec path to file with the legislative specification
+   * @param regulativeSpec path to file with the regulative specification
    */
-  public void init(String legislativeSpec) {
-    legislation = Legislations.fromFile(legislativeSpec);
-    legislation.getNorms()
-               .forEach(norm -> defineObsProperty(norm));
-    legislation.getSanctions()
-               .forEach(sanction -> defineObsProperty(sanction));
+  public void init(String regulativeSpec) {
+    this.regulativeSpec = RegulativeSpecs.fromFile(regulativeSpec);
+    this.regulativeSpec.getNorms()
+                       .forEach(norm -> defineObsProperty(norm));
+    this.regulativeSpec.getSanctions()
+                       .forEach(sanction -> defineObsProperty(sanction));
   }
 
   /** Handy method to define observable properties of a {@code literable}. */
@@ -82,11 +82,11 @@ public final class DeJure extends Artifact {
   }
 
   /**
-   * Add new norm to legislation and define observable property for it.
+   * Add new norm to regulative specification and define observable property for it.
    * 
    * Only instances of {@link Norm} or {@link String} should be passed as argument. If {@code norm}
    * is an instance of {@link String}, then it will be parsed using {@link Norms#parse(String)}
-   * before being added to the legislation.
+   * before being added to the regulative specification.
    * 
    * @param norm norm to be added
    */
@@ -104,22 +104,22 @@ public final class DeJure extends Artifact {
   }
 
   /**
-   * Add new norm to legislation and define observable property for it.
+   * Add new norm to regulative specification and define observable property for it.
    * 
-   * Note that only norms with different ids from the ones present in the legislation can be added,
-   * even if disabled. If an already existing norm is tried to be added, such addition attempt is
-   * just ignored.
+   * Note that only norms with different ids from the ones present in the specification can be
+   * added, even if disabled. If an already existing norm is tried to be added, such addition
+   * attempt is just ignored.
    * 
    * @param norm norm to be added
    */
   private void addNorm(Norm norm) {
-    if (legislation.addNorm(norm)) {
+    if (regulativeSpec.addNorm(norm)) {
       defineObsProperty(norm);
     }
   }
 
   /**
-   * Remove norm from legislation and observable property with it.
+   * Remove norm from regulative specification and observable property with it.
    * 
    * @param norm norm to be removed
    */
@@ -127,15 +127,15 @@ public final class DeJure extends Artifact {
   @OPERATION
   public void removeNorm(Norm norm) {
     // TODO: check whether operator agent is a legislator
-    if (legislation.removeNorm(norm.getId()) != null) {
+    if (regulativeSpec.removeNorm(norm.getId()) != null) {
       removeObsProperty(norm);
     }
   }
 
   /**
-   * Add new sanction to legislation and define observable property for it.
+   * Add new sanction to regulative specification and define observable property for it.
    * 
-   * Note that only sanction with different ids from the ones present in the legislation can be
+   * Note that only sanction with different ids from the ones present in the specification can be
    * added, even if disabled. If an already existing sanction is tried to be added, such addition
    * attempt is just ignored.
    * 
@@ -145,22 +145,22 @@ public final class DeJure extends Artifact {
   @OPERATION
   public void addSanction(Sanction sanction) {
     // TODO: check whether operator agent is a legislator
-    if (legislation.addSanction(sanction)) {
+    if (regulativeSpec.addSanction(sanction)) {
       defineObsProperty(sanction);
     }
   }
 
   /**
-   * Remove sanction from legislation and observable property with it.
+   * Remove sanction from regulative specification and observable property with it.
    * 
-   * @param sanction
+   * @param sanction sanction to be removed
    * @return {@code true} if sanction was removed successfully
    */
   @LINK
   @OPERATION
   public void removeSanction(Sanction sanction) {
     // TODO: check whether operator agent is a legislator
-    if (legislation.removeSanction(sanction.getId()) != null) {
+    if (regulativeSpec.removeSanction(sanction.getId()) != null) {
       removeObsProperty(sanction);
     }
   }
@@ -181,8 +181,8 @@ public final class DeJure extends Artifact {
     Atom normIdAtom = createAtom(normId);
     Atom sanctionIdAtom = createAtom(sanctionId);
 
-    if (legislation.addLink(normIdAtom, sanctionIdAtom)) {
-      Norm norm = legislation.getNorm(normIdAtom);
+    if (regulativeSpec.addLink(normIdAtom, sanctionIdAtom)) {
+      Norm norm = regulativeSpec.getNorm(normIdAtom);
       updateObsProperty(norm, normIdAtom);
     }
   }
@@ -200,9 +200,9 @@ public final class DeJure extends Artifact {
   public void unlink(String normId, String sanctionId) {
     // TODO: check whether operator agent is a legislator
     Atom normIdAtom = createAtom(normId);
-    Norm norm = legislation.getNorm(normIdAtom);
+    Norm norm = regulativeSpec.getNorm(normIdAtom);
 
-    if (legislation.unlink(normIdAtom, createAtom(sanctionId))) {
+    if (regulativeSpec.unlink(normIdAtom, createAtom(sanctionId))) {
       updateObsProperty(norm, normIdAtom);
     }
   }
@@ -211,13 +211,13 @@ public final class DeJure extends Artifact {
   @LINK
   @OPERATION
   public void getNorms(OpFeedbackParam<Set<Norm>> out) {
-    out.set(legislation.getNorms());
+    out.set(regulativeSpec.getNorms());
   }
 
   /** Return sanctions through {@link out}. */
   @LINK
   @OPERATION
   public void getSanctions(OpFeedbackParam<Set<Sanction>> out) {
-    out.set(legislation.getSanctions());
+    out.set(regulativeSpec.getSanctions());
   }
 }

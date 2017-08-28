@@ -38,60 +38,60 @@ import rambos.norm.Norms;
 import rambos.sanction.Sanctions;
 
 /**
- * Static utility methods pertaining to {@link Legislation} instances.
+ * Static utility methods pertaining to {@link RegulativeSpec} instances.
  * 
  * @author igorcadelima
  *
  */
-public final class Legislations {
-  private static final String SCHEMA_PATH = "/xsd/legislation.xsd";
+public final class RegulativeSpecs {
+  private static final String SCHEMA_PATH = "/xsd/regulative-spec.xsd";
   private static final String NORMS_TAG = "norms";
   private static final String SANCTIONS_TAG = "sanctions";
   private static final String LINKED_SANCTIONS_TAG = "linked-sanctions";
 
-  private Legislations() {}
+  private RegulativeSpecs() {}
 
-  /** Return a legislation instance based on the {@code legislativeSpec} file. */
-  public static Legislation fromFile(String legislativeSpec) {
+  /** Return a regulative specification instance based on the {@code regulativeSpec} file. */
+  public static RegulativeSpec fromFile(String file) {
     try {
-      Document spec = NormSpecUtil.parseDocument(legislativeSpec, SCHEMA_PATH);
-      Legislation legislation = new BasicLegislation();
-      extractNorms(spec, legislation);
-      extractSanctions(spec, legislation);
-      extractLinks(spec, legislation);
-      return legislation;
+      Document specDoc = NormSpecUtil.parseDocument(file, SCHEMA_PATH);
+      RegulativeSpec regulativeSpec = new BasicRegulativeSpec();
+      extractNorms(specDoc, regulativeSpec);
+      extractSanctions(specDoc, regulativeSpec);
+      extractLinks(specDoc, regulativeSpec);
+      return regulativeSpec;
     } catch (ParserConfigurationException | SAXException | IOException e) {
       e.printStackTrace();
     }
     return null;
   }
 
-  /** Extract norms from {@code spec} and add them to {@code legislation}. */
-  private static void extractNorms(Document spec, Legislation legislation) {
-    Node normsRootEl = spec.getElementsByTagName(NORMS_TAG)
-                           .item(0);
+  /** Extract norms from {@code specDoc} and add them to {@code regulativeSpec}. */
+  private static void extractNorms(Document specDoc, RegulativeSpec regulativeSpec) {
+    Node normsRootEl = specDoc.getElementsByTagName(NORMS_TAG)
+                              .item(0);
     List<Element> norms = getChildElements(normsRootEl);
-    norms.forEach(normEl -> legislation.addNorm(Norms.of(normEl)));
+    norms.forEach(normEl -> regulativeSpec.addNorm(Norms.of(normEl)));
   }
 
-  /** Extract sanctions from {@code spec} and add them to {@code legislation}. */
-  private static void extractSanctions(Document spec, Legislation legislation) {
-    Node sanctionsRootEl = spec.getElementsByTagName(SANCTIONS_TAG)
-                               .item(0);
+  /** Extract sanctions from {@code specDoc} and add them to {@code regulativeSpec}. */
+  private static void extractSanctions(Document specDoc, RegulativeSpec regulativeSpec) {
+    Node sanctionsRootEl = specDoc.getElementsByTagName(SANCTIONS_TAG)
+                                  .item(0);
     List<Element> sanctions = getChildElements(sanctionsRootEl);
-    sanctions.forEach(sanctionEl -> legislation.addSanction(Sanctions.parse(sanctionEl)));
+    sanctions.forEach(sanctionEl -> regulativeSpec.addSanction(Sanctions.parse(sanctionEl)));
   }
 
-  /** Extract links from {@code spec} and add them to {@code legislation}. */
-  private static void extractLinks(Document spec, Legislation legislation) {
-    NodeList linkedSanctionsNodes = spec.getElementsByTagName(LINKED_SANCTIONS_TAG);
+  /** Extract links from {@code specDoc} and add them to {@code regulativeSpec}. */
+  private static void extractLinks(Document specDoc, RegulativeSpec regulativeSpec) {
+    NodeList linkedSanctionsNodes = specDoc.getElementsByTagName(LINKED_SANCTIONS_TAG);
     for (int i = 0; i < linkedSanctionsNodes.getLength(); i++) {
       Node linkedSanctionsNode = linkedSanctionsNodes.item(i);
       List<Element> sanctionIdEls = getChildElements(linkedSanctionsNode);
       sanctionIdEls.forEach(sanctionIdEl -> {
         String sanctionId = sanctionIdEl.getTextContent();
         String normId = ((Element) linkedSanctionsNode.getParentNode()).getAttribute("id");
-        legislation.addLink(createAtom(normId), createAtom(sanctionId));
+        regulativeSpec.addLink(createAtom(normId), createAtom(sanctionId));
       });
     }
   }
