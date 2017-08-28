@@ -28,6 +28,7 @@ import cartago.LINK;
 import cartago.OPERATION;
 import cartago.ObsProperty;
 import jason.asSyntax.ASSyntax;
+import jason.asSyntax.Atom;
 import rambos.common.Enums;
 import rambos.common.id.Id;
 import rambos.common.id.Uuid;
@@ -108,6 +109,25 @@ public final class DeFacto extends Artifact {
                                                                            .getTermsArray());
     decision.setEfficacy(efficacyObj);
     prop.updateValue(7, ASSyntax.createAtom(efficacy.toString()));
+  }
+
+  /**
+   * Set whether a sanction decision has been applied or not.
+   * 
+   * Note that {@code decisionId} should be an instance of {@link Uuid} or {@link String}.
+   * 
+   * @param decisionId id of the sanction decision to be updated
+   * @param applied {@code true} if applied, else {@code false}
+   */
+  @LINK
+  @OPERATION
+  public void setApplied(Object decisionId, boolean applied) {
+    SanctionDecision decision = sanctionDecisions.get(decisionIdFrom(decisionId));
+    ObsProperty prop =
+        getObsPropertyByTemplate(decision.getFunctor(), (Object[]) decision.toLiteral()
+                                                                           .getTermsArray());
+    decision.setApplied(applied);
+    prop.updateValue(8, applied ? Atom.LTrue : Atom.LFalse);
   }
 
   /**
