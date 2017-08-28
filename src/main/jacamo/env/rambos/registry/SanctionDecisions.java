@@ -24,7 +24,6 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.NumberTerm;
 import rambos.common.Enums;
-import rambos.registry.BasicSanctionDecision.Builder;
 import rambos.registry.SanctionDecision.Cause;
 import rambos.registry.SanctionDecision.Efficacy;
 
@@ -55,20 +54,21 @@ public final class SanctionDecisions {
         throw new IllegalArgumentException();
       }
 
-      return new Builder().time(((NumberTerm) l.getTerm(1)).solve())
-                          .sanctioner(l.getTerm(2)
-                                       .toString())
-                          .sanctionee(l.getTerm(3)
-                                       .toString())
-                          .norm(l.getTerm(4)
-                                 .toString())
-                          .sanction(l.getTerm(5)
-                                     .toString())
-                          .cause(Enums.lookup(Cause.class, l.getTerm(6)
-                                                            .toString()))
-                          .efficacy(Enums.lookup(Efficacy.class, l.getTerm(7)
-                                                                  .toString()))
-                          .build();
+      return BasicSanctionDecision.builder()
+                                  .time(((NumberTerm) l.getTerm(1)).solve())
+                                  .sanctioner(l.getTerm(2)
+                                               .toString())
+                                  .sanctionee(l.getTerm(3)
+                                               .toString())
+                                  .norm(l.getTerm(4)
+                                         .toString())
+                                  .sanction(l.getTerm(5)
+                                             .toString())
+                                  .cause(Enums.lookup(Cause.class, l.getTerm(6)
+                                                                    .toString()))
+                                  .efficacy(Enums.lookup(Efficacy.class, l.getTerm(7)
+                                                                          .toString()))
+                                  .build();
 
     } catch (Exception e) {
       throw new IllegalArgumentException("String does not contain a parsable sanction decision");

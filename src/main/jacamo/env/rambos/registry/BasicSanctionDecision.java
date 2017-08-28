@@ -46,81 +46,19 @@ final class BasicSanctionDecision implements SanctionDecision {
   /**
    * Constructs a {@link BasicSanctionDecision} with the properties specified in {@code builder}.
    */
-  private BasicSanctionDecision(Builder builder) {
-    time = builder.time;
-    sanctioner = builder.sanctioner;
-    sanctionee = builder.sanctionee;
-    norm = builder.norm;
-    sanction = builder.sanction;
-    cause = builder.cause;
-    efficacy = builder.efficacy;
+  BasicSanctionDecision(SanctionDecisionBuilder builder) {
+    time = builder.time();
+    sanctioner = builder.sanctioner();
+    sanctionee = builder.sanctionee();
+    norm = builder.norm();
+    sanction = builder.sanction();
+    cause = builder.cause();
+    efficacy = builder.efficacy();
   }
 
-  static class Builder {
-    private long time;
-    private String sanctioner;
-    private String sanctionee;
-    private String norm;
-    private String sanction;
-    private Cause cause;
-    private Efficacy efficacy = Efficacy.INDETERMINATE;
-
-    /**
-     * Set time using to the given value, rounded to the closest possible representation.
-     * 
-     * This method rounds the argument using {@link Math#round(double)} and passes it to
-     * {@link #time(long)}.
-     * 
-     * @param time time at which the sanction was applied
-     * @return builder instance
-     */
-    Builder time(double time) {
-      return time(Math.round(time));
-    }
-
-    Builder time(long time) {
-      this.time = time;
-      return this;
-    }
-
-    Builder sanctioner(String sanctioner) {
-      this.sanctioner = sanctioner;
-      return this;
-    }
-
-    Builder sanctionee(String sanctionee) {
-      this.sanctionee = sanctionee;
-      return this;
-    }
-
-    Builder norm(String norm) {
-      this.norm = norm;
-      return this;
-    }
-
-    Builder sanction(String sanction) {
-      this.sanction = sanction;
-      return this;
-    }
-
-    Builder cause(Cause cause) {
-      this.cause = cause;
-      return this;
-    }
-
-    Builder efficacy(Efficacy efficacy) {
-      this.efficacy = efficacy;
-      return this;
-    }
-
-    /**
-     * Return a new {@link SanctionDecision} with the specified implementation.
-     * 
-     * @return new {@link SanctionDecision} instance
-     */
-    BasicSanctionDecision build() {
-      return new BasicSanctionDecision(this);
-    }
+  /** Return new {@link SanctionDecisionBuilder} instance. */
+  static SanctionDecisionBuilder builder() {
+    return new SanctionDecisionBuilder();
   }
 
   @Override
