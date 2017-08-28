@@ -31,6 +31,7 @@ final class SanctionDecisionBuilder {
   private String sanction;
   private Cause cause;
   private Efficacy efficacy = Efficacy.INDETERMINATE;
+  private boolean applied;
 
   /**
    * Set time using to the given value, rounded to the closest possible representation.
@@ -80,6 +81,11 @@ final class SanctionDecisionBuilder {
     return this;
   }
 
+  SanctionDecisionBuilder applied(boolean applied) {
+    this.applied = applied;
+    return this;
+  }
+
   /**
    * Return a new {@link SanctionDecision} with the specified implementation.
    * 
@@ -115,5 +121,9 @@ final class SanctionDecisionBuilder {
 
   Efficacy efficacy() {
     return efficacy;
+  }
+
+  boolean applied() {
+    return applied;
   }
 }

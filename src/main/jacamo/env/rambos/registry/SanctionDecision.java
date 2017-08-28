@@ -60,4 +60,8 @@ public interface SanctionDecision extends Literable {
   Efficacy getEfficacy();
 
   void setEfficacy(Efficacy e);
+
+  boolean isApplied();
+
+  void setApplied(boolean applied);
 }

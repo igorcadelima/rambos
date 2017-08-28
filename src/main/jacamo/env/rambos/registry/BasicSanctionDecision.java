@@ -20,7 +20,11 @@
  *******************************************************************************/
 package rambos.registry;
 
-import jason.asSyntax.ASSyntax;
+import static jason.asSyntax.ASSyntax.createAtom;
+import static jason.asSyntax.ASSyntax.createLiteral;
+import static jason.asSyntax.ASSyntax.createNumber;
+
+import jason.asSyntax.Atom;
 import jason.asSyntax.Literal;
 import rambos.common.id.Id;
 import rambos.common.id.Uuid;
@@ -42,6 +46,7 @@ final class BasicSanctionDecision implements SanctionDecision {
   private final String sanction;
   private final Cause cause;
   private Efficacy efficacy = Efficacy.INDETERMINATE;
+  private boolean applied;
 
   /**
    * Constructs a {@link BasicSanctionDecision} with the properties specified in {@code builder}.
@@ -54,6 +59,7 @@ final class BasicSanctionDecision implements SanctionDecision {
     sanction = builder.sanction();
     cause = builder.cause();
     efficacy = builder.efficacy();
+    applied = builder.applied();
   }
 
   /** Return new {@link SanctionDecisionBuilder} instance. */
@@ -107,22 +113,26 @@ final class BasicSanctionDecision implements SanctionDecision {
   }
 
   @Override
+  public boolean isApplied() {
+    return applied;
+  }
+
+  @Override
+  public void setApplied(boolean applied) {
+    this.applied = applied;
+  }
+
+  @Override
   public String getFunctor() {
     return FUNCTOR;
   }
 
   @Override
   public Literal toLiteral() {
-    Literal l = ASSyntax.createLiteral(getFunctor());
-    l.addTerm(id.toLiteral());
-    l.addTerm(ASSyntax.createNumber(time));
-    l.addTerm(ASSyntax.createAtom(sanctioner));
-    l.addTerm(ASSyntax.createAtom(sanctionee));
-    l.addTerm(ASSyntax.createAtom(norm));
-    l.addTerm(ASSyntax.createAtom(sanction));
-    l.addTerm(ASSyntax.createAtom(cause.lowercase()));
-    l.addTerm(ASSyntax.createAtom(efficacy.lowercase()));
-    return l;
+    return createLiteral(getFunctor(), id.toLiteral(), createNumber(time), createAtom(sanctioner),
+        createAtom(sanctionee), createAtom(norm), createAtom(sanction),
+        createAtom(cause.lowercase()), createAtom(efficacy.lowercase()),
+        applied ? Atom.LTrue : Atom.LFalse);
   }
 
   @Override
@@ -134,8 +144,9 @@ final class BasicSanctionDecision implements SanctionDecision {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((efficacy == null) ? 0 : efficacy.hashCode());
+    result = prime * result + (applied ? 1231 : 1237);
     result = prime * result + ((cause == null) ? 0 : cause.hashCode());
+    result = prime * result + ((efficacy == null) ? 0 : efficacy.hashCode());
     result = prime * result + ((norm == null) ? 0 : norm.hashCode());
     result = prime * result + ((sanction == null) ? 0 : sanction.hashCode());
     result = prime * result + ((sanctionee == null) ? 0 : sanctionee.hashCode());
@@ -153,9 +164,11 @@ final class BasicSanctionDecision implements SanctionDecision {
     if (getClass() != obj.getClass())
       return false;
     BasicSanctionDecision other = (BasicSanctionDecision) obj;
-    if (efficacy != other.efficacy)
+    if (applied != other.applied)
       return false;
     if (cause != other.cause)
+      return false;
+    if (efficacy != other.efficacy)
       return false;
     if (norm == null) {
       if (other.norm != null)

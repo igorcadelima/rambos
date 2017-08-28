@@ -68,6 +68,8 @@ public final class SanctionDecisions {
                                                                     .toString()))
                                   .efficacy(Enums.lookup(Efficacy.class, l.getTerm(7)
                                                                           .toString()))
+                                  .applied(Boolean.valueOf(l.getTerm(8)
+                                                            .toString()))
                                   .build();
 
     } catch (Exception e) {
