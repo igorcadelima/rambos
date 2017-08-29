@@ -44,7 +44,7 @@ import rambos.sanction.Sanction;
  *
  */
 public final class DeJure extends Artifact {
-  RegulativeSpec regulativeSpec;
+  private RegulativeSpec regulativeSpec;
 
   /**
    * Initialise {@link DeJure} repository based on data from the given regulative specification.
