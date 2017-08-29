@@ -54,9 +54,9 @@ public final class DeJure extends Artifact {
   public void init(String regulativeSpec) {
     this.regulativeSpec = RegulativeSpecs.fromFile(regulativeSpec);
     this.regulativeSpec.getNorms()
-                       .forEach(norm -> defineObsProperty(norm));
+                       .forEach(this::defineObsProperty);
     this.regulativeSpec.getSanctions()
-                       .forEach(sanction -> defineObsProperty(sanction));
+                       .forEach(this::defineObsProperty);
   }
 
   /** Handy method to define observable properties of a {@code literable}. */
