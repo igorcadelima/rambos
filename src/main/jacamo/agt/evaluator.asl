@@ -25,15 +25,8 @@
   .puts("I evaluated the case and the sanctions should be #{SSne}");
   !!order_execution(SSne).
 
-+!order_execution(SSne)
-  <-
-  RoleSpec = role(Role,_,SuperRoles,_,_,_,_);
-  for (.member(S,SSne)) {
-    .setof(Role,specification(group_specification(_,RolesSpecs,[],properties(_))) & .member(RoleSpec,RolesSpecs) & .member(executor,SuperRoles),ExecutorRoles);
-    .setof(Agent,play(Agent,R,_) & .member(R,ExecutorRoles),ExecutorAgents);
-
-    .shuffle(ExecutorAgents,[Executor|_]);
-
-    .puts("Ordering execution of #{S} to #{Executor}");
-    .send(Executor, achieve, execute(S));
-  }.
++!order_execution(SSne).
+//  <-
+//  Choose executor
+//  .send(Executor, achieve, execute(S));
+//  .
