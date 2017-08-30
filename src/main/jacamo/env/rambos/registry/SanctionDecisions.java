@@ -55,7 +55,7 @@ public final class SanctionDecisions {
       }
 
       return BasicSanctionDecision.builder()
-                                  .time(((NumberTerm) l.getTerm(1)).solve())
+                                  .time((long) ((NumberTerm) l.getTerm(1)).solve())
                                   .sanctioner(l.getTerm(2)
                                                .toString())
                                   .sanctionee(l.getTerm(3)

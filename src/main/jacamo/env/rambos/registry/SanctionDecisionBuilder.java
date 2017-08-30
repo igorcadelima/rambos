@@ -33,19 +33,6 @@ final class SanctionDecisionBuilder {
   private Efficacy efficacy = Efficacy.INDETERMINATE;
   private boolean applied;
 
-  /**
-   * Set time using to the given value, rounded to the closest possible representation.
-   * 
-   * This method rounds the argument using {@link Math#round(double)} and passes it to
-   * {@link #time(long)}.
-   * 
-   * @param time time at which the sanction was applied
-   * @return builder instance
-   */
-  SanctionDecisionBuilder time(double time) {
-    return time(Math.round(time));
-  }
-
   SanctionDecisionBuilder time(long time) {
     this.time = time;
     return this;
