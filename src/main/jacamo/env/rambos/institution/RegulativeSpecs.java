@@ -54,7 +54,7 @@ public final class RegulativeSpecs {
   /** Return a regulative specification instance based on the {@code regulativeSpec} file. */
   public static RegulativeSpec fromFile(String file) {
     try {
-      Document specDoc = NormSpecUtil.parseDocument(file, SCHEMA_PATH);
+      Document specDoc = Documents.parseDocument(file, SCHEMA_PATH);
       RegulativeSpec regulativeSpec = new BasicRegulativeSpec();
       extractNorms(specDoc, regulativeSpec);
       extractSanctions(specDoc, regulativeSpec);

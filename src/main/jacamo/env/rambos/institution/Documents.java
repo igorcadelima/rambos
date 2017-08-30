@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * @author igorcadelima
  *
  */
-final class NormSpecUtil {
+final class Documents {
   /**
    * Try to parse, validate using schema passed as argument, normalize, and return {@link Document}.
    * 
@@ -105,7 +105,7 @@ final class NormSpecUtil {
    */
   static Schema getSchema(String schemaPath) throws SAXException {
     SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-    URL schemaResource = NormSpecUtil.class.getResource(schemaPath);
+    URL schemaResource = Documents.class.getResource(schemaPath);
     return schemaFactory.newSchema(schemaResource);
   }
 
