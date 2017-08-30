@@ -70,11 +70,11 @@ eclipse {
 repositories {
 	mavenCentral()
 	maven { url 'http://jacamo.sourceforge.net/maven2' }
+	maven { url "http://jade.tilab.com/maven/" }
 }
 
 dependencies {
-	compile fileTree(dir: '../../jacamo/jacamo/build/libs', include: ['*.jar'])
-//	implementation 'org.jacamo:jacamo:latest.integration'
+	implementation 'org.jacamo:jacamo:latest.integration'
 }
 
 sourceSets {
